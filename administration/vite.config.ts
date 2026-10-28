@@ -16,7 +16,7 @@ import { promisify } from 'node:util'
 import { UserConfig, defineConfig } from 'vite'
 import generateFile, { GenerateFile } from 'vite-plugin-generate-file'
 
-import versionJson from '../version.json'
+import versionJson from '../version.json' with { type: 'json' }
 
 const execFileAsync = promisify(execFile)
 
@@ -93,7 +93,7 @@ function versionName(mode: ViteMode): string {
 async function currentCommitHash(): Promise<string> {
   return (
     await execFileAsync('git', ['log', '-n1', '--format=%h'], {
-      cwd: join(__dirname, '..'),
+      cwd: join(import.meta.dirname, '..'),
       encoding: 'utf8',
     })
   ).stdout.trim()

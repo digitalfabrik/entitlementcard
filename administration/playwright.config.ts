@@ -95,15 +95,15 @@ export default defineConfig({
             stdout: 'ignore' as const,
             stderr: 'ignore' as const,
           },
+          {
+            command: 'npx vite',
+            name: 'Administration',
+            url: 'http://localhost:3000',
+            reuseExistingServer: true,
+            stdout: 'ignore' as const,
+            stderr: 'ignore' as const,
+          },
         ]),
-    {
-      command: 'npm run start:ci',
-      name: 'Administration',
-      url: 'http://localhost:3000',
-      reuseExistingServer: true,
-      stdout: 'ignore',
-      stderr: 'ignore',
-    },
     {
       command: './run-backend.sh',
       env: {

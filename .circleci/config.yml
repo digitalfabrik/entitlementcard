@@ -632,6 +632,10 @@ jobs:
             - install_mise
             - install_node_modules
             - run:
+                command: mise x -- npm run build:dev
+                name: Build administration frontend
+                working_directory: ~/project/administration
+            - run:
                 command: tar -xf ~/attached_workspace/backend/build/distributions/backend.tar -C ~/
                 name: Extract backend distribution
             - run:
@@ -734,7 +738,7 @@ jobs:
             - notify:
                 allow_all_branches: true
                 channel: releases
-                success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern, Sozialpass Nürnberg und Sozialpass Koblenz ${NEW_VERSION_NAME} have been released successfully! :tada:\n${RELEASE_NOTES}\n https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}
+                success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>[<< parameters.platform >>] Ehrenamtskarte Bayern, Sozialpass Nürnberg und Sozialpass Koblenz ${NEW_VERSION_NAME} have been released successfully! :tada:\n${RELEASE_NOTES}\n https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}
     pack_administration:
         docker:
             - image: debian:12
@@ -886,7 +890,7 @@ jobs:
             - notify:
                 allow_all_branches: true
                 channel: releases
-                success_message: 'Ehrenamtskarte Bayern, Sozialpass Nürnberg und Sozialpass Koblenz ${RELEASE} have been promoted successfully to production :tada:'
+                success_message: '[<< parameters.platform >>] Ehrenamtskarte Bayern, Sozialpass Nürnberg und Sozialpass Koblenz ${RELEASE} have been promoted successfully to production :tada:'
     promote_ios:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true

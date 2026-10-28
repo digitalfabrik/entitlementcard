@@ -20,6 +20,11 @@ steps:
   - install_mise
   - install_node_modules
   - run:
+      # Build before starting the backend, so bundling does not compete with it for memory
+      name: Build administration frontend
+      working_directory: ~/project/administration
+      command: mise x -- npm run build:dev
+  - run:
       name: Extract backend distribution
       command: tar -xf ~/attached_workspace/backend/build/distributions/backend.tar -C ~/
   - run:

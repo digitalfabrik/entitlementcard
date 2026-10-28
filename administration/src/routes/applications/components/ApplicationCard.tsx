@@ -34,7 +34,6 @@ import { useReactToPrint } from 'react-to-print'
 import { Temporal } from 'temporal-polyfill'
 import { useMutation } from 'urql'
 
-import { AccordionExpandButton } from '../../../components/AccordionExpandButton'
 import BaseMenu, { MenuItemType } from '../../../components/BaseMenu'
 import ConfirmDialog from '../../../components/ConfirmDialog'
 import JsonFieldView from '../../../components/JsonFieldView'
@@ -313,7 +312,6 @@ const ApplicationCard = ({
   const [deleteDialogCalled, setDeleteDialogCalled] = useState(false)
   const [rejectionDialogOpen, setRejectionDialogOpen] = useState(false)
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
-  const [accordionExpanded, setAccordionExpanded] = useState(false)
   const [deleteApplicationState, deleteApplicationMutation] = useMutation(DeleteApplicationDocument)
   const [approveApplicationState, approveApplicationMutation] = useMutation(
     ApproveApplicationStatusDocument,
@@ -409,82 +407,87 @@ const ApplicationCard = ({
   ]
 
   return (
-    <Accordion
-      disableGutters
-      aria-controls='panel-content'
-      onChange={(_, expanded) => setAccordionExpanded(expanded)}
-    >
+    <Accordion disableGutters aria-controls='panel-content'>
       <AccordionSummary
-        // Need this to display the `expandIconWrapper` slot, even if this is not directly used.
         expandIcon={<ExpandMore />}
-        slots={{ expandIconWrapper: AccordionExpandButton }}
-        slotProps={{
-          // @ts-expect-error Currently, MUI apparently cannot properly forward prop types from the slots
-          expandIconWrapper: { expanded: accordionExpanded },
+        sx={{
+          flexDirection: 'row-reverse',
+          gap: 2.5,
+          paddingY: 0.5,
+          '& .MuiAccordionSummary-content': { minWidth: 0 },
         }}
-        sx={{ flexDirection: 'column', alignItems: 'stretch', padding: 0 }}
       >
-        <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
-          <Typography variant='h6' sx={{ minWidth: '250px', marginY: 0 }}>
-            {t('applicationFrom', { date: Temporal.Instant.from(application.createdDate) })}
-          </Typography>
-          <Warning
-            color='warning'
-            visibility={application.status === ApplicationStatus.Withdrawn ? 'visible' : 'hidden'}
-          />
-          <Typography
-            variant='h6'
-            sx={{
-              marginY: 0,
-              flexGrow: 1,
-              flexShrink: 1,
-              color: theme.palette.text.secondary,
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-            }}
-          >
-            {personalData &&
-              personalData.forenames !== undefined &&
-              personalData.surname !== undefined &&
-              `${t('name')}: ${personalData.surname}, ${personalData.forenames}`}
-          </Typography>
+        <Stack sx={{ width: '100%', gap: 2 }}>
+          <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
+            <Typography
+              variant='subtitle2'
+              color='common.black'
+              sx={{
+                fontSize: theme.typography.subtitle1.fontSize,
+                marginY: 0,
+                flexGrow: 1,
+                flexShrink: 1,
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+              }}
+            >
+              {personalData &&
+                personalData.forenames !== undefined &&
+                personalData.surname !== undefined &&
+                `${personalData.surname}, ${personalData.forenames}`}
+            </Typography>
+            <Warning
+              color='warning'
+              visibility={application.status === ApplicationStatus.Withdrawn ? 'visible' : 'hidden'}
+            />
+            <Typography variant='body1' color='textSecondary' sx={{ whiteSpace: 'nowrap' }}>
+              {t('applicationDate', { date: Temporal.Instant.from(application.createdDate) })}
+            </Typography>
+          </Stack>
           <ApplicationIndicators application={application} />
         </Stack>
       </AccordionSummary>
 
-      <AccordionDetails sx={{ position: 'relative' }}>
+      <AccordionDetails>
+        <Divider sx={{ marginBottom: 2 }} />
         <Stack
-          sx={{
-            spacing: 2,
-            alignItems: 'flex-start',
-            gap: 2,
-            marginLeft: 2,
-            marginBottom: 2,
-            marginRight: 2,
-          }}
+          direction='row'
+          sx={{ alignItems: 'flex-start', gap: 2, marginLeft: 2, marginBottom: 2, marginRight: 2 }}
         >
-          {application.status === ApplicationStatus.Withdrawn &&
-            !!application.statusResolvedDate && (
-              <Box sx={{ backgroundColor: theme.palette.warning.light, padding: 2 }}>
-                <Typography>
-                  {t('withdrawalMessage', {
-                    date: Temporal.Instant.from(application.statusResolvedDate),
-                  })}
-                  <br />
-                  {t('deleteApplicationSoonPrompt')}{' '}
-                </Typography>
-              </Box>
-            )}
-          {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}
-          <Box>
-            <JsonFieldView
-              jsonField={application.jsonValue}
-              baseUrl={baseUrl}
-              key={0}
-              hierarchyIndex={0}
-              attachmentAccessible
-              expandedRoot={false}
+          <Stack sx={{ alignItems: 'flex-start', gap: 2, flexGrow: 1, minWidth: 0 }}>
+            {application.status === ApplicationStatus.Withdrawn &&
+              !!application.statusResolvedDate && (
+                <Box sx={{ backgroundColor: theme.palette.warning.light, padding: 2 }}>
+                  <Typography>
+                    {t('withdrawalMessage', {
+                      date: Temporal.Instant.from(application.statusResolvedDate),
+                    })}
+                    <br />
+                    {t('deleteApplicationSoonPrompt')}{' '}
+                  </Typography>
+                </Box>
+              )}
+            {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}
+            <Box>
+              <JsonFieldView
+                jsonField={application.jsonValue}
+                baseUrl={baseUrl}
+                key={0}
+                hierarchyIndex={0}
+                attachmentAccessible
+                expandedRoot={false}
+              />
+            </Box>
+          </Stack>
+          <Box sx={{ flexShrink: 0 }}>
+            <NoteDialogController
+              application={application}
+              isOpen={openNoteDialog}
+              onOpenNoteDialog={setOpenNoteDialog}
+              onChange={note => {
+                onChange({ ...application, note })
+              }}
             />
           </Box>
         </Stack>
@@ -532,17 +535,6 @@ const ApplicationCard = ({
             closeIcon={<KeyboardArrowDown />}
           />
         </Stack>
-
-        <Box sx={{ position: 'absolute', top: 0, right: theme.spacing(2), zIndex: 1 }}>
-          <NoteDialogController
-            application={application}
-            isOpen={openNoteDialog}
-            onOpenNoteDialog={setOpenNoteDialog}
-            onChange={note => {
-              onChange({ ...application, note })
-            }}
-          />
-        </Box>
       </AccordionDetails>
 
       <DeleteDialog

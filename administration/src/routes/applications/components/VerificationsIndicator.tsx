@@ -1,18 +1,22 @@
 /* eslint-disable react/destructuring-assignment */
 import { AttachFile, EditNote } from '@mui/icons-material'
-import { Box, Stack, Tooltip, Typography, styled } from '@mui/material'
+import { Box, Stack, Tooltip, Typography } from '@mui/material'
 import { green } from '@mui/material/colors'
 import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { BaseChip } from '../../../components/BaseChip'
 import { VerificationIcon } from '../../../components/VerificationIcon'
 import { VerificationStatus, verificationStatus } from '../../../util/verifications'
 import { Application, ApplicationVerification } from '../types/types'
+import { getApplicationCardType, getApplicationType } from '../utils/applicationDataHelper'
 import {
   PreVerifiedEntitlementType,
   getPreVerifiedEntitlementType,
 } from '../utils/preVerifiedEntitlements'
 import { ApplicationNoteTooltip } from './ApplicationNoteTooltip'
+import { ApplicationTypeChip } from './ApplicationTypeChip'
+import { CardTypeIndicator } from './CardTypeIndicator'
 
 const VerificationItem = (p: { status: VerificationStatus; count: number }): ReactElement => (
   <Box sx={{ display: 'inline-flex', alignItems: 'center' }} data-testid={`indicator-${p.status}`}>
@@ -94,22 +98,6 @@ const preVerifiedLabelMetaData: Record<PreVerifiedEntitlementType, PreVerifiedLa
   },
 }
 
-const PreVerifiedLabel = styled('span')(({ theme }) => ({
-  padding: '4px 10px',
-  fontSize: '14px',
-  backgroundColor: green[50],
-  borderColor: green[900],
-  borderWidth: '1px',
-  borderStyle: 'solid',
-  borderRadius: '2em',
-  color: green[900],
-  marginRight: theme.spacing(1), // Using MUI theme for spacing
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.5),
-  whiteSpace: 'nowrap',
-}))
-
 export const PreVerifiedIndicator = ({
   type,
 }: {
@@ -117,10 +105,12 @@ export const PreVerifiedIndicator = ({
 }): ReactElement => {
   const { labelText, attachment } = preVerifiedLabelMetaData[type]
   return (
-    <PreVerifiedLabel>
-      {attachment && <AttachFile sx={{ fontSize: 16 }} />}
-      {labelText}
-    </PreVerifiedLabel>
+    <BaseChip
+      label={labelText}
+      icon={attachment ? <AttachFile /> : undefined}
+      color={green[900]}
+      backgroundColor={green[50]}
+    />
   )
 }
 
@@ -130,19 +120,28 @@ export const ApplicationIndicators = ({
   application: Application
 }): ReactElement => {
   const preVerifiedEntitlementType = getPreVerifiedEntitlementType(application.jsonValue)
-
+  const applicationType = getApplicationType(application.jsonValue)
   return (
-    <Stack direction='row' spacing={2} sx={{ displayPrint: 'none' }}>
-      {(application.note ?? '').trim().length > 0 && (
-        <ApplicationNoteTooltip application={application}>
-          <EditNote color='primary' />
-        </ApplicationNoteTooltip>
-      )}
-      {preVerifiedEntitlementType !== undefined ? (
-        <PreVerifiedIndicator type={preVerifiedEntitlementType} />
-      ) : (
-        <VerificationIndicator verifications={application.verifications} />
-      )}
+    <Stack
+      direction='row'
+      sx={{ displayPrint: 'none', justifyContent: 'space-between', alignItems: 'center', gap: 2 }}
+    >
+      <Stack direction='row' sx={{ alignItems: 'center', gap: 2 }}>
+        <CardTypeIndicator type={getApplicationCardType(application.jsonValue)} />
+        {applicationType !== undefined && <ApplicationTypeChip applicationType={applicationType} />}
+      </Stack>
+      <Stack direction='row' sx={{ alignItems: 'center', gap: 2 }}>
+        {(application.note ?? '').trim().length > 0 && (
+          <ApplicationNoteTooltip application={application}>
+            <EditNote color='primary' />
+          </ApplicationNoteTooltip>
+        )}
+        {preVerifiedEntitlementType !== undefined ? (
+          <PreVerifiedIndicator type={preVerifiedEntitlementType} />
+        ) : (
+          <VerificationIndicator verifications={application.verifications} />
+        )}
+      </Stack>
     </Stack>
   )
 }

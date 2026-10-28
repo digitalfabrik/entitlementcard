@@ -7,14 +7,15 @@ updates:
     directory: "/"
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
     labels:
       - "maintenance"
       - "dependencies"
     ignore:
       - dependency-name: "*"
-        # Ignore major and pre-release updates for all dependencies
+        # Ignore major updates for all dependencies
         update-types: ["version-update:semver-major"]
-        versions: ["alpha", "beta", "rc"]
     groups:
       minor-and-patch:
         patterns: ["*"]
@@ -25,14 +26,15 @@ updates:
     directory: "/backend"
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
     labels:
       - "maintenance"
       - "dependencies"
     ignore:
       - dependency-name: "*"
-        # Ignore major and pre-release updates for all dependencies
+        # Ignore major updates for all dependencies
         update-types: ["version-update:semver-major"]
-        versions: ["alpha", "beta", "rc"]
     groups:
       minor-and-patch:
         patterns: ["*"]
@@ -43,6 +45,8 @@ updates:
     directory: "/frontend"
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
     labels:
       - "maintenance"
       - "dependencies"
@@ -60,6 +64,8 @@ updates:
     directory: "/frontend/ios"
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
     labels:
       - "maintenance"
       - "dependencies"
@@ -73,25 +79,66 @@ updates:
         patterns: ["*"]
         update-types: [patch, minor]
 
-  # Single weekly updates for other ecosystems with few dependencies including all update types
+  - package-ecosystem: bundler
+    directory: "/frontend/android"
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    labels:
+      - "maintenance"
+      - "dependencies"
+    open-pull-requests-limit: 1
+    ignore:
+      - dependency-name: "*"
+        # Ignore major updates for all dependencies
+        update-types: ["version-update:semver-major"]
+    groups:
+      minor-and-patch:
+        patterns: ["*"]
+        update-types: [patch, minor]
+
+  # Ecosystems with few dependencies: minor and patch updates are grouped, major updates come as single PRs
   - package-ecosystem: gradle
     directory: "/frontend/android"
     schedule:
-      interval: weekly
+      interval: monthly
+    cooldown:
+      default-days: 7
     labels:
       - "maintenance"
       - "dependencies"
     open-pull-requests-limit: 2
-    ignore:
-      - dependency-name: "*"
-        # Ignore pre-release updates for all dependencies
-        versions: ["alpha", "beta", "rc"]
+    groups:
+      minor-and-patch:
+        patterns: ["*"]
+        update-types: [patch, minor]
 
   - package-ecosystem: docker-compose
     directory: "/"
     schedule:
-      interval: weekly
+      interval: monthly
+    cooldown:
+      default-days: 7
     labels:
       - "maintenance"
       - "dependencies"
     open-pull-requests-limit: 2
+    groups:
+      minor-and-patch:
+        patterns: ["*"]
+        update-types: [patch, minor]
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    labels:
+      - "maintenance"
+      - "dependencies"
+    open-pull-requests-limit: 1
+    groups:
+      all:
+        patterns: ["*"]
