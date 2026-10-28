@@ -20,6 +20,8 @@ import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.Mockito
 import org.mockito.Mockito.doThrow
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
@@ -71,6 +73,7 @@ internal class RejectApplicationTest : IntegrationTest() {
             applicantName = eq("Max Mustermann"),
             applicantAddress = eq("test@test.de"),
             rejectionMessage = eq("dummy"),
+            regionId = Mockito.eq(regionAdmin.regionId!!),
         )
     }
 
@@ -82,6 +85,7 @@ internal class RejectApplicationTest : IntegrationTest() {
             applicantName = any(),
             applicantAddress = any(),
             rejectionMessage = any(),
+            regionId = anyInt(),
         )
 
         val applicationId = TestData.createApplication(
