@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next'
 
 import BaseCheckbox from '../../../components/BaseCheckbox'
 import TextAreaDialog from '../../../components/TextAreaDialog'
+import ApplicationConfirmationMailPreview from './ApplicationConfirmationMailPreview'
 
 type ApplicationConfirmationNoteDialogProps = {
+  regionId: number
   defaultConfirmationNote?: string | null
   defaultConfirmationNoteActivated: boolean
   isOpen: boolean
@@ -15,6 +17,7 @@ type ApplicationConfirmationNoteDialogProps = {
 
 const MAX_NOTE_CHARS = 1000
 const ApplicationConfirmationNoteDialog = ({
+  regionId,
   isOpen,
   isSavingApplicationConfirmationNote,
   defaultConfirmationNoteActivated,
@@ -52,6 +55,16 @@ const ApplicationConfirmationNoteDialog = ({
       onClose={() => setIsOpen(false)}
       loading={isSavingApplicationConfirmationNote}
       additionalContent={additionalContent}
+      preview={{
+        label: t('applicationConfirmationMailPreview'),
+        render: text => (
+          <ApplicationConfirmationMailPreview
+            regionId={regionId}
+            note={text}
+            noteActivated={applicationConfirmationNoteActivated}
+          />
+        ),
+      }}
     />
   )
 }

@@ -6,6 +6,7 @@ import SettingsCard, { SettingsCardButtonBox } from '../../../components/Setting
 import ApplicationConfirmationNote from './ApplicationConfirmationNote'
 
 type ApplicationConfirmationNoteCardProps = {
+  regionId: number
   defaultConfirmationNote: string | null | undefined
   defaultConfirmationNoteActivated: boolean
   saveApplicationConfirmationNote: (text: string, activated: boolean) => void
@@ -13,6 +14,7 @@ type ApplicationConfirmationNoteCardProps = {
 }
 
 const ApplicationConfirmationNoteCard = ({
+  regionId,
   saveApplicationConfirmationNote,
   defaultConfirmationNote,
   defaultConfirmationNoteActivated,
@@ -29,6 +31,7 @@ const ApplicationConfirmationNoteCard = ({
       </SettingsCardButtonBox>
       {openApplicationConfirmationNote && (
         <ApplicationConfirmationNote
+          regionId={regionId}
           saveApplicationConfirmationNote={saveApplicationConfirmationNote}
           setIsOpen={setOpenApplicationConfirmationNote}
           isOpen={openApplicationConfirmationNote}
