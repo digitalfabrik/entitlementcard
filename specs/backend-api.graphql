@@ -289,6 +289,8 @@ type Query {
   getApplicationByApplicant(accessKey: String!): ApplicationApplicant!
   "Queries an application by application verification accessKey"
   getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String!): ApplicationVerifier!
+  "Returns the HTML of the mail that is sent to the applicant after submitting an application, filled with example data. The given application confirmation note is included if it is activated and not blank."
+  getApplicationConfirmationMailPreview(applicationConfirmationNote: String!, applicationConfirmationNoteActivated: Boolean!, regionId: Int!): String!
   "Queries an application verification by application verification accessKey"
   getApplicationVerification(applicationVerificationAccessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"
