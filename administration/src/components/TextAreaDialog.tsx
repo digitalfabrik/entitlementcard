@@ -27,8 +27,6 @@ type NoteProps = {
   }
 }
 
-const PREVIEW_DIALOG_CONTENT_HEIGHT = 600
-
 const TextAreaDialog = ({
   isOpen,
   onSave,
@@ -66,6 +64,8 @@ const TextAreaDialog = ({
       actionDisabled={maxCharsExceeded}
       loading={loading}
       showCloseIcon
+      // A fixed height prevents the dialog from changing its size when switching tabs
+      fillHeight={preview !== undefined}
     >
       {preview !== undefined && (
         <Tabs
@@ -77,14 +77,7 @@ const TextAreaDialog = ({
           <Tab value='preview' label={preview.label} />
         </Tabs>
       )}
-      <Box
-        // A fixed height prevents the dialog from changing its size when switching tabs
-        sx={{
-          height: preview !== undefined ? PREVIEW_DIALOG_CONTENT_HEIGHT : undefined,
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+      <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
         {showPreview ? (
           <Box sx={{ flex: 1, minHeight: 0 }}>{preview.render(text)}</Box>
         ) : (
@@ -106,7 +99,7 @@ const TextAreaDialog = ({
               slotProps={{ input: { inputComponent: 'textarea' } }}
               sx={{
                 flex: 1,
-                minHeight: 0,
+                minHeight: 120,
                 '& .MuiInputBase-root': { flex: 1, minHeight: 0, alignItems: 'stretch' },
                 '& textarea': { height: '100%', overflowY: 'auto', resize: 'none' },
               }}

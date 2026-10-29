@@ -29,6 +29,7 @@ const ConfirmDialog = ({
   showCancelButton = true,
   closeOnConfirm = true,
   showCloseIcon = false,
+  fillHeight = false,
 }: {
   actionDisabled?: boolean
   loading?: boolean
@@ -47,6 +48,8 @@ const ConfirmDialog = ({
   showCancelButton?: boolean
   closeOnConfirm?: boolean
   showCloseIcon?: boolean
+  /** Lets the dialog take the available height, children can fill the remaining space using flex */
+  fillHeight?: boolean
   maxWidth?: Breakpoint
 }): ReactElement => {
   const { t } = useTranslation('misc')
@@ -60,6 +63,7 @@ const ConfirmDialog = ({
       onClose={onClose}
       maxWidth={maxWidth}
       aria-describedby={contentId}
+      slotProps={{ paper: { sx: fillHeight ? { height: 'min(100%, 900px)' } : undefined } }}
     >
       <DialogTitle sx={showCloseIcon ? { paddingRight: 7 } : undefined}>{title}</DialogTitle>
       {showCloseIcon && (
@@ -71,7 +75,12 @@ const ConfirmDialog = ({
           <Close />
         </IconButton>
       )}
-      <DialogContent id={contentId}>{children}</DialogContent>
+      <DialogContent
+        id={contentId}
+        sx={fillHeight ? { display: 'flex', flexDirection: 'column' } : undefined}
+      >
+        {children}
+      </DialogContent>
       <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
         {showCancelButton && (
           <Button onClick={onClose} variant='outlined' startIcon={<Close />}>
