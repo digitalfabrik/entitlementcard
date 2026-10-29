@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest'
+
 import EMailExtension, { EMAIL_EXTENSION_NAME } from './EMailExtension'
 
 describe('EMailExtension', () => {

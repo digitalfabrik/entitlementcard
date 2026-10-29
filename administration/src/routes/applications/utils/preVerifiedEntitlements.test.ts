@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest'
+
 import { GeneralJsonField, JsonField } from '../../../components/JsonFieldView'
 import { getPreVerifiedEntitlementType } from './preVerifiedEntitlements'
 

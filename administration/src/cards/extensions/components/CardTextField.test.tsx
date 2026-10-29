@@ -1,4 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import CardTextField from './CardTextField'
 
@@ -8,7 +9,7 @@ describe('CardTextField', () => {
     label: 'Test Label',
     placeholder: 'Enter text',
     value: '',
-    onChange: jest.fn(),
+    onChange: vi.fn(),
     showError: false,
     errorMessage: null,
     inputProps: {},
@@ -16,11 +17,11 @@ describe('CardTextField', () => {
 
   // Replace setTimeout with a controlled implementation so we can advance time manually
   beforeEach(() => {
-    jest.useFakeTimers()
+    vi.useFakeTimers()
   })
 
   afterEach(() => {
-    jest.useRealTimers()
+    vi.useRealTimers()
   })
 
   it('should render input field with label and placeholder', () => {
@@ -41,7 +42,7 @@ describe('CardTextField', () => {
   })
 
   it('should call onBlur handler when input loses focus', () => {
-    const onBlurMock = jest.fn()
+    const onBlurMock = vi.fn()
     const propsWithOnBlur = {
       ...defaultProps,
       inputProps: { onBlur: onBlurMock },
@@ -62,7 +63,7 @@ describe('CardTextField', () => {
     const input = getByLabelText('Test Label')
     fireEvent.blur(input)
     // Ignore timout for onBlur
-    act(() => jest.runAllTimers())
+    act(() => vi.runAllTimers())
 
     expect(getByText('Error occurred')).toBeTruthy()
   })

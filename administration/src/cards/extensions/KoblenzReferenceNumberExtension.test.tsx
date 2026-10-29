@@ -1,9 +1,10 @@
 import { fireEvent } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { renderWithOptions } from '../../testing/render'
 import KoblenzReferenceNumberExtension from './KoblenzReferenceNumberExtension'
 
-const mockSetValue = jest.fn()
+const mockSetValue = vi.fn()
 
 describe('KoblenzReferenceNumberExtension', () => {
   describe('Component', () => {

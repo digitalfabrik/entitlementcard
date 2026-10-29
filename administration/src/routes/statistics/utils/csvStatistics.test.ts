@@ -1,4 +1,5 @@
 import { Temporal } from 'temporal-polyfill'
+import { describe, expect, it, vi } from 'vitest'
 
 import { CardStatisticsResultModel } from '../../../graphql'
 import { config as bayernConfig } from '../../../project-configs/bayern/config'
@@ -6,12 +7,12 @@ import { config as nuernbergConfig } from '../../../project-configs/nuernberg/co
 import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import { CsvStatisticsError, csvFileName, generateCsv } from './csvStatistics'
 
-jest.mock('csv-stringify/browser/esm/sync', () => ({
+vi.mock('csv-stringify/browser/esm/sync', () => ({
   stringify: (input: string[][]) => input[0].join(','),
 }))
 
-jest.mock('../../../project-configs/showcase/config')
-const TEST_BLOB_CONSTRUCTOR = jest.fn()
+vi.mock('../../../project-configs/showcase/config')
+const TEST_BLOB_CONSTRUCTOR = vi.fn()
 describe('CSVStatistics', () => {
   const region = getTestRegion({ prefix: 'Stadt' })
   const dateString = '01_02_2023_01_03_2024'
@@ -51,12 +52,13 @@ describe('CSVStatistics', () => {
   })
 
   it('should create a correct csv blob', async () => {
-    jest
-      .spyOn(global, 'Blob')
-      .mockImplementationOnce(
-        (blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob =>
-          TEST_BLOB_CONSTRUCTOR(blobParts, options),
-      )
+    vi.spyOn(global, 'Blob').mockImplementationOnce(
+      class {
+        constructor(blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined) {
+          TEST_BLOB_CONSTRUCTOR(blobParts, options)
+        }
+      } as typeof Blob,
+    )
 
     generateCsv(statisticsData, bayernConfig.cardStatistics)
     expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith(

@@ -1,5 +1,6 @@
 import { toJson } from '@bufbuild/protobuf'
 import { Temporal } from 'temporal-polyfill'
+import { describe, expect, it, vi } from 'vitest'
 
 import { BavariaCardType, CardInfoSchema } from '../card_pb'
 import { Region } from '../graphql'
@@ -30,7 +31,7 @@ import NuernbergPassIdExtension from './extensions/NuernbergPassIdExtension'
 import RegionExtension, { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
 import StartDayExtension from './extensions/StartDayExtension'
 
-jest.useFakeTimers({ now: new Date('2020-01-01') })
+vi.useFakeTimers({ now: new Date('2020-01-01') })
 
 describe('Card', () => {
   const region = getTestRegion({})

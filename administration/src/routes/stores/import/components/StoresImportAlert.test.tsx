@@ -1,7 +1,9 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import { renderWithOptions } from '../../../../testing/render'
 import StoresImportAlert from './StoresImportAlert'
 
-const setDryRun = jest.fn()
+const setDryRun = vi.fn()
 describe('StoresImportAlert', () => {
   it('should show the correct alert information for dry run', () => {
     const { getByTestId, queryByTestId, getByText } = renderWithOptions(

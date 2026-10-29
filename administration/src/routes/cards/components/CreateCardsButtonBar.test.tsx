@@ -1,4 +1,5 @@
 import { act, fireEvent } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { initializeCard } from '../../../cards/card'
 import { config } from '../../../project-configs/bayern/config'
@@ -6,7 +7,7 @@ import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
 
-jest.useFakeTimers()
+vi.useFakeTimers()
 
 const mockProvider: CustomRenderOptions = { translation: true, theme: true }
 
@@ -14,7 +15,7 @@ describe('CreateCardsButtonBar', () => {
   const region = getTestRegion({})
 
   it('Should goBack when clicking back', async () => {
-    const goBack = jest.fn()
+    const goBack = vi.fn()
     const { getByText } = renderWithOptions(
       <CreateCardsButtonBar
         goBack={goBack}
@@ -35,8 +36,8 @@ describe('CreateCardsButtonBar', () => {
   })
 
   it('Should disable generate button for no cards', async () => {
-    const generateCardsPdf = jest.fn()
-    const generateCardsCsv = jest.fn()
+    const generateCardsPdf = vi.fn()
+    const generateCardsCsv = vi.fn()
     const { getByText } = renderWithOptions(
       <CreateCardsButtonBar
         goBack={() => undefined}
@@ -54,7 +55,7 @@ describe('CreateCardsButtonBar', () => {
     fireEvent.mouseOver(generateButton)
     fireEvent.click(generateButton)
     await act(async () => {
-      jest.advanceTimersByTime(100)
+      vi.advanceTimersByTime(100)
     })
 
     expect(getByText('Legen Sie zunächst eine Karte an.')).toBeTruthy()
@@ -62,8 +63,8 @@ describe('CreateCardsButtonBar', () => {
   })
 
   it('Should disable generate button for invalid cards', async () => {
-    const generateCardsPdf = jest.fn()
-    const generateCardsCsv = jest.fn()
+    const generateCardsPdf = vi.fn()
+    const generateCardsCsv = vi.fn()
     const cards = [initializeCard(config.card, region, { fullName: '' })]
     const { getByText } = renderWithOptions(
       <CreateCardsButtonBar
@@ -82,7 +83,7 @@ describe('CreateCardsButtonBar', () => {
     fireEvent.click(generateButton)
 
     await act(async () => {
-      jest.advanceTimersByTime(100)
+      vi.advanceTimersByTime(100)
     })
 
     expect(generateButton.disabled).toBeTruthy()
@@ -91,8 +92,8 @@ describe('CreateCardsButtonBar', () => {
   })
 
   it('Should generate valid cards', async () => {
-    const generateCardsPdf = jest.fn()
-    const generateCardsCsv = jest.fn()
+    const generateCardsPdf = vi.fn()
+    const generateCardsCsv = vi.fn()
     const cards = [initializeCard(config.card, region, { fullName: 'Thea Test' })]
     const { getByText } = renderWithOptions(
       <CreateCardsButtonBar

@@ -1,9 +1,11 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import { config } from '../../../project-configs/nuernberg/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import { activityLogEntries } from '../__mocks__/ActivityLogData'
 import ActivityLogTable from './ActivityLogTable'
 
-jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
+vi.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 
 const mockProvider: CustomRenderOptions = { translation: true, theme: true }
 describe('ActivityLogTable', () => {

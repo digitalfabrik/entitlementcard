@@ -1,12 +1,14 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import { config as nuernbergConfig } from '../../../project-configs/nuernberg/config'
 import { activityLogCardExample } from '../__mocks__/ActivityLogData'
 import { loadActivityLog, saveActivityLog } from './activityLog'
 
-jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
+vi.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 
 describe('ActivityLog', () => {
   it('should save activity log session storage', () => {
-    const setItemSpy = jest.spyOn(Object.getPrototypeOf(sessionStorage), 'setItem')
+    const setItemSpy = vi.spyOn(Object.getPrototypeOf(sessionStorage), 'setItem')
     saveActivityLog(activityLogCardExample)
     expect(setItemSpy).toHaveBeenCalledTimes(1)
     expect(setItemSpy).toHaveBeenCalledWith(
@@ -16,7 +18,7 @@ describe('ActivityLog', () => {
   })
 
   it('should properly load activity log from session storage', () => {
-    const getItemSpy = jest.spyOn(Object.getPrototypeOf(sessionStorage), 'getItem')
+    const getItemSpy = vi.spyOn(Object.getPrototypeOf(sessionStorage), 'getItem')
     saveActivityLog(activityLogCardExample)
     loadActivityLog(nuernbergConfig.card)
     expect(getItemSpy).toHaveBeenCalledWith('activity-log')

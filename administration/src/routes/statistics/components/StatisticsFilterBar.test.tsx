@@ -1,21 +1,22 @@
 import { act, fireEvent } from '@testing-library/react'
 import { Intl } from 'temporal-polyfill'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import { defaultStatisticsRange } from '../constants'
 import StatisticsFilterBar from './StatisticsFilterBar'
 
-jest.useFakeTimers()
+vi.useFakeTimers()
 const dateFormatter = new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' })
 const mockProvider: CustomRenderOptions = {
   localization: true,
   translation: true,
 }
 describe('StatisticFilterBar', () => {
-  const onApplyFilter = jest.fn()
-  const onExportCsv = jest.fn()
+  const onApplyFilter = vi.fn()
+  const onExportCsv = vi.fn()
 
-  beforeEach(jest.resetAllMocks)
+  beforeEach(vi.resetAllMocks)
 
   it('should execute onApplyFilter if filter button was clicked', async () => {
     const { getByText } = renderWithOptions(
@@ -105,7 +106,7 @@ describe('StatisticFilterBar', () => {
     fireEvent.click(applyFilterButton)
 
     await act(async () => {
-      jest.advanceTimersByTime(100)
+      vi.advanceTimersByTime(100)
     })
 
     expect(
@@ -147,7 +148,7 @@ describe('StatisticFilterBar', () => {
     fireEvent.mouseOver(csvExportButton)
     fireEvent.click(csvExportButton)
     await act(async () => {
-      jest.advanceTimersByTime(100)
+      vi.advanceTimersByTime(100)
     })
     expect(getByText('Es sind keine Daten zum Export verfügbar.')).toBeTruthy()
     expect(csvExportButton.closest('button')).toBeDisabled()

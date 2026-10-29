@@ -18,8 +18,8 @@ steps:
       command: mise x -- npm run check-circular-deps
   - run:
       name: Run tests and generate coverage report
-      command: mise x -- npm run test:coverage -- --maxWorkers=1
+      command: mise x -- npm run test:coverage
   - store_artifacts:
-      path: src/coverage
+      path: coverage
       destination: ~/attached_workspace/coverage
   - notify

@@ -1,13 +1,14 @@
 import { act, fireEvent } from '@testing-library/react'
 import { Temporal } from 'temporal-polyfill'
+import { describe, expect, it, vi } from 'vitest'
 
 import { config as koblenzConfig } from '../../project-configs/koblenz/config'
 import { config as nuernbergConfig } from '../../project-configs/nuernberg/config'
 import { CustomRenderOptions, renderWithOptions } from '../../testing/render'
 import BirthdayExtension, { minBirthday } from './BirthdayExtension'
 
-jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
-const setValue = jest.fn()
+vi.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
+const setValue = vi.fn()
 
 const mockProvider: CustomRenderOptions = {
   router: true,
@@ -88,7 +89,7 @@ describe('BirthdayExtension', () => {
       const sectionList = container.querySelector('.MuiPickersSectionList-root')!
       fireEvent.blur(sectionList)
       // Ignore timout for onBlur
-      act(() => jest.runAllTimers())
+      act(() => vi.runAllTimers())
       expect(BirthdayExtension.isValid({ birthday: null })).toBeFalsy()
       expect(getByText('Bitte geben Sie ein gültiges Geburtsdatum an.')).toBeTruthy()
     })

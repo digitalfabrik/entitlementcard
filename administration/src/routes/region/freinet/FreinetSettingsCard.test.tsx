@@ -1,12 +1,13 @@
 import { fireEvent } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { FreinetAgency } from '../../../graphql'
 import { renderWithOptions } from '../../../testing/render'
 import FreinetSettingsCard from './FreinetSettingsCard'
 
 describe('FreinetSettingsCard', () => {
-  const onSave = jest.fn()
-  const setDateTransferActivated = jest.fn()
+  const onSave = vi.fn()
+  const setDateTransferActivated = vi.fn()
   const agencyData: FreinetAgency = {
     agencyId: 908,
     agencyName: 'EAK-Stadt Augsburg',

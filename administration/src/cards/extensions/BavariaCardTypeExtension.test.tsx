@@ -1,4 +1,5 @@
 import { fireEvent } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { renderWithOptions } from '../../testing/render'
 import BavariaCardTypeExtension, {
@@ -8,7 +9,7 @@ import BavariaCardTypeExtension, {
 } from './BavariaCardTypeExtension'
 
 describe('BavariaCardTypeExtension', () => {
-  const mockSetValue = jest.fn()
+  const mockSetValue = vi.fn()
   const defaultProps = {
     value: { bavariaCardType: BAVARIA_CARD_TYPE_STANDARD } as BavariaCardTypeExtensionState,
     setValue: mockSetValue,

@@ -1,5 +1,6 @@
 import { act, fireEvent } from '@testing-library/react'
 import { Temporal } from 'temporal-polyfill'
+import { describe, expect, it, vi } from 'vitest'
 
 import { CustomRenderOptions, renderWithOptions } from '../../testing/render'
 import { formatDateDefaultGerman, plainDateToDaysSinceEpoch } from '../../util/date'
@@ -11,11 +12,11 @@ const mockProvider: CustomRenderOptions = {
   translation: true,
   localization: true,
 }
-jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
+vi.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 
 describe('StartDayExtension', () => {
   describe('Component', () => {
-    const mockSetValue = jest.fn()
+    const mockSetValue = vi.fn()
     const defaultProps = {
       value: { startDay: new Temporal.PlainDate(2024, 1, 1) },
       setValue: mockSetValue,
@@ -53,7 +54,7 @@ describe('StartDayExtension', () => {
       const sectionList = container.querySelector('.MuiPickersSectionList-root')!
       fireEvent.blur(sectionList)
       // Ignore timout for onBlur
-      act(() => jest.runAllTimers())
+      act(() => vi.runAllTimers())
       expect(StartDayExtension.isValid({ startDay: null })).toBeFalsy()
       expect(getByText('Bitte geben Sie ein gültiges Startdatum ein.')).toBeTruthy()
     })
@@ -67,7 +68,7 @@ describe('StartDayExtension', () => {
       const sectionList = container.querySelector('.MuiPickersSectionList-root')!
       fireEvent.blur(sectionList)
       // Ignore timout for onBlur
-      act(() => jest.runAllTimers())
+      act(() => vi.runAllTimers())
       expect(StartDayExtension.isValid({ startDay })).toBeFalsy()
       expect(
         getByText(
@@ -90,7 +91,7 @@ describe('StartDayExtension', () => {
       const sectionList = container.querySelector('.MuiPickersSectionList-root')!
       fireEvent.blur(sectionList)
       // Ignore timout for onBlur
-      act(() => jest.runAllTimers())
+      act(() => vi.runAllTimers())
       expect(StartDayExtension.isValid({ startDay: startDayTooFarInFuture })).toBeFalsy()
       expect(
         getByText(
@@ -119,7 +120,7 @@ describe('StartDayExtension', () => {
       const sectionList = container.querySelector('.MuiPickersSectionList-root')!
       fireEvent.blur(sectionList)
       // Ignore timout for onBlur
-      act(() => jest.runAllTimers())
+      act(() => vi.runAllTimers())
       expect(StartDayExtension.isValid({ startDay })).toBeTruthy()
       expect(queryByTestId('form-alert')).toBeNull()
     })

@@ -1,4 +1,5 @@
 import { fireEvent, waitFor } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   BAVARIA_CARD_TYPE_GOLD,
@@ -16,21 +17,21 @@ import { getTestRegion } from '../../../user-settings/__mocks__/Region'
 import { ENTRY_LIMIT } from '../../constants'
 import ImportCardsInput from './ImportCardsInput'
 
-jest.mock('../../../../Router', () => ({}))
+vi.mock('../../../../Router', () => ({}))
 
-const enqueueSnackbarMock = jest.fn()
-jest.mock('notistack', () => ({
-  ...jest.requireActual('notistack'),
+const enqueueSnackbarMock = vi.fn()
+vi.mock('notistack', async importOriginal => ({
+  ...(await importOriginal<typeof import('notistack')>()),
   useSnackbar: () => ({
     enqueueSnackbar: enqueueSnackbarMock,
   }),
 }))
 
 describe('ImportCardsInput', () => {
-  beforeEach(jest.clearAllMocks)
+  beforeEach(vi.clearAllMocks)
   const region = getTestRegion({})
 
-  const setCards = jest.fn()
+  const setCards = vi.fn()
 
   const renderAndSubmitCardsInput = async (
     projectConfig: ProjectConfig,
@@ -39,11 +40,15 @@ describe('ImportCardsInput', () => {
   ) => {
     const fileReaderMock = {
       // eslint-disable-next-line func-names
-      readAsText: jest.fn(function (this: FileReader, _: Blob) {
+      readAsText: vi.fn(function (this: FileReader, _: Blob) {
         this.onloadend!({ target: { result: csv } } as ProgressEvent<FileReader>)
       }),
     } as unknown as FileReader
-    jest.spyOn(global, 'FileReader').mockReturnValue(fileReaderMock)
+    vi.spyOn(global, 'FileReader').mockImplementation(
+      class {
+        readAsText = fileReaderMock.readAsText
+      } as unknown as typeof FileReader,
+    )
     const file = new File([csv], `${projectConfig.name}.csv`, { type: 'text/csv' })
 
     const { getByTestId } = renderWithOptions(
@@ -128,7 +133,7 @@ Tilo Traber,,gold,test@test.de,98765432
   })
 
   it('should correctly import CSV Card for bayern freinet', async () => {
-    jest.spyOn(URLSearchParams.prototype, 'get').mockReturnValue('true')
+    vi.spyOn(URLSearchParams.prototype, 'get').mockReturnValue('true')
 
     const projectConfig = bayernConfig
     const csv = `
@@ -255,7 +260,7 @@ ${'Thea Test,03.04.2024,12345678\n'.repeat(ENTRY_LIMIT + 1)}
       error: `Die Datei hat mehr als ${ENTRY_LIMIT} Einträge.`,
     },
   ])(`import CSV Card should fail with error '$error'`, async ({ csv, error }) => {
-    const setCards = jest.fn()
+    const setCards = vi.fn()
 
     await renderAndSubmitCardsInput(bayernConfig, csv, setCards)
 

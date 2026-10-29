@@ -1,4 +1,5 @@
 import { create, toBinary } from '@bufbuild/protobuf'
+import { describe, expect, it } from 'vitest'
 
 import { DynamicActivationCodeSchema, QrCodeSchema, StaticVerificationCodeSchema } from '../card_pb'
 import { convertHexmapToUInt8Array, convertProtobufToHexCode, encodeQRCode } from './qrcode'
