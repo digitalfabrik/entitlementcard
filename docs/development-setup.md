@@ -38,8 +38,7 @@
     - **[brew](https://formulae.brew.sh/)** package manager for macOS. Optional but highly recommended.
     - **[XCode](https://apps.apple.com/de/app/xcode/id497799835?mt=12) >= 26.6**
     - **[Ruby](https://www.ruby-lang.org/en/downloads/) >= 4.0.4**
-    - **[Bundler](https://bundler.io/) >= 4.0.10**: for installing cocoapods and other dependencies.
-    - **[cocoapods](https://cocoapods.org/) >= 1.17.0**: for installing the iOS dependencies.
+    - **[Bundler](https://bundler.io/) >= 4.0.10**: for installing fastlane and other dependencies.
 - For developing and building the Android version of the mobile app:
 
   One of:
@@ -95,9 +94,6 @@ the open-source Podman/Podman Compose or classic Docker/Docker Compose.
 #### iOS
 
 - Install gems: `cd ios && bundle install`
-- Install cocoapods: `cd ios && bundle exec pod install --repo-update`
-- *Optional*: install cocoapods globally (only necessary if using IntelliJ run configurations to run on iOS):
-  `brew install cocoapods`
 
 ### Run Frontend
 

@@ -15,12 +15,6 @@ steps:
   - install_app_toolbelt
   - install_flutter_packages:
       precache: ios
-  - install_pods
-  - run:
-      # Rosetta is necessary to build flutter apps on circleci mac m1 images
-      # https://github.com/digitalfabrik/entitlementcard/pull/2001#discussion_r2010122708
-      name: Install rosetta
-      command: softwareupdate --install-rosetta --agree-to-license
   - run:
       name: '[FL] Build'
       working_directory: ~/project/frontend/ios
