@@ -20,9 +20,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.1
 
-      - uses: jdx/mise-action@v4.0.1
+      - uses: jdx/mise-action@v5.2.2
         with:
           version: v2026.10.21
           cache: false
@@ -69,9 +69,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.1
 
-      - uses: jdx/mise-action@v4.0.1
+      - uses: jdx/mise-action@v5.2.2
         with:
           version: v2026.5.12
           cache: false
