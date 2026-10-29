@@ -5,7 +5,6 @@ import java.nio.file.Paths
 
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
     id("dev.flutter.flutter-gradle-plugin")
     id("idea")
 }
@@ -41,7 +40,8 @@ android {
     }
 
     defaultConfig {
-        minSdk = flutter.minSdkVersion
+        // Required for sentry v10
+        minSdk = 26
         targetSdk = 37
         multiDexEnabled = true
         versionCode = flutter.versionCode

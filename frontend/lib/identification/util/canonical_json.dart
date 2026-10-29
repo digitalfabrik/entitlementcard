@@ -1,4 +1,5 @@
 import 'dart:collection';
+
 import 'package:protobuf/protobuf.dart';
 
 extension CanonicalJson on GeneratedMessage {

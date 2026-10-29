@@ -6,8 +6,8 @@ description: App for entitlementcard holders and verifiers.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: 3.12.2
-  flutter: 3.44.9
+  sdk: 3.13.7
+  flutter: 3.47.8
 
 dependencies:
   flutter:
@@ -17,7 +17,7 @@ dependencies:
     sdk: flutter
   intl: ^0.20.2
   mutex: ^3.1.0
-  maplibre_gl: ^0.27.0
+  maplibre_gl: ^0.27.1
   provider: ^6.1.5
   graphql_flutter: ^5.3.0
   url_launcher: ^6.3.2
@@ -41,7 +41,7 @@ dependencies:
   crypto: ^3.0.7
   shared_preferences: ^2.5.5
   tinycolor2: ^3.0.1
-  sentry_flutter: ^9.28.0
+  sentry_flutter: ^10.2.0
   carousel_slider: ^5.1.2
   slang: ^4.19.0
   slang_flutter: ^4.19.0

@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:ehrenamtskarte/app.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/home/home_page.dart';
@@ -158,9 +159,8 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                               setState(() {
                                 _state = _State.waiting;
                               });
-                              ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(SnackBar(content: Text(t.common.unknownError)));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(content: Text(t.common.unknownError)));
                               rethrow;
                             }
                           }
@@ -233,15 +233,15 @@ DynamicActivationCode? getActivationCode(
       const Base64Decoder().convert(Uri.decodeComponent(sanitizedBase64QrCode)),
     );
     return activationCode;
-  } on CardExpiredException catch (e, _) {
+  } on CardExpiredException catch (e) {
     updateErrorMessage(
       t.deeplinkActivation.cardExpiredExceptionMessage(expiryDate: DateFormat('dd.MM.yyyy').format(e.expiry)),
     );
     return null;
-  } on QrCodeParseException catch (e, _) {
+  } on QrCodeParseException {
     updateErrorMessage(t.deeplinkActivation.qrCodeParseExceptionMessage);
     return null;
-  } on FormatException catch (e, _) {
+  } on FormatException {
     updateErrorMessage(t.deeplinkActivation.formatExceptionMessage);
     return null;
   }
