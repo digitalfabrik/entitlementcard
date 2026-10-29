@@ -36,5 +36,6 @@ object MigrationsRegistry {
             V0031_AddAcceptingStoreDescriptionsTable(),
             V0032_AddUniqueIndexForAcceptingStoreDescriptionsTable(),
             V0033_AddIndexOnCardsEntitlementId(),
+            V0034_AddAvailableCardFormatsToRegions(),
         )
 }

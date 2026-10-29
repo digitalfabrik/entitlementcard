@@ -2,10 +2,12 @@ mutation updateRegionSettings(
   $regionId: Int!
   $activatedForApplication: Boolean!
   $activatedForConfirmationMail: Boolean!
+  $availableCardFormats: AvailableCardFormats!
 ) {
   result: updateRegionSettings(
     regionId: $regionId
     activatedForApplication: $activatedForApplication
     activatedForConfirmationMail: $activatedForConfirmationMail
+    availableCardFormats: $availableCardFormats
   )
 }

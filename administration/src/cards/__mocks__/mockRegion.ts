@@ -1,4 +1,4 @@
-import { Region } from '../../graphql'
+import { AvailableCardFormats, Region } from '../../graphql'
 
 export const mockRegion: Region = {
   id: 123,
@@ -8,6 +8,7 @@ export const mockRegion: Region = {
   activatedForCardConfirmationMail: true,
   applicationConfirmationMailNoteActivated: false,
   applicationConfirmationMailNote: null,
+  availableCardFormats: AvailableCardFormats.DigitalAndPhysical,
   dataPrivacyPolicy: null,
   regionIdentifier: null,
 }

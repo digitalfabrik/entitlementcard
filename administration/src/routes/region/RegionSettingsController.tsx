@@ -1,16 +1,22 @@
 import { useSnackbar } from 'notistack'
-import { ReactElement } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'urql'
 
 import { messageFromGraphQlError } from '../../errors'
-import { GetRegionSettingsByIdDocument, UpdateRegionSettingsDocument } from '../../graphql'
+import {
+  AvailableCardFormats,
+  GetRegionSettingsByIdDocument,
+  UpdateRegionSettingsDocument,
+} from '../../graphql'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getQueryResult from '../../util/getQueryResult'
 import RegionSettingsCard from './components/RegionSettingsCard'
 
 const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElement => {
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('regionSettings')
+  const { applicationFeature } = useContext(ProjectConfigContext)
   const [regionSettingsState, regionSettingsQuery] = useQuery({
     query: GetRegionSettingsByIdDocument,
     variables: { regionId },
@@ -28,11 +34,13 @@ const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElem
   const onSave = async (
     activatedForApplication: boolean,
     activatedForConfirmationMail: boolean,
+    availableCardFormats: AvailableCardFormats,
   ) => {
     const result = await updateRegionSettingsMutation({
       regionId,
       activatedForApplication,
       activatedForConfirmationMail,
+      availableCardFormats,
     })
 
     if (result.error) {
@@ -43,7 +51,7 @@ const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElem
     }
   }
 
-  const { activatedForApplication, activatedForCardConfirmationMail } =
+  const { activatedForApplication, activatedForCardConfirmationMail, availableCardFormats } =
     regionSettingsByIdQueryResult.data.result
 
   return (
@@ -52,6 +60,8 @@ const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElem
       loading={updateRegionSettingsState.fetching}
       defaultApplicationActivation={activatedForApplication}
       defaultConfirmationMailActivation={activatedForCardConfirmationMail}
+      defaultAvailableCardFormats={availableCardFormats}
+      showAvailableCardFormats={applicationFeature !== undefined}
     />
   )
 }

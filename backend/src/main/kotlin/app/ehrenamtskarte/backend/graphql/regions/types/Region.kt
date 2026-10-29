@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.regions.types
 
+import app.ehrenamtskarte.backend.db.entities.AvailableCardFormats
 import app.ehrenamtskarte.backend.db.entities.RegionEntity
 
 data class Region(
@@ -12,6 +13,7 @@ data class Region(
     val activatedForCardConfirmationMail: Boolean,
     val applicationConfirmationMailNoteActivated: Boolean,
     val applicationConfirmationMailNote: String?,
+    val availableCardFormats: AvailableCardFormats,
 ) {
     companion object {
         fun fromEntity(entity: RegionEntity): Region =
@@ -25,6 +27,7 @@ data class Region(
                 entity.activatedForCardConfirmationMail,
                 entity.applicationConfirmationMailNoteActivated,
                 entity.applicationConfirmationMailNote,
+                entity.availableCardFormats,
             )
     }
 }

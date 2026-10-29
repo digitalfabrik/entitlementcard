@@ -1,4 +1,4 @@
-import { Region } from '../../../graphql'
+import { AvailableCardFormats, Region } from '../../../graphql'
 
 export const getTestRegion = (options: {
   id?: number
@@ -8,6 +8,7 @@ export const getTestRegion = (options: {
   activatedForCardConfirmationMail?: boolean
   applicationConfirmationMailNoteActivated?: boolean
   applicationConfirmationMailNote?: string
+  availableCardFormats?: AvailableCardFormats
 }): Region => ({
   id: options.id ?? 0,
   name: options.name ?? 'Augsburg',
@@ -17,6 +18,7 @@ export const getTestRegion = (options: {
   applicationConfirmationMailNoteActivated:
     options.applicationConfirmationMailNoteActivated ?? false,
   applicationConfirmationMailNote: options.applicationConfirmationMailNote ?? null,
+  availableCardFormats: options.availableCardFormats ?? AvailableCardFormats.DigitalAndPhysical,
   dataPrivacyPolicy: null,
   regionIdentifier: null,
 })
