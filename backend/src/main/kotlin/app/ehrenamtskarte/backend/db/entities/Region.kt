@@ -7,6 +7,7 @@ import org.jetbrains.exposed.v1.dao.IntEntityClass
 
 const val PRIVACY_POLICY_MAX_CHARS = 20000
 const val APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS = 1000
+const val CONTACT_INFORMATION_MAX_CHARS = 500
 
 object Regions : IntIdTable() {
     val projectId = reference("projectId", Projects)
@@ -22,6 +23,8 @@ object Regions : IntIdTable() {
         "applicationConfirmationMailNote",
         APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS,
     ).nullable()
+    val contactInformationActivated = bool("contactInformationActivated").default(false)
+    val contactInformation = varchar("contactInformation", CONTACT_INFORMATION_MAX_CHARS).nullable()
 
     init {
         uniqueIndex("unique_projectid_regionidentifier", projectId, regionIdentifier)
@@ -41,4 +44,11 @@ class RegionEntity(id: EntityID<Int>) : IntEntity(id) {
     var activatedForCardConfirmationMail by Regions.activatedForCardConfirmationMail
     var applicationConfirmationMailNoteActivated by Regions.applicationConfirmationMailNoteActivated
     var applicationConfirmationMailNote by Regions.applicationConfirmationMailNote
+    var contactInformationActivated by Regions.contactInformationActivated
+    var contactInformation by Regions.contactInformation
+
+    val activeApplicationConfirmationMailNote: String?
+        get() = applicationConfirmationMailNote.takeIf { applicationConfirmationMailNoteActivated }
+    val activeContactInformation: String?
+        get() = contactInformation.takeIf { contactInformationActivated }
 }

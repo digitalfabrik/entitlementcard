@@ -1,0 +1,6 @@
+query getContactInformation($regionId: Int!) {
+  region: regionByRegionId(regionId: $regionId) {
+    contactInformationActivated
+    contactInformation
+  }
+}

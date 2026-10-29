@@ -7,6 +7,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
 } from '@mui/material'
 import { OverridableStringUnion } from '@mui/types'
 import { ReactElement, ReactNode, useId } from 'react'
@@ -27,6 +28,8 @@ const ConfirmDialog = ({
   maxWidth = 'sm',
   showCancelButton = true,
   closeOnConfirm = true,
+  showCloseIcon = false,
+  fillHeight = false,
 }: {
   actionDisabled?: boolean
   loading?: boolean
@@ -44,6 +47,9 @@ const ConfirmDialog = ({
   >
   showCancelButton?: boolean
   closeOnConfirm?: boolean
+  showCloseIcon?: boolean
+  /** Lets the dialog take the available height, children can fill the remaining space using flex */
+  fillHeight?: boolean
   maxWidth?: Breakpoint
 }): ReactElement => {
   const { t } = useTranslation('misc')
@@ -57,9 +63,24 @@ const ConfirmDialog = ({
       onClose={onClose}
       maxWidth={maxWidth}
       aria-describedby={contentId}
+      slotProps={{ paper: { sx: fillHeight ? { height: 'min(100%, 900px)' } : undefined } }}
     >
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent id={contentId}>{children}</DialogContent>
+      <DialogTitle sx={showCloseIcon ? { paddingRight: 7 } : undefined}>{title}</DialogTitle>
+      {showCloseIcon && (
+        <IconButton
+          aria-label={t('close')}
+          onClick={onClose}
+          sx={{ position: 'absolute', right: 8, top: 8 }}
+        >
+          <Close />
+        </IconButton>
+      )}
+      <DialogContent
+        id={contentId}
+        sx={fillHeight ? { display: 'flex', flexDirection: 'column' } : undefined}
+      >
+        {children}
+      </DialogContent>
       <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
         {showCancelButton && (
           <Button onClick={onClose} variant='outlined' startIcon={<Close />}>

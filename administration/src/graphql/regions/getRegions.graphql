@@ -8,6 +8,8 @@ query getRegions($project: String!) {
     activatedForCardConfirmationMail
     applicationConfirmationMailNoteActivated
     applicationConfirmationMailNote
+    contactInformationActivated
+    contactInformation
     dataPrivacyPolicy
   }
 }

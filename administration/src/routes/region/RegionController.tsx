@@ -9,6 +9,7 @@ import { useWhoAmI } from '../../provider/WhoAmIProvider'
 import RegionSettingsController from './RegionSettingsController'
 import ApplicationConfirmationNoteController from './application-confirmation-note/ApplicationConfirmationNoteController'
 import DataPrivacyCard from './components/DataPrivacyCard'
+import ContactInformationController from './contact-information/ContactInformationController'
 import FreinetSettingsController from './freinet/FreinetSettingsController'
 
 const RegionController = (): ReactElement => {
@@ -37,6 +38,7 @@ const RegionController = (): ReactElement => {
           <DataPrivacyCard />
           <RegionSettingsController regionId={region.id} />
           <ApplicationConfirmationNoteController regionId={region.id} />
+          <ContactInformationController regionId={region.id} />
           {freinetDataTransferEnabled && <FreinetSettingsController regionId={region.id} />}
         </Stack>
       )}

@@ -104,6 +104,8 @@ describe('Card', () => {
       activatedForCardConfirmationMail: true,
       applicationConfirmationMailNoteActivated: false,
       applicationConfirmationMailNote: null,
+      contactInformationActivated: false,
+      contactInformation: null,
       dataPrivacyPolicy: null,
       regionIdentifier: null,
     }

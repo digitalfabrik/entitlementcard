@@ -71,4 +71,38 @@ describe('TextAreaDialog', () => {
     const { getByPlaceholderText } = renderTextDialog({ maxChars: 10, defaultText: null })
     expect(getByPlaceholderText(placeholderText)).toBeTruthy()
   })
+
+  it('should not show tabs if no preview was provided', () => {
+    const { queryByRole } = renderTextDialog({ defaultText })
+    expect(queryByRole('tab')).toBeNull()
+  })
+
+  it('should render the preview of the current text in the preview tab', () => {
+    const { getByText, getByDisplayValue, getByRole, getByLabelText, queryByText } =
+      renderWithOptions(
+        <TextAreaDialog
+          title='Show note'
+          loading={false}
+          defaultText={defaultText}
+          placeholder={placeholderText}
+          isOpen
+          onClose={onClose}
+          onSave={onSave}
+          preview={{ label: 'Vorschau', render: text => <span>Vorschau von {text}</span> }}
+        />,
+        { translation: true },
+      )
+    fireEvent.change(getByDisplayValue(defaultText), { target: { value: 'Neuer Text' } })
+    fireEvent.click(getByRole('tab', { name: 'Vorschau' }))
+
+    expect(getByText('Vorschau von Neuer Text')).toBeTruthy()
+
+    fireEvent.click(getByRole('tab', { name: 'Bearbeiten' }))
+    expect(queryByText('Vorschau von Neuer Text')).toBeNull()
+    expect(getByDisplayValue('Neuer Text')).toBeTruthy()
+
+    // The close icon is labeled, the cancel button only has a text
+    fireEvent.click(getByLabelText('Schließen'))
+    expect(onClose).toHaveBeenCalled()
+  })
 })

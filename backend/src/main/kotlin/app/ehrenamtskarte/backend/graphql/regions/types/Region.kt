@@ -12,6 +12,8 @@ data class Region(
     val activatedForCardConfirmationMail: Boolean,
     val applicationConfirmationMailNoteActivated: Boolean,
     val applicationConfirmationMailNote: String?,
+    val contactInformationActivated: Boolean,
+    val contactInformation: String?,
 ) {
     companion object {
         fun fromEntity(entity: RegionEntity): Region =
@@ -25,6 +27,8 @@ data class Region(
                 entity.activatedForCardConfirmationMail,
                 entity.applicationConfirmationMailNoteActivated,
                 entity.applicationConfirmationMailNote,
+                entity.contactInformationActivated,
+                entity.contactInformation,
             )
     }
 }

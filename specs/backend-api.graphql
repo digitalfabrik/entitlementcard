@@ -248,6 +248,8 @@ type Mutation {
   updateApplicationConfirmationNote(applicationConfirmationNote: String!, applicationConfirmationNoteActivated: Boolean!, regionId: Int!): Boolean!
   "Updates a note of an application"
   updateApplicationNote(applicationId: Int!, noteText: String!): Boolean!
+  "Updates the contact information that is appended to mails sent to applicants"
+  updateContactInformation(contactInformation: String!, contactInformationActivated: Boolean!, regionId: Int!): Boolean!
   "Updates the data privacy policy of a region"
   updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
   "Updates the data transfer to freinet. Works only for the EAK project."
@@ -289,6 +291,8 @@ type Query {
   getApplicationByApplicant(accessKey: String!): ApplicationApplicant!
   "Queries an application by application verification accessKey"
   getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String!): ApplicationVerifier!
+  "Returns the HTML of the mail that is sent to the applicant after submitting an application, filled with example data. The given application confirmation note is included if it is activated and not blank."
+  getApplicationConfirmationMailPreview(applicationConfirmationNote: String!, applicationConfirmationNoteActivated: Boolean!, regionId: Int!): String!
   "Queries an application verification by application verification accessKey"
   getApplicationVerification(applicationVerificationAccessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"
@@ -297,6 +301,8 @@ type Query {
   getCardStatisticsInProject(dateEnd: String!, dateStart: String!): [CardStatisticsResultModel!]!
   "Returns card statistics for region. Start and end dates are inclusive."
   getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, regionId: Int!): [CardStatisticsResultModel!]!
+  "Returns the HTML of the mail that is sent to the applicant after submitting an application, filled with example data. The given contact information is included if it is activated and not blank."
+  getContactInformationMailPreview(contactInformation: String!, contactInformationActivated: Boolean!, regionId: Int!): String!
   "Returns freinet agency information for a particular region. Works only for the EAK project."
   getFreinetAgencyByRegionId(regionId: Int!): FreinetAgency
   "Get the pepper for Koblenz user hashing"
@@ -334,6 +340,8 @@ type Region {
   activatedForCardConfirmationMail: Boolean!
   applicationConfirmationMailNote: String
   applicationConfirmationMailNoteActivated: Boolean!
+  contactInformation: String
+  contactInformationActivated: Boolean!
   dataPrivacyPolicy: String
   id: Int!
   name: String!
@@ -422,6 +430,7 @@ enum GraphQLExceptionCode {
   INVALID_APPLICATION_STATUS
   INVALID_CARD_HASH
   INVALID_CODE_TYPE
+  INVALID_CONTACT_INFORMATION_SIZE
   INVALID_CREDENTIALS
   INVALID_DATA_POLICY_SIZE
   INVALID_FILE_SIZE
