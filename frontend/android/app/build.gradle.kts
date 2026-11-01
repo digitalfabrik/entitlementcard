@@ -177,7 +177,7 @@ flutter {
 }
 
 dependencies {
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.12.0")
 }
 
 /** Add checks verifying that the correct build config is used for the specified flavor. */
