@@ -101,7 +101,7 @@ internal class ContactInformationTest : IntegrationTest() {
     }
 
     @Test
-    fun `should include the contact information in the preview only if it is activated and not blank`() {
+    fun `should include the contact information in the preview if activated and not blank, otherwise the fallback`() {
         val token = TestAdministrators.EAK_REGION_ADMIN.getJwtToken()
 
         val htmlWithContact = postGraphQL(createPreviewQuery(16, contactInformation, true), token)
@@ -117,6 +117,9 @@ internal class ContactInformationTest : IntegrationTest() {
         )
         assertFalse(htmlWithDeactivatedContact.contains("Ehrenamtsbüro Augsburg"))
         assertFalse(htmlWithBlankContact.contains("zuständige Stelle"))
+        assertFalse(htmlWithContact.contains("örtliche Landratsamt"))
+        assertTrue(htmlWithDeactivatedContact.contains("örtliche Landratsamt"))
+        assertTrue(htmlWithBlankContact.contains("örtliche Landratsamt"))
     }
 
     private fun createMutation(

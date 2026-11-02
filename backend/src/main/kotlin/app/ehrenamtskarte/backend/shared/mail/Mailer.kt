@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.config.SmtpConfig
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
@@ -89,6 +90,12 @@ class Mailer(
         projectConfig: ProjectConfig,
         applicationVerification: ApplicationVerificationEntity,
     ) {
+        val contactInformation = transaction {
+            ApplicationEntity.findById(applicationVerification.applicationId)
+                ?.let { RegionEntity.findById(it.regionId) }
+                ?.activeContactInformation
+        }
+
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
@@ -120,6 +127,7 @@ class Mailer(
                     )
                 }
                 finalInformationParagraph(projectConfig)
+                contactInformationParagraphs(contactInformation)
             },
         )
     }
@@ -221,13 +229,8 @@ class Mailer(
                     link(reviewApplicationLink(projectConfig, accessKey))
                 }
                 applicationConfirmationNoteParagraph(applicationConfirmationNote)
-                p {
-                    t(
-                        "Bei Rückfragen wenden Sie sich bitte direkt an Ihr zuständiges Landratsamt oder die " +
-                            "Verwaltung Ihrer kreisfreien Stadt.",
-                    )
-                }
-                finalInformationParagraph(projectConfig, contactInformation)
+                finalInformationParagraph(projectConfig)
+                contactInformationParagraphs(contactInformation)
             },
         )
     }
@@ -319,7 +322,8 @@ class Mailer(
                             "das alle notwendigen Informationen enthält.",
                     )
                 }
-                finalInformationParagraph(projectConfig, contactInformation)
+                finalInformationParagraph(projectConfig)
+                contactInformationParagraphs(contactInformation)
             },
         )
     }
@@ -352,7 +356,8 @@ class Mailer(
                     )
                 }
                 p { plain(rejectionMessage) }
-                finalInformationParagraph(projectConfig, contactInformation)
+                finalInformationParagraph(projectConfig)
+                contactInformationParagraphs(contactInformation)
             },
         )
     }
@@ -369,11 +374,7 @@ fun <T> collectMailErrors(items: List<T>, send: (T) -> Unit): List<GraphQLError>
         }
     }
 
-private fun EmailBody.finalInformationParagraph(
-    projectConfig: ProjectConfig,
-    contactInformation: String? = null,
-    highlightContactInformation: Boolean = false,
-) {
+private fun EmailBody.finalInformationParagraph(projectConfig: ProjectConfig) {
     p {
         t(
             "Bitte beachten Sie, dass dies eine automatisierte Nachricht ist. " +
@@ -386,7 +387,6 @@ private fun EmailBody.finalInformationParagraph(
         br()
         plain(projectConfig.emailSignature)
     }
-    contactInformationParagraphs(contactInformation, highlightContactInformation)
 }
 
 private fun EmailBody.adjustNotificationsParagraph(projectConfig: ProjectConfig) {
@@ -432,6 +432,16 @@ private fun applicationApplicantMailBody(
             link(reviewApplicationLink(projectConfig, accessKey))
         }
         applicationConfirmationNoteParagraph(applicationConfirmationNote, highlightCustomTexts)
+        finalInformationParagraph(projectConfig)
+        contactInformationParagraphs(contactInformation, highlightCustomTexts)
+    }
+
+/**
+ * Adds the contact information of the region. If none is set, a generic hint to contact the local administration is
+ * added instead.
+ */
+private fun EmailBody.contactInformationParagraphs(contactInformation: String?, highlighted: Boolean = false) {
+    if (contactInformation.isNullOrBlank()) {
         p {
             t(
                 "Falls Sie Fragen zu Ihrem Antrag haben oder Unterstützung benötigen, " +
@@ -439,11 +449,7 @@ private fun applicationApplicantMailBody(
                     "kreisfreien Stadt.",
             )
         }
-        finalInformationParagraph(projectConfig, contactInformation, highlightCustomTexts)
-    }
-
-private fun EmailBody.contactInformationParagraphs(contactInformation: String?, highlighted: Boolean = false) {
-    if (!contactInformation.isNullOrBlank()) {
+    } else {
         p { t("Bei Fragen zu Ihrem Antrag wenden Sie sich bitte direkt an die zuständige Stelle:") }
         p(highlighted) {
             plain(contactInformation)
