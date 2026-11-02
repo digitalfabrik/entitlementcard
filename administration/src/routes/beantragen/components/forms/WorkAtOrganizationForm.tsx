@@ -16,9 +16,9 @@ import {
 import { Form, FormComponentProps } from '../../util/formType'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import DateForm from '../primitive-inputs/DateForm'
-import { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
 import NumberForm from '../primitive-inputs/NumberForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import ActivityVerificationForm from './ActivityVerificationForm'
 import OrganizationForm from './OrganizationForm'
 
 const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
@@ -55,7 +55,7 @@ const SubForms = {
   workSinceDate: DateForm,
   payment: CheckboxForm,
   responsibility: ShortTextForm,
-  certificate: OptionalFileInputForm,
+  verification: ActivityVerificationForm,
 }
 
 type State = CompoundState<typeof SubForms>
@@ -70,10 +70,20 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
       payment: paymentOptions,
       workSinceDate: { maximumDate: undefined },
     })(state)
+    if (result.type === 'error') {
+      return result
+    }
+    const { organization, verification, ...activity } = result.value
 
-    return result.type === 'error'
-      ? result
-      : { type: 'valid', value: { ...result.value, isAlreadyVerified: null } }
+    return {
+      type: 'valid',
+      value: {
+        ...activity,
+        organization: { ...organization, contact: verification.contact },
+        certificate: verification.certificate,
+        isAlreadyVerified: null,
+      },
+    }
   },
   Component: ({
     state,
@@ -116,7 +126,6 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
         <SubForms.organization.Component
           state={state.organization}
           setState={useUpdateStateCallback(setState, 'organization')}
-          applicantName={applicantName}
         />
         <SubForms.payment.Component
           state={state.payment}
@@ -124,15 +133,10 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
           label={t('payment')}
           options={paymentOptions}
         />
-        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
-          {t('applicationForms:certificateHeadline')}
-        </Typography>
-        <Typography component='p'>
-          {t('applicationForms:certificateDescription')} {FileRequirementsText}
-        </Typography>
-        <SubForms.certificate.Component
-          state={state.certificate}
-          setState={useUpdateStateCallback(setState, 'certificate')}
+        <SubForms.verification.Component
+          state={state.verification}
+          setState={useUpdateStateCallback(setState, 'verification')}
+          applicantName={applicantName}
         />
       </>
     )

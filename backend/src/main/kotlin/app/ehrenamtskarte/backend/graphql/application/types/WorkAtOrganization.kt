@@ -13,6 +13,10 @@ data class WorkAtOrganization(
     val certificate: Attachment?,
     val isAlreadyVerified: Boolean?,
 ) : JsonFieldSerializable {
+    init {
+        organization.requireContactOrCertificate(certificate)
+    }
+
     override fun toJsonField(): JsonField =
         JsonField(
             "workAtOrganization",

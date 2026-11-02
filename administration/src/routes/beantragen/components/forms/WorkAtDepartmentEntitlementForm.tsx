@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
 import CustomDivider from '../../../../components/CustomDivider'
@@ -12,14 +12,14 @@ import {
   createCompoundValidate,
 } from '../../util/compoundFormUtils'
 import { Form, FormComponentProps } from '../../util/formType'
-import { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import ActivityVerificationForm from './ActivityVerificationForm'
 import OrganizationForm from './OrganizationForm'
 
 const SubForms = {
   organization: OrganizationForm,
   responsibility: ShortTextForm,
-  certificate: OptionalFileInputForm,
+  verification: ActivityVerificationForm,
 }
 
 type State = CompoundState<typeof SubForms>
@@ -32,7 +32,21 @@ const WorkAtDepartmentEntitlementForm: Form<
 > = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: createCompoundValidate(SubForms, {}),
+  validate: state => {
+    const result = createCompoundValidate(SubForms, {})(state)
+    if (result.type === 'error') {
+      return result
+    }
+    const { organization, verification, responsibility } = result.value
+    return {
+      type: 'valid',
+      value: {
+        responsibility,
+        organization: { ...organization, contact: verification.contact },
+        certificate: verification.certificate,
+      },
+    }
+  },
   Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => {
     const { t } = useTranslation('applicationForms')
     return (
@@ -48,17 +62,11 @@ const WorkAtDepartmentEntitlementForm: Form<
         <SubForms.organization.Component
           state={state.organization}
           setState={useUpdateStateCallback(setState, 'organization')}
-          applicantName={applicantName}
         />
-        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
-          {t('certificateHeadline')}
-        </Typography>
-        <Typography component='p'>
-          {t('certificateDescription')} {FileRequirementsText}
-        </Typography>
-        <SubForms.certificate.Component
-          state={state.certificate}
-          setState={useUpdateStateCallback(setState, 'certificate')}
+        <SubForms.verification.Component
+          state={state.verification}
+          setState={useUpdateStateCallback(setState, 'verification')}
+          applicantName={applicantName}
         />
       </>
     )
