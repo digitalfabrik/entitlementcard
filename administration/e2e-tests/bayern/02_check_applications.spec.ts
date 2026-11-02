@@ -31,14 +31,10 @@ test.describe('Bayern regional admin', () => {
     await expectVisible(item, 'Postleitzahl: 123123')
     await expectVisible(item, 'Land: Deutschland')
     await expectVisible(item, 'Einsatzgebiet: Sport')
-    await expectVisible(item, 'Kontaktperson der Organisation')
-    await expectVisible(item, 'Vor- und Nachname der Kontaktperson in der Organisation: person 1')
-    await expectVisible(item, 'Telefon: 123456789')
-    await expectVisible(item, 'E-Mail-Adresse: test@outlook.com')
-    await expectVisible(
-      item,
-      'Die Kontaktperson hat der Weitergabe ihrer Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden: Ja',
-    )
+    await expect(item.getByText('Kontaktperson der Organisation', { exact: true })).toHaveCount(0)
+    await expectVisible(item, 'Tätigkeitsnachweis: Anhang 1(siehe Anhang 1)')
+    await expectVisible(item, 'Bestätigung(en) durch Organisationen:')
+    await expectVisible(item, '(keine)')
   }
 
   const organizationInfoTest2 = async item => {
@@ -68,7 +64,7 @@ test.describe('Bayern regional admin', () => {
       item,
       'Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt, die über den jährlichen Freibetrag hinaus geht (840 Euro Ehrenamtspauschale bzw. 3000 Euro Übungsleiterpauschale): Nein',
     )
-    await expectVisible(item, 'Tätigkeitsnachweis: Anhang 1(siehe Anhang 1)')
+    await expect(item.getByText(/^Tätigkeitsnachweis:/)).toHaveCount(0)
     await expectVisible(
       item,
       'Der Antrag wurde direkt von der Organisation/Verein gestellt (z. B. über Drittanbietersoftware verein360).: Nein',
