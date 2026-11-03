@@ -641,7 +641,7 @@ input OrganizationContactInput {
 input OrganizationInput {
   address: AddressInput!
   category: ShortTextInput!
-  contact: OrganizationContactInput!
+  contact: OrganizationContactInput
   name: ShortTextInput!
 }
 

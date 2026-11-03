@@ -52,23 +52,24 @@ test.describe('Bayern testing', () => {
     await expect(page.getByRole('textbox', { name: 'Land' })).toHaveValue('Deutschland')
     await page.getByRole('combobox', { name: 'Einsatzgebiet' }).click()
     await page.getByRole('option', { name: 'Sport' }).click()
-    await expect(page.locator('form')).toContainText('Kontaktperson der Organisation')
-    await expect(page.locator('form')).toContainText(
-      'Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.',
-    )
+    await expect(page.getByText('Für diese ehrenamtliche Tä')).toBeVisible()
+
+    await expect(page.getByRole('heading', { name: 'Nachweis der Tätigkeit' })).toBeVisible()
+    await expect(
+      page.getByRole('radio', { name: 'Bestätigung durch eine Kontaktperson der Organisation' }),
+    ).toBeChecked()
+    await expect(
+      page.getByText(
+        'Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.',
+      ),
+    ).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Datei Anhängen' })).toBeHidden()
     await page.getByRole('textbox', { name: 'Vor- und Nachname der' }).fill('John doe 2')
     await page.getByRole('textbox', { name: 'E-Mail-Adresse', exact: true }).fill('test@gmail.com')
     await page.getByRole('textbox', { name: 'E-Mail-Adresse wiederholen' }).fill('test@gmail.com')
     await page.getByRole('textbox', { name: 'Telefon' }).fill('123456798')
     await page.getByRole('checkbox', { name: 'Die Kontaktperson hat der' }).check()
     await expect(page.getByText('Die Kontaktperson hat der')).toBeVisible()
-    await expect(page.getByText('Für diese ehrenamtliche Tä')).toBeVisible()
-
-    await expect(page.locator('form').first()).toContainText('Tätigkeitsnachweis')
-    await expect(page.locator('form')).toContainText(
-      'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.',
-    )
-    await testImageFileSelection(page, 'Datei Anhängen')
     await expect(page.getByRole('button', { name: 'Weitere Tätigkeit hinzufügen' })).toBeVisible()
   }
 
@@ -84,26 +85,21 @@ test.describe('Bayern testing', () => {
     await expect(page.getByRole('textbox', { name: 'Land' })).toHaveValue('Deutschland')
     await page.getByRole('combobox', { name: 'Einsatzgebiet' }).click()
     await page.getByRole('option', { name: 'Sport' }).click()
-    await page.getByRole('textbox', { name: 'Vor- und Nachname der' }).fill('person 1')
-    await page
-      .getByRole('textbox', { name: 'E-Mail-Adresse', exact: true })
-      .fill('test@outlook.com')
-    await page
-      .getByRole('textbox', { name: 'E-Mail-Adresse wiederholen', exact: true })
-      .fill('test@outlook.com')
-    await page.getByRole('textbox', { name: 'Telefon' }).fill('123456789')
-    await expect(page.locator('form')).toContainText(
-      'Die Kontaktperson hat der Weitergabe ihrer Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden *',
-    )
-    await page.getByRole('checkbox', { name: 'Die Kontaktperson hat der' }).check()
     await page
       .getByRole('textbox', { name: 'Funktion oder Tätigkeit' })
       .fill('activity about activity')
-    await expect(page.locator('form')).toContainText('Tätigkeitsnachweis')
-    await expect(page.locator('form')).toContainText(
-      'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.',
-    )
-    await testImageFileSelection(page, 'Datei Anhängen')
+
+    await expect(page.getByRole('heading', { name: 'Nachweis der Tätigkeit' })).toBeVisible()
+    await page
+      .getByRole('radio', { name: 'Hochladen eines Tätigkeitsnachweises der Organisation' })
+      .check()
+    await expect(page.getByRole('textbox', { name: 'Vor- und Nachname der' })).toBeHidden()
+    await expect(
+      page.getByText(
+        'Bitte hängen Sie hier einen eingescannten oder abfotografierten Tätigkeitsnachweis der Organisation an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.',
+      ),
+    ).toBeVisible()
+    await testImageFileSelection(page, 'Datei Anhängen *')
   }
 
   const personalInfo = async (page: Page, browserName) => {
