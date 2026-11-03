@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import BaseCheckbox from '../../../components/BaseCheckbox'
 import TextAreaDialog from '../../../components/TextAreaDialog'
-import { GraphQlExceptionCode } from '../../../graphql'
 
 export type MailTextSettingTexts = {
   headline: string
@@ -17,7 +16,7 @@ export type MailTextSettingTexts = {
 export type MailTextSettingProps = {
   texts: MailTextSettingTexts
   maxChars: number
-  maxCharsErrorCode: GraphQlExceptionCode
+  maxCharsErrorMessage: string
   defaultText: string | null | undefined
   defaultActivated: boolean
   isSaving: boolean
@@ -33,7 +32,7 @@ type MailTextSettingDialogProps = MailTextSettingProps & {
 const MailTextSettingDialog = ({
   texts,
   maxChars,
-  maxCharsErrorCode,
+  maxCharsErrorMessage,
   defaultText,
   defaultActivated,
   isSaving,
@@ -50,7 +49,7 @@ const MailTextSettingDialog = ({
       description={texts.dialogDescription}
       defaultText={defaultText}
       maxChars={maxChars}
-      maxCharsErrorCode={maxCharsErrorCode}
+      maxCharsErrorMessage={maxCharsErrorMessage}
       placeholder={texts.placeholder}
       isOpen
       onSave={text => onSave(text, activated)}

@@ -4,7 +4,7 @@ import { Client, Exchange, Operation, Provider as UrqlProvider, makeResult } fro
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { map, pipe, tap } from 'wonka'
 
-import { GetContactInformationMailPreviewDocument, GraphQlExceptionCode } from '../../../graphql'
+import { GetContactInformationMailPreviewDocument } from '../../../graphql'
 import { renderWithOptions } from '../../../testing/render'
 import MailTextPreview from './MailTextPreview'
 import MailTextSettingDialog from './MailTextSettingDialog'
@@ -42,7 +42,7 @@ describe('MailTextSettingDialog', () => {
       <MailTextSettingDialog
         texts={texts}
         maxChars={500}
-        maxCharsErrorCode={GraphQlExceptionCode.InvalidContactInformationSize}
+        maxCharsErrorMessage='Der Text ist zu lang.'
         defaultText={defaultText}
         defaultActivated={defaultActivated}
         isSaving={false}
@@ -82,16 +82,12 @@ describe('MailTextSettingDialog', () => {
     expect(onSave).toHaveBeenCalledWith('Neues Büro', true)
   })
 
-  it('should show the error message of the given error code if the text is too long', () => {
+  it('should show the given error message if the text is too long', () => {
     const { getByText, getByDisplayValue } = renderDialog('Büro', true)
 
     fireEvent.change(getByDisplayValue('Büro'), { target: { value: 'a'.repeat(501) } })
 
-    expect(
-      getByText(
-        'Unzulässige Zeichenlänge der Kontaktinformationen erreicht. Maximal sind 500 Zeichen erlaubt.',
-      ),
-    ).toBeTruthy()
+    expect(getByText('Der Text ist zu lang.')).toBeTruthy()
   })
 
   it('should request the preview with the current text and show that it is displayed', async () => {

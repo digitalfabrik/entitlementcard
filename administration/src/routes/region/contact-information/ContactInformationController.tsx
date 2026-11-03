@@ -7,7 +7,6 @@ import { messageFromGraphQlError } from '../../../errors'
 import {
   GetContactInformationDocument,
   GetContactInformationMailPreviewDocument,
-  GraphQlExceptionCode,
   UpdateContactInformationDocument,
 } from '../../../graphql'
 import getQueryResult from '../../../util/getQueryResult'
@@ -72,7 +71,9 @@ const ContactInformationController = ({
         activatedLabel: t('contactInformationActivated'),
       }}
       maxChars={MAX_CONTACT_INFORMATION_CHARS}
-      maxCharsErrorCode={GraphQlExceptionCode.InvalidContactInformationSize}
+      maxCharsErrorMessage={t('errors:invalidContactInformationSize', {
+        maxSize: MAX_CONTACT_INFORMATION_CHARS,
+      })}
       defaultText={contactInformation}
       defaultActivated={contactInformationActivated}
       isSaving={updateContactInformationState.fetching}

@@ -7,7 +7,6 @@ import { messageFromGraphQlError } from '../../../errors'
 import {
   GetApplicationConfirmationMailPreviewDocument,
   GetApplicationConfirmationNoteInformationDocument,
-  GraphQlExceptionCode,
   UpdateApplicationConfirmationNoteDocument,
 } from '../../../graphql'
 import getQueryResult from '../../../util/getQueryResult'
@@ -72,7 +71,9 @@ const ApplicationConfirmationNoteController = ({
         activatedLabel: t('applicationConfirmationMailNoteActivated'),
       }}
       maxChars={MAX_NOTE_CHARS}
-      maxCharsErrorCode={GraphQlExceptionCode.InvalidApplicationConfirmationNoteSize}
+      maxCharsErrorMessage={t('errors:invalidApplicationConfirmationNoteSize', {
+        maxSize: MAX_NOTE_CHARS,
+      })}
       defaultText={applicationConfirmationMailNote}
       defaultActivated={applicationConfirmationMailNoteActivated}
       isSaving={updateApplicationNoteState.fetching}

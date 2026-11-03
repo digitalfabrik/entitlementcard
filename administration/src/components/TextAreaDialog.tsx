@@ -4,28 +4,8 @@ import { ReactElement, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import AlertBox from '../components/AlertBox'
-import { graphQlErrorMap } from '../errors'
-import { GraphQlExceptionCode } from '../graphql'
 import CharacterCounter from './CharacterCounter'
 import ConfirmDialog from './ConfirmDialog'
-
-type NoteProps = {
-  title: string
-  description?: string
-  placeholder: string
-  isOpen: boolean
-  onSave: (text: string) => void
-  onClose: () => void
-  loading: boolean
-  defaultText?: string | null
-  maxChars?: number
-  maxCharsErrorCode?: GraphQlExceptionCode
-  additionalContent?: ReactElement
-  preview?: {
-    label: string
-    render: (text: string) => ReactNode
-  }
-}
 
 const TextAreaDialog = ({
   isOpen,
@@ -35,21 +15,33 @@ const TextAreaDialog = ({
   placeholder,
   defaultText,
   maxChars,
-  maxCharsErrorCode = GraphQlExceptionCode.InvalidNoteSize,
+  maxCharsErrorMessage,
   title,
   description,
   additionalContent,
   preview,
-}: NoteProps): ReactElement => {
+}: {
+  title: string
+  description?: string
+  placeholder: string
+  isOpen: boolean
+  onSave: (text: string) => void
+  onClose: () => void
+  loading: boolean
+  defaultText?: string | null
+  maxChars: number
+  maxCharsErrorMessage: string
+  additionalContent?: ReactElement
+  preview?: {
+    label: string
+    render: (text: string) => ReactNode
+  }
+}): ReactElement => {
   const { t } = useTranslation('misc')
   const [text, setText] = useState<string>(defaultText ?? '')
   const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit')
   const showPreview = preview !== undefined && activeTab === 'preview'
-  const maxCharsExceeded = maxChars === undefined ? false : text.length > maxChars
-  const { title: errorMessage } = graphQlErrorMap({
-    code: maxCharsErrorCode,
-    maxSize: maxChars,
-  })
+  const maxCharsExceeded = text.length > maxChars
 
   return (
     <ConfirmDialog
@@ -104,10 +96,10 @@ const TextAreaDialog = ({
                 '& textarea': { height: '100%', overflowY: 'auto', resize: 'none' },
               }}
             />
-            {maxChars !== undefined ? (
-              <CharacterCounter text={text} maxChars={maxChars} />
+            <CharacterCounter text={text} maxChars={maxChars} />
+            {maxCharsExceeded ? (
+              <AlertBox title={maxCharsErrorMessage} severity='error' />
             ) : undefined}
-            {maxCharsExceeded ? <AlertBox title={errorMessage} severity='error' /> : undefined}
             {additionalContent}
           </Stack>
         )}
