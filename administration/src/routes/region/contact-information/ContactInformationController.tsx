@@ -1,3 +1,4 @@
+import { CONTACT_INFORMATION_MAX_CHARS } from 'build-configs'
 import { useSnackbar } from 'notistack'
 import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,9 +13,6 @@ import {
 import getQueryResult from '../../../util/getQueryResult'
 import MailTextPreview from '../mail-text-setting/MailTextPreview'
 import MailTextSettingCard from '../mail-text-setting/MailTextSettingCard'
-
-// Must match CONTACT_INFORMATION_MAX_CHARS in backend/src/main/kotlin/app/ehrenamtskarte/backend/db/entities/Region.kt
-const MAX_CONTACT_INFORMATION_CHARS = 500
 
 type ContactInformationControllerProps = {
   regionId: number
@@ -70,9 +68,9 @@ const ContactInformationController = ({
         placeholder: t('contactInformationDialogPlaceholder'),
         activatedLabel: t('contactInformationActivated'),
       }}
-      maxChars={MAX_CONTACT_INFORMATION_CHARS}
+      maxChars={CONTACT_INFORMATION_MAX_CHARS}
       maxCharsErrorMessage={t('errors:invalidContactInformationSize', {
-        maxSize: MAX_CONTACT_INFORMATION_CHARS,
+        maxSize: CONTACT_INFORMATION_MAX_CHARS,
       })}
       defaultText={contactInformation}
       defaultActivated={contactInformationActivated}

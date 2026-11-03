@@ -12,3 +12,7 @@ export const KOBLENZ_STAGING_ID = 'staging.koblenz.sozialpass.app'
 export const QUERY_PARAM_NAME = 'Name'
 export const QUERY_PARAM_BIRTHDAY = 'Geburtsdatum'
 export const QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER = 'Referenznummer'
+
+// Must match the constants in backend/src/main/kotlin/app/ehrenamtskarte/backend/db/entities/Region.kt
+export const APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS = 1000
+export const CONTACT_INFORMATION_MAX_CHARS = 500
