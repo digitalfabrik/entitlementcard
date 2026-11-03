@@ -9,6 +9,7 @@ import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.graphql.application.types.PersonalData
+import app.ehrenamtskarte.backend.graphql.cards.types.CardCreationConfirmationMailInput
 import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
 import com.sanctionco.jmail.JMail
 import graphql.GraphQLError
@@ -279,21 +280,17 @@ class Mailer(
 
     fun sendCardCreationConfirmationMail(
         projectConfig: ProjectConfig,
-        deepLink: String,
-        recipientAddress: String,
-        recipientName: String,
-        regionId: Int,
+        notification: CardCreationConfirmationMailInput,
+        region: RegionEntity,
     ) {
-        val contactInformation = transaction { RegionEntity.findById(regionId)?.activeContactInformation }
-
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
             fromName = projectConfig.administrationName,
-            to = recipientAddress,
+            to = notification.recipientAddress,
             subject = "Ihr Antrag für die Ehrenamtskarte Bayern wurde bewilligt",
             message = emailBody {
-                p { t("Sehr geehrte/r $recipientName,") }
+                p { t("Sehr geehrte/r ${notification.recipientName},") }
                 p {
                     t(
                         "wir freuen uns, Ihnen mitteilen zu können, " +
@@ -313,7 +310,7 @@ class Mailer(
                             "Klicken Sie dazu einfach auf den folgenden Link von Ihrem Smartphone aus: ",
                     )
                     br()
-                    link(URI.create(deepLink))
+                    link(URI.create(notification.deepLink))
                 }
                 p {
                     t(
@@ -323,7 +320,7 @@ class Mailer(
                     )
                 }
                 finalInformationParagraph(projectConfig)
-                contactInformationParagraphs(contactInformation)
+                contactInformationParagraphs(region.activeContactInformation)
             },
         )
     }

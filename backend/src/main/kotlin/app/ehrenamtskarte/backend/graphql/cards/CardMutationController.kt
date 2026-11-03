@@ -435,22 +435,14 @@ class CardMutationController(
             throw ForbiddenException()
         }
 
-        transaction {
-            val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()
-            if (!region.activatedForCardConfirmationMail) {
-                throw RegionNotActivatedForCardConfirmationMailException()
-            }
+        val region = transaction { RegionEntity.findById(regionId) } ?: throw RegionNotFoundException()
+        if (!region.activatedForCardConfirmationMail) {
+            throw RegionNotActivatedForCardConfirmationMailException()
         }
 
         val failedRecipients = notifications.mapNotNull { notification ->
             try {
-                mailerService.sendCardCreationConfirmationMail(
-                    projectConfig,
-                    notification.deepLink,
-                    notification.recipientAddress,
-                    notification.recipientName,
-                    regionId,
-                )
+                mailerService.sendCardCreationConfirmationMail(projectConfig, notification, region)
                 null
             } catch (_: MailNotSentException) {
                 notification.recipientAddress
