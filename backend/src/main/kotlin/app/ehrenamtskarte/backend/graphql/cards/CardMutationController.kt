@@ -442,7 +442,11 @@ class CardMutationController(
 
         val failedRecipients = notifications.mapNotNull { notification ->
             try {
-                mailerService.sendCardCreationConfirmationMail(projectConfig, notification, region)
+                mailerService.sendCardCreationConfirmationMail(
+                    projectConfig,
+                    notification,
+                    region.activeContactInformation,
+                )
                 null
             } catch (_: MailNotSentException) {
                 notification.recipientAddress

@@ -4,9 +4,7 @@ import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.config.SmtpConfig
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
-import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
-import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.graphql.application.types.PersonalData
 import app.ehrenamtskarte.backend.graphql.cards.types.CardCreationConfirmationMailInput
@@ -90,13 +88,8 @@ class Mailer(
         applicantName: String,
         projectConfig: ProjectConfig,
         applicationVerification: ApplicationVerificationEntity,
+        contactInformation: String?,
     ) {
-        val contactInformation = transaction {
-            ApplicationEntity.findById(applicationVerification.applicationId)
-                ?.let { RegionEntity.findById(it.regionId) }
-                ?.activeContactInformation
-        }
-
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
@@ -137,13 +130,9 @@ class Mailer(
         projectConfig: ProjectConfig,
         personalData: PersonalData,
         accessKey: String,
-        regionId: Int,
+        applicationConfirmationNote: String?,
+        contactInformation: String?,
     ) {
-        val (applicationConfirmationNote, contactInformation) = transaction {
-            val region = RegionEntity.findById(regionId)
-            region?.activeApplicationConfirmationMailNote to region?.activeContactInformation
-        }
-
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
@@ -203,13 +192,9 @@ class Mailer(
         applicationVerification: ApplicationVerificationEntity,
         applicantName: String,
         accessKey: String,
-        regionId: Int,
+        applicationConfirmationNote: String?,
+        contactInformation: String?,
     ) {
-        val (applicationConfirmationNote, contactInformation) = transaction {
-            val region = RegionEntity.findById(regionId)
-            region?.activeApplicationConfirmationMailNote to region?.activeContactInformation
-        }
-
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
@@ -281,7 +266,7 @@ class Mailer(
     fun sendCardCreationConfirmationMail(
         projectConfig: ProjectConfig,
         notification: CardCreationConfirmationMailInput,
-        region: RegionEntity,
+        contactInformation: String?,
     ) {
         sendMail(
             backendConfig = backendConfig,
@@ -320,7 +305,7 @@ class Mailer(
                     )
                 }
                 finalInformationParagraph(projectConfig)
-                contactInformationParagraphs(region.activeContactInformation)
+                contactInformationParagraphs(contactInformation)
             },
         )
     }
@@ -330,10 +315,8 @@ class Mailer(
         applicantName: String,
         applicantAddress: String,
         rejectionMessage: String,
-        regionId: Int,
+        contactInformation: String?,
     ) {
-        val contactInformation = transaction { RegionEntity.findById(regionId)?.activeContactInformation }
-
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,

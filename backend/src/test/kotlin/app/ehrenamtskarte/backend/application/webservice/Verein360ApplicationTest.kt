@@ -208,9 +208,9 @@ internal class Verein360ApplicationTest : IntegrationTest() {
             }
         }
 
-        verify(mailer, times(0)).sendApplicationApplicantMail(any(), any(), anyString(), anyInt())
-        verify(mailer, times(0)).sendApplicationVerificationMail(anyString(), any(), any())
-        verify(mailer, times(1)).sendPreVerifiedApplicationMail(any(), any(), anyString(), anyString(), anyInt())
+        verify(mailer, times(0)).sendApplicationApplicantMail(any(), any(), anyString(), any(), any())
+        verify(mailer, times(0)).sendApplicationVerificationMail(anyString(), any(), any(), any())
+        verify(mailer, times(1)).sendPreVerifiedApplicationMail(any(), any(), anyString(), anyString(), any(), any())
         verify(mailer, times(1)).sendNotificationForApplicationMails(any(), anyInt())
     }
 
@@ -237,9 +237,9 @@ internal class Verein360ApplicationTest : IntegrationTest() {
             }
         }
 
-        verify(mailer, times(1)).sendApplicationApplicantMail(any(), any(), anyString(), anyInt())
-        verify(mailer, times(1)).sendApplicationVerificationMail(anyString(), any(), any())
-        verify(mailer, times(0)).sendPreVerifiedApplicationMail(any(), any(), anyString(), anyString(), anyInt())
+        verify(mailer, times(1)).sendApplicationApplicantMail(any(), any(), anyString(), any(), any())
+        verify(mailer, times(1)).sendApplicationVerificationMail(anyString(), any(), any(), any())
+        verify(mailer, times(0)).sendPreVerifiedApplicationMail(any(), any(), anyString(), anyString(), any(), any())
         verify(mailer, times(1)).sendNotificationForApplicationMails(any(), anyInt())
     }
 
