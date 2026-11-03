@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import ConfirmDialog from '../../../../components/ConfirmDialog'
 import CustomDivider from '../../../../components/CustomDivider'
-import { WorkAtOrganizationInput } from '../../../../graphql'
+import { CompensationType, WorkAtOrganizationInput } from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,
@@ -14,10 +14,10 @@ import {
   createCompoundValidate,
 } from '../../util/compoundFormUtils'
 import { Form, FormComponentProps } from '../../util/formType'
-import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import DateForm from '../primitive-inputs/DateForm'
 import { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
 import NumberForm from '../primitive-inputs/NumberForm'
+import SelectForm from '../primitive-inputs/SelectForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
 import OrganizationForm from './OrganizationForm'
 
@@ -47,15 +47,31 @@ const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
 }
 
 const amountOfWorkOptions = { min: 0, max: 100 }
-const paymentOptions = { required: false } as const
+const compensationAmountOptions = { min: 0, max: 10000, integer: true }
 
-const SubForms = {
+const compensationTypeOptions = {
+  items: [
+    { value: CompensationType.None, label: 'compensationTypeNone' },
+    { value: CompensationType.VolunteerAllowance, label: 'compensationTypeVolunteerAllowance' },
+    { value: CompensationType.TrainerAllowance, label: 'compensationTypeTrainerAllowance' },
+  ],
+}
+
+const isCompensationAmountRequired = (compensationType: string): boolean =>
+  compensationType !== '' && compensationType !== CompensationType.None
+
+const RequiredSubForms = {
   organization: OrganizationForm,
   amountOfWork: NumberForm,
   workSinceDate: DateForm,
-  payment: CheckboxForm,
+  compensationType: SelectForm,
   responsibility: ShortTextForm,
   certificate: OptionalFileInputForm,
+}
+
+const SubForms = {
+  ...RequiredSubForms,
+  compensationAmount: NumberForm,
 }
 
 type State = CompoundState<typeof SubForms>
@@ -65,15 +81,30 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: state => {
-    const result = createCompoundValidate(SubForms, {
+    const result = createCompoundValidate(RequiredSubForms, {
       amountOfWork: amountOfWorkOptions,
-      payment: paymentOptions,
+      compensationType: compensationTypeOptions,
       workSinceDate: { maximumDate: undefined },
     })(state)
+    const compensationAmountResult = isCompensationAmountRequired(
+      state.compensationType.selectedValue,
+    )
+      ? NumberForm.validate(state.compensationAmount, compensationAmountOptions)
+      : { type: 'valid' as const, value: null }
 
-    return result.type === 'error'
-      ? result
-      : { type: 'valid', value: { ...result.value, isAlreadyVerified: null } }
+    if (result.type === 'error' || compensationAmountResult.type === 'error') {
+      return { type: 'error' }
+    }
+    return {
+      type: 'valid',
+      value: {
+        ...result.value,
+        compensationType: result.value.compensationType.shortText as CompensationType,
+        compensationAmount: compensationAmountResult.value,
+        isAlreadyVerified: null,
+        payment: null,
+      },
+    }
   },
   Component: ({
     state,
@@ -82,6 +113,7 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
     applicantName,
   }: FormComponentProps<State, AdditionalProps>) => {
     const { t } = useTranslation('application')
+    const setCompensationAmount = useUpdateStateCallback(setState, 'compensationAmount')
 
     return (
       <>
@@ -113,16 +145,26 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
             />
           </div>
         </div>
+        <SubForms.compensationType.Component
+          state={state.compensationType}
+          setState={useUpdateStateCallback(setState, 'compensationType')}
+          label={t('compensationType')}
+          options={{
+            items: compensationTypeOptions.items.map(item => ({ ...item, label: t(item.label) })),
+          }}
+        />
+        {isCompensationAmountRequired(state.compensationType.selectedValue) && (
+          <SubForms.compensationAmount.Component
+            label={t('compensationAmount')}
+            state={state.compensationAmount}
+            setState={setCompensationAmount}
+            options={compensationAmountOptions}
+          />
+        )}
         <SubForms.organization.Component
           state={state.organization}
           setState={useUpdateStateCallback(setState, 'organization')}
           applicantName={applicantName}
-        />
-        <SubForms.payment.Component
-          state={state.payment}
-          setState={useUpdateStateCallback(setState, 'payment')}
-          label={t('payment')}
-          options={paymentOptions}
         />
         <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
           {t('applicationForms:certificateHeadline')}

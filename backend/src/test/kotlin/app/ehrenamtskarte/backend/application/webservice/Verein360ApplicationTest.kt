@@ -31,11 +31,15 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 internal class Verein360ApplicationTest : IntegrationTest() {
     data class ValidationErrorTestCase(val application: ApplicationInput, val error: String)
@@ -187,7 +191,7 @@ internal class Verein360ApplicationTest : IntegrationTest() {
         val response = postGraphQL(mutation, token = "dummy")
 
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(true, response.toDataObject<Boolean>())
+        assertTrue(response.toDataObject<Boolean>())
 
         transaction {
             assertEquals(1, Applications.selectAll().count())
@@ -216,7 +220,7 @@ internal class Verein360ApplicationTest : IntegrationTest() {
         val response = postGraphQL(mutation)
 
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(true, response.toDataObject<Boolean>())
+        assertTrue(response.toDataObject<Boolean>())
 
         transaction {
             assertEquals(1, Applications.selectAll().count())
@@ -237,6 +241,29 @@ internal class Verein360ApplicationTest : IntegrationTest() {
         verify(mailer, times(1)).sendApplicationVerificationMail(anyString(), any(), any())
         verify(mailer, times(0)).sendPreVerifiedApplicationMail(any(), any(), anyString(), anyString(), anyInt())
         verify(mailer, times(1)).sendNotificationForApplicationMails(any(), anyInt())
+    }
+
+    /**
+     * Contract test for Verein360 API:
+     * It sends the request exactly as documented in docs/verein360-endpoint.md without the generated GraphQL client,
+     * so that breaking changes of the GraphQL schema are detected.
+     */
+    @Test
+    fun `should accept the documented verein360 request`() {
+        TestData.createApiToken(creatorId = adminVerein360.id, type = ApiTokenType.VERIFIED_APPLICATION)
+
+        val requestBody = requireNotNull(javaClass.getResource("/verein360/addEakApplicationRequest.json")) {
+            "Verein360 request fixture not found"
+        }.readText()
+
+        val headers = HttpHeaders().apply {
+            contentType = MediaType.APPLICATION_JSON
+            setBearerAuth("dummy")
+        }
+        val response = restTemplate.postForEntity("/", HttpEntity(requestBody, headers), String::class.java)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertTrue(response.toDataObject<Boolean>())
     }
 
     private fun createMutation(

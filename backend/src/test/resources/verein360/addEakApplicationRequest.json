@@ -1,0 +1,61 @@
+{
+  "query": "mutation addEakApplication($regionId: Int!, $application: ApplicationInput!, $project: String!) { result: addEakApplication(regionId: $regionId, application: $application, project: $project) }",
+  "variables": {
+    "regionId": 1,
+    "application": {
+      "applicationDetails": {
+        "applicationType": "FIRST_APPLICATION",
+        "cardType": "BLUE",
+        "givenInformationIsCorrectAndComplete": true,
+        "hasAcceptedEmailUsage": true,
+        "hasAcceptedPrivacyPolicy": true,
+        "wantsDigitalCard": true,
+        "wantsPhysicalCard": false,
+        "blueCardEntitlement": {
+          "entitlementType": "WORK_AT_ORGANIZATIONS",
+          "workAtOrganizationsEntitlement": {
+            "list": {
+              "amountOfWork": 7.5,
+              "organization": {
+                "address": {
+                  "country": { "shortText": "Deutschland" },
+                  "houseNumber": { "shortText": "123" },
+                  "location": { "shortText": "München" },
+                  "postalCode": { "shortText": "80331" },
+                  "street": { "shortText": "Example Street" }
+                },
+                "category": { "shortText": "sports" },
+                "contact": {
+                  "email": { "email": "jane.doe@sportverein.de" },
+                  "hasGivenPermission": true,
+                  "name": { "shortText": "Jane Doe" },
+                  "telephone": { "shortText": "0150123456789" }
+                },
+                "name": { "shortText": "Sportverein Augsburg-Nord" }
+              },
+              "payment": false,
+              "responsibility": { "shortText": "Trainer" },
+              "workSinceDate": { "date": "2020-10-06" },
+              "isAlreadyVerified": true
+            }
+          }
+        }
+      },
+      "personalData": {
+        "address": {
+          "country": { "shortText": "Deutschland" },
+          "houseNumber": { "shortText": "123" },
+          "location": { "shortText": "München" },
+          "postalCode": { "shortText": "80331" },
+          "street": { "shortText": "Example Street" }
+        },
+        "dateOfBirth": { "date": "1990-01-01" },
+        "emailAddress": { "email": "johndoe@example.com" },
+        "forenames": { "shortText": "John" },
+        "surname": { "shortText": "Doe" },
+        "telephone": { "shortText": "123456789" }
+      }
+    },
+    "project": "bayern.ehrenamtskarte.app"
+  }
+}
