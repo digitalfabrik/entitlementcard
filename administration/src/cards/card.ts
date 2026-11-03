@@ -73,7 +73,7 @@ type ExtensionWithState = {
   extension: Extension<InferExtensionStateType<(typeof Extensions)[number]>>
   state: InferExtensionStateType<(typeof Extensions)[number]>
 }
-export const getExtensions = ({ extensions }: Card): ExtensionWithState[] => {
+export const getExtensions = ({ extensions }: Pick<Card, 'extensions'>): ExtensionWithState[] => {
   const extensionKeys = Object.keys(extensions) as (keyof typeof Extensions)[]
   return extensionKeys.map(key => {
     const extensionObject = Extensions.find(extension => extension.name === key)!
@@ -115,7 +115,7 @@ export const deserializeCard = (serializedCard: SerializedCard, cardConfig: Card
   }, {}),
 })
 
-export const hasInfiniteLifetime = (card: Card): boolean =>
+export const hasInfiniteLifetime = (card: Pick<Card, 'extensions'>): boolean =>
   getExtensions(card).some(({ extension, state }) => extension.causesInfiniteLifetime(state))
 
 const hasValidNameLength = (fullName: string): boolean => {
@@ -260,16 +260,18 @@ export const initializeCardFromCSV = (
   const fullName = normalizeWhitespace(
     line[headers.indexOf(cardConfig.nameColumnName)] ?? defaultCard.fullName,
   )
-  const rawExpirationDate = line[headers.indexOf(cardConfig.expiryColumnName)]
-  const card = {
+  const expirationDate = safeParseGermanPlainDateString(
+    line[headers.indexOf(cardConfig.expiryColumnName)],
+  )
+  return {
     id: createRandomId(),
     fullName,
-    expirationDate: safeParseGermanPlainDateString(rawExpirationDate),
+    expirationDate:
+      expirationDate === null && !hasInfiniteLifetime({ extensions })
+        ? defaultCard.expirationDate
+        : expirationDate,
     extensions,
   }
-  return card.expirationDate === null && !hasInfiniteLifetime(card)
-    ? { ...card, expirationDate: defaultCard.expirationDate }
-    : card
 }
 
 export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => {
