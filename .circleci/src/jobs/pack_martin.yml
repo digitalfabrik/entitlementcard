@@ -14,14 +14,15 @@ steps:
         MARTIN_IMAGE=$(yq -r '.services.martin.image' docker-compose.yml)
         MARTIN_VERSION="${MARTIN_IMAGE##*:}"
         echo "Using martin ${MARTIN_VERSION}"
+        echo "export MARTIN_VERSION=${MARTIN_VERSION}" >> "$BASH_ENV"
         curl -fLO "https://github.com/maplibre/martin/releases/download/martin-v${MARTIN_VERSION}/martin-x86_64-unknown-linux-gnu.tar.gz"
   - run:
       name: Pack martin
+      # The package version is the martin version, so the package is only upgraded on the server if martin is updated
       command: |
         cp docker/martin-config.yaml config.yaml
         tar -xvzf martin-x86_64-unknown-linux-gnu.tar.gz -C . martin
-        NEW_VERSION_NAME="0.1.0"
-        scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
+        scripts/pack_deb.sh -v "${MARTIN_VERSION}" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
   - run:
       name: Move package
       command: |
