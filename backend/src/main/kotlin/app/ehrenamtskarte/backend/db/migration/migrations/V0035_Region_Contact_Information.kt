@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.db.migration.Statement
  * Adds columns to the region table for contact information that is appended to mails sent to applicants
  */
 @Suppress("ClassName")
-internal class V0034_Region_Contact_Information : Migration() {
+internal class V0035_Region_Contact_Information : Migration() {
     override val migrate: Statement = {
         exec(
             """
