@@ -65,7 +65,6 @@ const ConfirmDialog = ({
       aria-describedby={contentId}
       slotProps={{ paper: { sx: fillHeight ? { height: 'min(100%, 900px)' } : undefined } }}
     >
-      <DialogTitle sx={showCloseIcon ? { paddingRight: 7 } : undefined}>{title}</DialogTitle>
       {showCloseIcon && (
         <IconButton
           aria-label={t('close')}
@@ -75,6 +74,7 @@ const ConfirmDialog = ({
           <Close />
         </IconButton>
       )}
+      <DialogTitle sx={showCloseIcon ? { paddingRight: 7 } : undefined}>{title}</DialogTitle>
       <DialogContent
         id={contentId}
         sx={fillHeight ? { display: 'flex', flexDirection: 'column' } : undefined}

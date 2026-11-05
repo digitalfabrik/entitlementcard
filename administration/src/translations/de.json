@@ -506,8 +506,8 @@
     "applicationConfirmationMailNoteDialogTitle": "Notiz zur Eingangsbestätigung",
     "applicationConfirmationMailNoteSavedSuccessful": "Ihre Notizeinstellungen wurden erfolgreich geändert.",
     "mailPreview": "E-Mail-Vorschau",
-    "mailPreviewHint": "So sieht die E-Mail für den Antragsteller aus. Name und Link sind Beispieldaten.",
-    "applicationConfirmationMailPreviewNoteShown": "Die Notiz ist aktiviert und wird angezeigt. Sie ist nur exemplarisch hervorgehoben.",
+    "mailPreviewHint": "So sieht die E-Mail für den Antragsteller aus.",
+    "applicationConfirmationMailPreviewNoteShown": "Die Notiz ist aktiviert und wird angezeigt.",
     "applicationConfirmationMailPreviewNoteHidden": "Die Notiz ist nicht aktiviert oder leer und wird nicht angezeigt.",
     "contactInformationHeadline": "Kontaktinformationen E-Mail",
     "contactInformationExplanation": "Kontaktdaten am Ende der E-Mails an Antragstellende hinzufügen. Sie können die Kontaktinformationen jederzeit aktivieren oder deaktivieren.",
@@ -515,7 +515,7 @@
     "contactInformationDialogPlaceholder": "Fügen Sie hier die Kontaktdaten ein...",
     "contactInformationActivated": "Kontaktinformationen aktivieren",
     "contactInformationSavedSuccessful": "Ihre Kontaktinformationen wurden erfolgreich geändert.",
-    "contactInformationMailPreviewShown": "Die Kontaktdaten sind aktiviert und werden angezeigt. Sie sind nur exemplarisch hervorgehoben.",
+    "contactInformationMailPreviewShown": "Die Kontaktdaten sind aktiviert und werden angezeigt.",
     "contactInformationMailPreviewHidden": "Die Kontaktdaten sind nicht aktiviert oder leer und werden nicht angezeigt."
   },
   "selfService": {

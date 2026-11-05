@@ -52,7 +52,7 @@ const MailTextSettingDialog = ({
       maxCharsErrorMessage={maxCharsErrorMessage}
       placeholder={texts.placeholder}
       isOpen
-      onSave={text => onSave(text, activated)}
+      onSave={text => onSave(text.trim(), activated)}
       onClose={onClose}
       loading={isSaving}
       additionalContent={

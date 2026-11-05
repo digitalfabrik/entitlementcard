@@ -17,7 +17,7 @@ const EmailPreview = ({ html, hint, status, statusActive }: EmailPreviewProps): 
       <Typography
         variant='body2'
         sx={theme => ({
-          color: statusActive ? theme.palette.success.main : theme.palette.text.secondary,
+          color: statusActive ? theme.palette.success.dark : theme.palette.text.secondary,
         })}
       >
         {status}
@@ -25,6 +25,7 @@ const EmailPreview = ({ html, hint, status, statusActive }: EmailPreviewProps): 
     </Box>
     <Box
       sx={{
+        typography: 'body2',
         border: 1,
         borderColor: 'divider',
         borderRadius: 1,

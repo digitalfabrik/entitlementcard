@@ -9,7 +9,8 @@ type CharacterCounterProps = {
 const CharacterCounter = ({ text, maxChars }: CharacterCounterProps): ReactElement => (
   <Box
     sx={theme => ({
-      color: text.length > maxChars ? theme.palette.error.main : theme.palette.common.black,
+      color: text.length > maxChars ? theme.palette.error.main : theme.palette.text.secondary,
+      fontSize: theme.typography.body2.fontSize,
       alignSelf: 'center',
     })}
     aria-label='Character Counter'

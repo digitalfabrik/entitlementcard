@@ -82,6 +82,24 @@ describe('MailTextSettingDialog', () => {
     expect(onSave).toHaveBeenCalledWith('Neues Büro', true)
   })
 
+  it('should trim the text before saving', () => {
+    const { getByText, getByDisplayValue } = renderDialog('Büro', true)
+
+    fireEvent.change(getByDisplayValue('Büro'), { target: { value: '  Neues Büro \n ' } })
+    fireEvent.click(getByText('Speichern'))
+
+    expect(onSave).toHaveBeenCalledWith('Neues Büro', true)
+  })
+
+  it('should save a text containing only whitespace as empty text', () => {
+    const { getByText, getByDisplayValue } = renderDialog('Büro', true)
+
+    fireEvent.change(getByDisplayValue('Büro'), { target: { value: '   \n  ' } })
+    fireEvent.click(getByText('Speichern'))
+
+    expect(onSave).toHaveBeenCalledWith('', true)
+  })
+
   it('should show the given error message if the text is too long', () => {
     const { getByText, getByDisplayValue } = renderDialog('Büro', true)
 
