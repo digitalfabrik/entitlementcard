@@ -71,6 +71,7 @@ internal class RejectApplicationTest : IntegrationTest() {
             applicantName = eq("Max Mustermann"),
             applicantAddress = eq("test@test.de"),
             rejectionMessage = eq("dummy"),
+            contactInformation = any(),
         )
     }
 
@@ -82,6 +83,7 @@ internal class RejectApplicationTest : IntegrationTest() {
             applicantName = any(),
             applicantAddress = any(),
             rejectionMessage = any(),
+            contactInformation = any(),
         )
 
         val applicationId = TestData.createApplication(

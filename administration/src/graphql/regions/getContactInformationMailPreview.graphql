@@ -1,0 +1,11 @@
+query getContactInformationMailPreview(
+  $regionId: Int!
+  $contactInformation: String!
+  $contactInformationActivated: Boolean!
+) {
+  preview: getContactInformationMailPreview(
+    regionId: $regionId
+    contactInformation: $contactInformation
+    contactInformationActivated: $contactInformationActivated
+  )
+}

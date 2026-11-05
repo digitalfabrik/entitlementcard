@@ -9,8 +9,9 @@ describe('TextAreaDialog', () => {
   const onSave = vi.fn()
   const defaultText = 'Hallo'
   const placeholderText = 'Hier kann ein Text stehen...'
+  const maxCharsErrorMessage = 'Der Text ist zu lang.'
   const renderTextDialog = ({
-    maxChars,
+    maxChars = 10,
     defaultText,
   }: {
     maxChars?: number
@@ -21,6 +22,7 @@ describe('TextAreaDialog', () => {
         title='Show note'
         loading={false}
         maxChars={maxChars}
+        maxCharsErrorMessage={maxCharsErrorMessage}
         defaultText={defaultText}
         placeholder={placeholderText}
         isOpen
@@ -37,17 +39,18 @@ describe('TextAreaDialog', () => {
     await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
     const saveButton = getByText('Speichern').closest('button')
     expect(saveButton?.hasAttribute('disabled')).toBeTruthy()
+    expect(getByText(maxCharsErrorMessage)).toBeTruthy()
   })
 
-  it('should display the character counter if max characters were provided', () => {
+  it('should display the character counter', () => {
     const { getByLabelText } = renderTextDialog({ maxChars: 10, defaultText })
     const characterCounter = getByLabelText('Character Counter')
     expect(characterCounter).toBeDefined()
   })
 
-  it('should not display the character counter if max characters were provided', () => {
-    const { queryByLabelText } = renderTextDialog({ defaultText })
-    expect(queryByLabelText('Character Counter')).toBeNull()
+  it('should not display the error message if the character limit is not exceeded', () => {
+    const { queryByText } = renderTextDialog({ maxChars: 10, defaultText })
+    expect(queryByText(maxCharsErrorMessage)).toBeNull()
   })
 
   it('should call onSave if character count was not exceeded and button was clicked', async () => {
@@ -70,5 +73,41 @@ describe('TextAreaDialog', () => {
   it('should show placeholder text if no default text was provided', async () => {
     const { getByPlaceholderText } = renderTextDialog({ maxChars: 10, defaultText: null })
     expect(getByPlaceholderText(placeholderText)).toBeTruthy()
+  })
+
+  it('should not show tabs if no preview was provided', () => {
+    const { queryByRole } = renderTextDialog({ defaultText })
+    expect(queryByRole('tab')).toBeNull()
+  })
+
+  it('should render the preview of the current text in the preview tab', () => {
+    const { getByText, getByDisplayValue, getByRole, getByLabelText, queryByText } =
+      renderWithOptions(
+        <TextAreaDialog
+          title='Show note'
+          loading={false}
+          defaultText={defaultText}
+          maxChars={10}
+          maxCharsErrorMessage={maxCharsErrorMessage}
+          placeholder={placeholderText}
+          isOpen
+          onClose={onClose}
+          onSave={onSave}
+          preview={{ label: 'Vorschau', render: text => <span>Vorschau von {text}</span> }}
+        />,
+        { translation: true },
+      )
+    fireEvent.change(getByDisplayValue(defaultText), { target: { value: 'Neuer Text' } })
+    fireEvent.click(getByRole('tab', { name: 'Vorschau' }))
+
+    expect(getByText('Vorschau von Neuer Text')).toBeTruthy()
+
+    fireEvent.click(getByRole('tab', { name: 'Bearbeiten' }))
+    expect(queryByText('Vorschau von Neuer Text')).toBeNull()
+    expect(getByDisplayValue('Neuer Text')).toBeTruthy()
+
+    // The close icon is labeled, the cancel button only has a text
+    fireEvent.click(getByLabelText('Schließen'))
+    expect(onClose).toHaveBeenCalled()
   })
 })

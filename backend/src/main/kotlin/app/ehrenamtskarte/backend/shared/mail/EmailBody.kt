@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.shared.mail
 import kotlinx.html.HtmlBlockInlineTag
 import kotlinx.html.HtmlBlockTag
 import kotlinx.html.a
+import kotlinx.html.blockQuote
 import kotlinx.html.body
 import kotlinx.html.br
 import kotlinx.html.html
@@ -20,8 +21,12 @@ interface InlineRenderable {
 class EmailBody {
     private val children = ArrayList<Paragraph>(0)
 
-    fun p(builder: Paragraph.() -> Unit) {
-        children.add(Paragraph().apply { builder() })
+    /**
+     * Adds a paragraph. A highlighted paragraph is wrapped in a blockquote.
+     * Only intended to mark customizable parts in mail previews, not for mails that are actually sent.
+     */
+    fun p(highlighted: Boolean = false, builder: Paragraph.() -> Unit) {
+        children.add(Paragraph(highlighted).apply { builder() })
     }
 
     fun renderHtml(): String =
@@ -46,7 +51,7 @@ class EmailBody {
 
 fun emailBody(builder: EmailBody.() -> Unit): EmailBody = EmailBody().apply { builder() }
 
-class Paragraph {
+class Paragraph(private val highlighted: Boolean = false) {
     private val children: ArrayList<InlineRenderable> = ArrayList(0)
 
     fun t(text: String) {
@@ -71,6 +76,14 @@ class Paragraph {
     }
 
     fun renderHtml(parent: HtmlBlockTag) {
+        if (highlighted) {
+            parent.blockQuote { renderParagraphHtml(this) }
+        } else {
+            renderParagraphHtml(parent)
+        }
+    }
+
+    private fun renderParagraphHtml(parent: HtmlBlockTag) {
         parent.p {
             for (child in children) {
                 child.renderHtml(this)

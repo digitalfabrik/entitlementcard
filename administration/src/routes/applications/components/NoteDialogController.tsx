@@ -68,6 +68,7 @@ const NoteDialogController = ({
           title={t('noteDialogTitle')}
           isOpen={isOpen}
           maxChars={1000}
+          maxCharsErrorMessage={t('errors:invalidNoteSize', { maxSize: 1000 })}
           loading={updateApplicationState.fetching}
           onSave={onSave}
           onClose={onClose}

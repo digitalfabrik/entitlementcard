@@ -37,5 +37,6 @@ object MigrationsRegistry {
             V0032_AddUniqueIndexForAcceptingStoreDescriptionsTable(),
             V0033_AddIndexOnCardsEntitlementId(),
             V0034_MoveLegacyApplicationFieldsIntoApplicationDetails(),
+            V0035_Region_Contact_Information(),
         )
 }

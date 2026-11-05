@@ -17,6 +17,7 @@ export const commonColors: PaletteOptions = {
   success: {
     main: '#4CAF50',
     light: '#81C784',
+    dark: '#0F6B05',
   },
   info: {
     main: '#0096c3',
