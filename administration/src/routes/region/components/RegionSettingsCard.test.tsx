@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { AvailableCardFormats } from '../../../graphql'
 import { renderWithOptions } from '../../../testing/render'

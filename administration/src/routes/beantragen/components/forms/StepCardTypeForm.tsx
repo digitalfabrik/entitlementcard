@@ -144,7 +144,7 @@ const StepCardTypeForm: Form<State, ValidatedInput, Record<string, unknown>, Opt
           </Typography>
         )}
         {!options.physicalCardAvailable && (
-          <Typography variant='body2' color='text.secondary' sx={{my:1}}>
+          <Typography variant='body2' color='text.secondary' sx={{ my: 1 }}>
             {t('applicationForms:digitalCardOnlyHint')}
           </Typography>
         )}

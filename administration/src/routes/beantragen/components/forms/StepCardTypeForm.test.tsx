@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import { BavariaCardType } from '../../../../graphql'
 import { renderWithOptions } from '../../../../testing/render'
 import StepCardTypeForm from './StepCardTypeForm'
@@ -50,7 +52,7 @@ describe('StepCardTypeForm', () => {
     const { getByLabelText } = renderWithOptions(
       <StepCardTypeForm.Component
         state={goldenCardState}
-        setState={jest.fn()}
+        setState={vi.fn()}
         options={{ physicalCardAvailable: true }}
       />,
       { translation: true },
@@ -63,7 +65,7 @@ describe('StepCardTypeForm', () => {
     const { getByLabelText, getByText, queryByLabelText } = renderWithOptions(
       <StepCardTypeForm.Component
         state={{ ...goldenCardState, wantsDigitalCard: { checked: false } }}
-        setState={jest.fn()}
+        setState={vi.fn()}
         options={{ physicalCardAvailable: false }}
       />,
       { translation: true },
@@ -74,7 +76,7 @@ describe('StepCardTypeForm', () => {
     expect(queryByLabelText('Ich beantrage eine physische Ehrenamtskarte')).toBeNull()
     expect(
       getByText(
-        'In Ihrer Region ist die Ehrenamtskarte ausschließlich als digitale Version für Ihr Smartphone oder Tablet erhältlich.',
+        'In Ihrer Region ist die Ehrenamtskarte ausschließlich als digitale Version erhältlich.',
       ),
     ).toBeTruthy()
   })
