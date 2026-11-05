@@ -7,8 +7,11 @@ parameters:
     type: boolean
     default: false
 environment:
-  _JAVA_OPTIONS: "-Xmx3g"
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+  # The small resource class only has 2 GB of RAM. Run the Kotlin compiler inside the Gradle process so that there is
+  # only one big JVM (otherwise the Kotlin daemon inherits the Gradle jvmargs and needs another 1.5 GB), and cap its
+  # heap so that heap + metaspace + native memory still fit into the container.
+  # Do not use _JAVA_OPTIONS here, as it applies to every JVM (Gradle client, Gradle daemon, Kotlin daemon) at once.
+  GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process -Dorg.gradle.jvmargs="-Xmx1536m -XX:MaxMetaspaceSize=384m"'
   RELEASE_BUILD: << parameters.release >>
 working_directory: ~/project/backend
 steps:
