@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.db.migration.Statement
  * Defaults to DIGITAL_AND_PHYSICAL, so that all existing regions keep offering both card formats.
  */
 @Suppress("ClassName")
-internal class V0034_AddAvailableCardFormatsToRegions : Migration() {
+internal class V0036_AddAvailableCardFormatsToRegions : Migration() {
     override val migrate: Statement = {
         exec(
             """

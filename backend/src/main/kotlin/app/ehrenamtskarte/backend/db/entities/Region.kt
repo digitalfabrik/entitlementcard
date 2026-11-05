@@ -76,6 +76,5 @@ class RegionEntity(id: EntityID<Int>) : IntEntity(id) {
         get() = applicationConfirmationMailNote.takeIf { applicationConfirmationMailNoteActivated }
     val activeContactInformation: String?
         get() = contactInformation.takeIf { contactInformationActivated }
-    var applicationConfirmationMailNote by Regions.applicationConfirmationMailNote
     var availableCardFormats by Regions.availableCardFormats
 }

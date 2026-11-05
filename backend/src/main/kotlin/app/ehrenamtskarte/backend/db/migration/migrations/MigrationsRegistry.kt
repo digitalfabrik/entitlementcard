@@ -38,6 +38,6 @@ object MigrationsRegistry {
             V0033_AddIndexOnCardsEntitlementId(),
             V0034_MoveLegacyApplicationFieldsIntoApplicationDetails(),
             V0035_Region_Contact_Information(),
-            V0034_AddAvailableCardFormatsToRegions(),
+            V0036_AddAvailableCardFormatsToRegions(),
         )
 }
