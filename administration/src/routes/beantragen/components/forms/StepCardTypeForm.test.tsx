@@ -60,7 +60,7 @@ describe('StepCardTypeForm', () => {
   })
 
   it('should only show a checked and disabled digital card checkbox if physical cards are not available', () => {
-    const { getByLabelText, queryByLabelText } = renderWithOptions(
+    const { getByLabelText, getByText, queryByLabelText } = renderWithOptions(
       <StepCardTypeForm.Component
         state={{ ...goldenCardState, wantsDigitalCard: { checked: false } }}
         setState={jest.fn()}
@@ -72,5 +72,10 @@ describe('StepCardTypeForm', () => {
     expect(digitalCardCheckbox).toBeChecked()
     expect(digitalCardCheckbox).toBeDisabled()
     expect(queryByLabelText('Ich beantrage eine physische Ehrenamtskarte')).toBeNull()
+    expect(
+      getByText(
+        'In Ihrer Region ist die Ehrenamtskarte ausschließlich als digitale Version für Ihr Smartphone oder Tablet erhältlich.',
+      ),
+    ).toBeTruthy()
   })
 })

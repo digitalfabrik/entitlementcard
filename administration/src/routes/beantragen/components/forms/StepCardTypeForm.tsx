@@ -143,6 +143,11 @@ const StepCardTypeForm: Form<State, ValidatedInput, Record<string, unknown>, Opt
             <Trans i18nKey='applicationForms:applicationTypeDescription' />
           </Typography>
         )}
+        {!options.physicalCardAvailable && (
+          <Typography variant='body2' color='text.secondary' sx={{my:1}}>
+            {t('applicationForms:digitalCardOnlyHint')}
+          </Typography>
+        )}
         {/* If the region only offers digital cards, a digital card is always requested (see validate) */}
         <SubForms.wantsDigitalCard.Component
           state={options.physicalCardAvailable ? state.wantsDigitalCard : { checked: true }}

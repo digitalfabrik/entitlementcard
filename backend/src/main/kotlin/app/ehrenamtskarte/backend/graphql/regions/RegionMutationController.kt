@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.graphql.regions
 
-import app.ehrenamtskarte.backend.db.entities.APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.AvailableCardFormats
 import app.ehrenamtskarte.backend.db.entities.PRIVACY_POLICY_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.mayUpdateSettingsInRegion

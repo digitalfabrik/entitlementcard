@@ -15,7 +15,6 @@ import app.ehrenamtskarte.backend.helper.TestApplicationBuilder
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.toDataObject
 import app.ehrenamtskarte.backend.helper.toErrorObject
-import app.ehrenamtskarte.backend.shared.mail.Mailer
 import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
@@ -23,13 +22,9 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
-import org.springframework.test.context.bean.override.mockito.MockitoBean
 import kotlin.test.assertEquals
 
 internal class AvailableCardFormatsApplicationTest : IntegrationTest() {
-    @MockitoBean
-    private lateinit var mailer: Mailer
-
     private val regionId = 1
 
     @BeforeEach
