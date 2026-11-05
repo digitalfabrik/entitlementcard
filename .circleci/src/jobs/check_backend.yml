@@ -1,9 +1,8 @@
 docker:
   - image: cimg/base:2026.04
-resource_class: small
+resource_class: medium
 environment:
-  _JAVA_OPTIONS: "-Xmx3g"
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+  GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process -Dorg.gradle.jvmargs="-Xmx1536m -XX:MaxMetaspaceSize=384m"'
 working_directory: ~/project/backend
 steps:
   - prepare_workspace

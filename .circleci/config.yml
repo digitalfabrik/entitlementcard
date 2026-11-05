@@ -271,8 +271,7 @@ jobs:
         docker:
             - image: cimg/base:2026.04
         environment:
-            _JAVA_OPTIONS: -Xmx3g
-            GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
+            GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process -Dorg.gradle.jvmargs="-Xmx1536m -XX:MaxMetaspaceSize=384m"
             RELEASE_BUILD: << parameters.release >>
         parameters:
             release:
@@ -408,9 +407,8 @@ jobs:
         docker:
             - image: cimg/base:2026.04
         environment:
-            _JAVA_OPTIONS: -Xmx3g
-            GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
-        resource_class: small
+            GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process -Dorg.gradle.jvmargs="-Xmx1536m -XX:MaxMetaspaceSize=384m"
+        resource_class: medium
         steps:
             - prepare_workspace
             - install_mise
