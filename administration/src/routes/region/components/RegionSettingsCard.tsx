@@ -1,20 +1,37 @@
-import { Button, Typography } from '@mui/material'
+import {
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  Typography,
+} from '@mui/material'
 import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import BaseCheckbox from '../../../components/BaseCheckbox'
 import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
+import { AvailableCardFormats } from '../../../graphql'
 
 const RegionSettingsCard = ({
   onSave,
   loading,
   defaultApplicationActivation,
   defaultConfirmationMailActivation,
+  defaultAvailableCardFormats,
+  showAvailableCardFormats,
 }: {
-  onSave: (activatedForApplication: boolean, activatedForConfirmationMail: boolean) => void
+  onSave: (
+    activatedForApplication: boolean,
+    activatedForConfirmationMail: boolean,
+    availableCardFormats: AvailableCardFormats,
+  ) => void
   loading: boolean
   defaultApplicationActivation: boolean
   defaultConfirmationMailActivation: boolean
+  defaultAvailableCardFormats: AvailableCardFormats
+  showAvailableCardFormats: boolean
 }): ReactElement => {
   const { t } = useTranslation('regionSettings')
   const [activatedForApplication, setActivatedForApplication] = useState<boolean>(
@@ -22,6 +39,9 @@ const RegionSettingsCard = ({
   )
   const [activatedForCardConfirmationMail, setActivatedForCardConfirmationMail] = useState<boolean>(
     defaultConfirmationMailActivation,
+  )
+  const [availableCardFormats, setAvailableCardFormats] = useState<AvailableCardFormats>(
+    defaultAvailableCardFormats,
   )
 
   return (
@@ -40,9 +60,32 @@ const RegionSettingsCard = ({
         hasError={false}
         errorMessage={undefined}
       />
+      {showAvailableCardFormats && (
+        <FormControl sx={{ mt: 3 }}>
+          <FormLabel id='available-card-formats-label'>{t('availableCardFormats')}</FormLabel>
+          <RadioGroup
+            aria-labelledby='available-card-formats-label'
+            value={availableCardFormats}
+            onChange={event => setAvailableCardFormats(event.target.value as AvailableCardFormats)}
+          >
+            <FormControlLabel
+              value={AvailableCardFormats.Digital}
+              control={<Radio />}
+              label={t('availableCardFormatsDigital')}
+            />
+            <FormControlLabel
+              value={AvailableCardFormats.DigitalAndPhysical}
+              control={<Radio />}
+              label={t('availableCardFormatsDigitalAndPhysical')}
+            />
+          </RadioGroup>
+        </FormControl>
+      )}
       <SettingsCardButtonBox>
         <Button
-          onClick={() => onSave(activatedForApplication, activatedForCardConfirmationMail)}
+          onClick={() =>
+            onSave(activatedForApplication, activatedForCardConfirmationMail, availableCardFormats)
+          }
           loading={loading}
         >
           {t('save')}

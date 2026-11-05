@@ -5,8 +5,9 @@ import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
+import app.ehrenamtskarte.backend.db.entities.AvailableCardFormats
+import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
-import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.application.types.Application
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationType
 import app.ehrenamtskarte.backend.graphql.application.types.BavariaCardType
@@ -15,8 +16,8 @@ import app.ehrenamtskarte.backend.graphql.exceptions.InvalidFileSizeException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidFileTypeException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
+import app.ehrenamtskarte.backend.graphql.exceptions.PhysicalCardNotAvailableInRegionException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotActivatedForApplicationException
-import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.shared.authenticateApiToken
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.Part
@@ -42,12 +43,17 @@ class ApplicationService(
         }
     }
 
-    fun validateRegionActivatedForApplication(project: String, regionId: Int) {
-        transaction {
-            val region = RegionsRepository.findByIdInProject(project, regionId) ?: throw RegionNotFoundException()
-            if (!region.activatedForApplication) {
-                throw RegionNotActivatedForApplicationException()
-            }
+    fun validateRegionActivatedForApplication(region: RegionEntity) {
+        if (!region.activatedForApplication) {
+            throw RegionNotActivatedForApplicationException()
+        }
+    }
+
+    fun validateCardFormatsAvailableInRegion(application: Application, region: RegionEntity) {
+        if (application.applicationDetails.wantsPhysicalCard &&
+            region.availableCardFormats == AvailableCardFormats.DIGITAL
+        ) {
+            throw PhysicalCardNotAvailableInRegionException()
         }
     }
 

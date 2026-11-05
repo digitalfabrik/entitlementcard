@@ -7,7 +7,7 @@ import { FormContext } from '../forms/SteppedSubForms'
 type State = { checked: boolean }
 type ValidatedInput = boolean
 type Options = { required: true; notCheckedErrorMessage: string } | { required: false }
-type AdditionalProps = { label: string | ReactElement }
+type AdditionalProps = { label: string | ReactElement; disabled?: boolean }
 const CheckboxForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { checked: false },
   getArrayBufferKeys: () => [],
@@ -22,6 +22,7 @@ const CheckboxForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     setState,
     label,
     options,
+    disabled = false,
   }: FormComponentProps<State, AdditionalProps, Options>) => {
     const [interacted, setInteracted] = useState(false)
     const { disableAllInputs, showAllErrors } = useContext(FormContext)
@@ -31,7 +32,7 @@ const CheckboxForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
 
     return (
       <BaseCheckbox
-        disabled={disableAllInputs}
+        disabled={disableAllInputs || disabled}
         required={options.required}
         checked={state.checked}
         label={label}
