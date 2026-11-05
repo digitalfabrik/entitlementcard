@@ -340,9 +340,9 @@ type Region {
   activatedForCardConfirmationMail: Boolean!
   applicationConfirmationMailNote: String
   applicationConfirmationMailNoteActivated: Boolean!
+  availableCardFormats: AvailableCardFormats!
   contactInformation: String
   contactInformationActivated: Boolean!
-  availableCardFormats: AvailableCardFormats!
   dataPrivacyPolicy: String
   id: Int!
   name: String!
