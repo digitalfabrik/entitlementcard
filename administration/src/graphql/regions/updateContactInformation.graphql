@@ -1,0 +1,11 @@
+mutation updateContactInformation(
+  $regionId: Int!
+  $contactInformation: String!
+  $contactInformationActivated: Boolean!
+) {
+  success: updateContactInformation(
+    regionId: $regionId
+    contactInformation: $contactInformation
+    contactInformationActivated: $contactInformationActivated
+  )
+}

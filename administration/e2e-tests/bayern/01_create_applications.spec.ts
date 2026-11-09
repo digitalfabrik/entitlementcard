@@ -40,6 +40,9 @@ test.describe('Bayern testing', () => {
     await page.getByRole('textbox', { name: 'Ehrenamtliche Tätigkeit' }).fill('activity 1')
     await fillDateInput(page, 'Tätig seit', '10.10.1999', browser)
     await page.getByRole('textbox', { name: 'Arbeitsstunden pro Woche (' }).fill('56')
+    await page.getByRole('combobox', { name: 'Art der Aufwandsentschädigung' }).click()
+    await page.getByRole('option', { name: 'Ehrenamtspauschale' }).click()
+    await page.getByRole('textbox', { name: 'Höhe der Aufwandsentschädigung' }).fill('840')
     await expect(page.getByText('Angaben zur Organisation', { exact: false })).toBeVisible({
       timeout: 10_000,
     })

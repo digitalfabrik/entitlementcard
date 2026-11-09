@@ -157,14 +157,17 @@ commands:
             - run:
                 command: |
                     echo 'export MM_MESSAGE=":fire: [${CIRCLE_JOB}](${CIRCLE_BUILD_URL}) failed on branch ${CIRCLE_BRANCH}! :fire: << parameters.failure_mentions >>"' >> "$BASH_ENV"
+                    echo 'export MM_CHANNEL="entitlementcard-notifications"' >> "$BASH_ENV"
                 name: Mattermost - Prepare failure message
                 when: on_fail
             - run:
-                command: echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> "$BASH_ENV"
+                command: |
+                    echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> "$BASH_ENV"
+                    echo 'export MM_CHANNEL="<< parameters.channel >>"' >> "$BASH_ENV"
                 name: Mattermost - Prepare success message
                 when: on_success
             - run:
-                command: scripts/notify-mattermost << parameters.channel >> << parameters.allow_all_branches >>
+                command: scripts/notify-mattermost "${MM_CHANNEL}" << parameters.allow_all_branches >>
                 name: Mattermost Status Alert
                 when: always
                 working_directory: ~/project
@@ -268,8 +271,7 @@ jobs:
         docker:
             - image: cimg/base:2026.04
         environment:
-            _JAVA_OPTIONS: -Xmx3g
-            GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
+            GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process -Dorg.gradle.jvmargs="-Xmx1536m -XX:MaxMetaspaceSize=384m"
             RELEASE_BUILD: << parameters.release >>
         parameters:
             release:
@@ -405,9 +407,8 @@ jobs:
         docker:
             - image: cimg/base:2026.04
         environment:
-            _JAVA_OPTIONS: -Xmx3g
-            GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
-        resource_class: small
+            GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process -Dorg.gradle.jvmargs="-Xmx1536m -XX:MaxMetaspaceSize=384m"
+        resource_class: medium
         steps:
             - prepare_workspace
             - install_mise
@@ -782,14 +783,14 @@ jobs:
                     MARTIN_IMAGE=$(yq -r '.services.martin.image' docker-compose.yml)
                     MARTIN_VERSION="${MARTIN_IMAGE##*:}"
                     echo "Using martin ${MARTIN_VERSION}"
+                    echo "export MARTIN_VERSION=${MARTIN_VERSION}" >> "$BASH_ENV"
                     curl -fLO "https://github.com/maplibre/martin/releases/download/martin-v${MARTIN_VERSION}/martin-x86_64-unknown-linux-gnu.tar.gz"
                 name: Download martin
             - run:
                 command: |
                     cp docker/martin-config.yaml config.yaml
                     tar -xvzf martin-x86_64-unknown-linux-gnu.tar.gz -C . martin
-                    NEW_VERSION_NAME="0.1.0"
-                    scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
+                    scripts/pack_deb.sh -v "${MARTIN_VERSION}" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
                 name: Pack martin
             - run:
                 command: |

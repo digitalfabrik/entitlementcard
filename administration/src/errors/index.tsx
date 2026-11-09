@@ -204,6 +204,12 @@ export const graphQlErrorMap = (extensions?: {
           maxSize: extensions.maxSize,
         }),
       }
+    case GraphQlExceptionCode.InvalidContactInformationSize:
+      return {
+        title: i18next.t('errors:invalidContactInformationSize', {
+          maxSize: extensions.maxSize,
+        }),
+      }
     case GraphQlExceptionCode.FreinetFoundMultiplePersons: {
       return {
         title: i18next.t('errors:freinetMultiplePersonError'),

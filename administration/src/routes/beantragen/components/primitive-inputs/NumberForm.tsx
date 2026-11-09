@@ -8,7 +8,7 @@ import { FormContext } from '../forms/SteppedSubForms'
 
 type State = { type: 'NumberForm'; value: string }
 type ValidatedInput = number
-type Options = { min: number; max: number }
+type Options = { min: number; max: number; integer?: boolean }
 type AdditionalProps = { label: string; minWidth?: number }
 const NumberForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { type: 'NumberForm', value: '' },
@@ -21,9 +21,12 @@ const NumberForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       return { type: 'error', message: i18next.t('applicationForms:noValidNumberError') }
     }
     const number = Number(value)
-    const { min, max } = options
+    const { min, max, integer } = options
     if (Number.isNaN(number)) {
       return { type: 'error', message: i18next.t('applicationForms:noValidNumberError') }
+    }
+    if (integer && !Number.isInteger(number)) {
+      return { type: 'error', message: i18next.t('applicationForms:noIntegerError') }
     }
     if (number < min || number > max) {
       return {

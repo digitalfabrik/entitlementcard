@@ -1,0 +1,11 @@
+query GetApplicationConfirmationMailPreview(
+    $regionId: Int!
+    $applicationConfirmationNote: String!
+    $applicationConfirmationNoteActivated: Boolean!
+) {
+    preview: getApplicationConfirmationMailPreview(
+        regionId: $regionId
+        applicationConfirmationNote: $applicationConfirmationNote
+        applicationConfirmationNoteActivated: $applicationConfirmationNoteActivated
+    )
+}

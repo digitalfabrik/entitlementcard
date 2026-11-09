@@ -13,6 +13,7 @@ import app.ehrenamtskarte.backend.db.entities.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
 import app.ehrenamtskarte.backend.db.entities.mayUpdateApplicationsInRegion
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.application.types.Application
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationAdminGql
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantEmail
@@ -65,6 +66,7 @@ class EakApplicationMutationController(
             return addPreVerifiedEakApplication(application, regionId, attachments, projectConfig)
         }
 
+        val region = transaction { RegionsRepository.findRegionById(regionId) }
         val verifications = transaction {
             val (applicationEntity, verificationEntities) = applicationService.saveApplication(
                 application,
@@ -77,14 +79,20 @@ class EakApplicationMutationController(
                 projectConfig,
                 application.personalData,
                 applicationEntity.accessKey,
-                regionId,
+                region.activeApplicationConfirmationMailNote,
+                region.activeContactInformation,
             )
             verificationEntities
         }
 
         val applicantName = application.personalData.fullName()
         val errors = collectMailErrors(verifications) { verification ->
-            mailService.sendApplicationVerificationMail(applicantName, projectConfig, verification)
+            mailService.sendApplicationVerificationMail(
+                applicantName,
+                projectConfig,
+                verification,
+                region.activeContactInformation,
+            )
         }
         mailService.sendNotificationForApplicationMails(projectConfig, regionId)
 
@@ -97,6 +105,7 @@ class EakApplicationMutationController(
         attachments: List<Part>,
         projectConfig: ProjectConfig,
     ): DataFetcherResult<Boolean> {
+        val region = transaction { RegionsRepository.findRegionById(regionId) }
         val (applicationEntity, verificationEntities) = transaction {
             applicationService.saveApplication(application, regionId, attachments, VEREIN360)
         }
@@ -106,7 +115,8 @@ class EakApplicationMutationController(
                 verification,
                 application.personalData.fullName(),
                 applicationEntity.accessKey,
-                regionId,
+                region.activeApplicationConfirmationMailNote,
+                region.activeContactInformation,
             )
         }
         mailService.sendNotificationForApplicationMails(projectConfig, regionId)
@@ -244,6 +254,7 @@ class EakApplicationMutationController(
                     application.getApplicantName(),
                     application.getApplicantEmail(),
                     rejectionMessage,
+                    RegionsRepository.findRegionById(application.regionId.value).activeContactInformation,
                 )
             } catch (e: MailNotSentException) {
                 resultBuilder.error(e.toGraphQLError())
@@ -305,6 +316,7 @@ class EakApplicationMutationController(
                 application.getApplicantName(),
                 backendConfiguration.getProjectConfig(authContext.project),
                 applicationVerification,
+                RegionsRepository.findRegionById(application.regionId.value).activeContactInformation,
             )
         }
         return true
