@@ -34,18 +34,19 @@ const WorkAtDepartmentEntitlementForm: Form<
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: state => {
     const result = createCompoundValidate(SubForms, {})(state)
-    if (result.type === 'error') {
-      return result
-    }
-    const { organization, verification, responsibility } = result.value
-    return {
-      type: 'valid',
-      value: {
-        responsibility,
-        organization: { ...organization, contact: verification.contact },
-        certificate: verification.certificate,
-      },
-    }
+    return result.type === 'error'
+      ? result
+      : {
+          type: 'valid',
+          value: {
+            responsibility: result.value.responsibility,
+            organization: {
+              ...result.value.organization,
+              contact: result.value.verification.contact,
+            },
+            certificate: result.value.verification.certificate,
+          },
+        }
   },
   Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => {
     const { t } = useTranslation('applicationForms')

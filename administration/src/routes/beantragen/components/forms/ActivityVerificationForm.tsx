@@ -57,16 +57,15 @@ const ActivityVerificationForm: Form<State, ValidatedInput, AdditionalProps> = {
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: state => {
     const result = validateSelected(state)
-    if (result.type === 'error') {
-      return result
-    }
-    return {
-      type: 'valid',
-      value: {
-        contact: result.value.contact ?? null,
-        certificate: result.value.certificate ?? null,
-      },
-    }
+    return result.type === 'error'
+      ? result
+      : {
+          type: 'valid',
+          value: {
+            contact: result.value.contact ?? null,
+            certificate: result.value.certificate ?? null,
+          },
+        }
   },
   Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => {
     const { t } = useTranslation('applicationForms')
