@@ -3,6 +3,7 @@ import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import RenderGuard from '../../components/RenderGuard'
+import { SettingsCardGroup } from '../../components/SettingsCard'
 import { Role } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import { useWhoAmI } from '../../provider/WhoAmIProvider'
@@ -24,13 +25,14 @@ const ProjectSettingsController = (): ReactElement => {
       <Stack
         sx={{
           flexGrow: 1,
-          justifyContent: 'safe center',
           alignItems: 'center',
           overflow: 'auto',
           padding: 4,
         }}
       >
-        <ApiTokenSettings showPepperSection={isProjectAdminWithUserImportApiEnabled} />
+        <SettingsCardGroup>
+          <ApiTokenSettings showPepperSection={isProjectAdminWithUserImportApiEnabled} />
+        </SettingsCardGroup>
       </Stack>
     </RenderGuard>
   )
