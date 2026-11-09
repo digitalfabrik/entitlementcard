@@ -6,10 +6,26 @@ import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../components/AlertBox'
 import { ApplicationStatus } from '../../graphql'
+import { getCertificateVerifications } from '../../util/certificateVerifications'
 import ApplicationCard from './components/ApplicationCard'
 import ApplicationStatusBar from './components/ApplicationStatusBar'
 import type { Application, ApplicationStatusBarItemType } from './types/types'
 import { getPreVerifiedEntitlementType } from './utils/preVerifiedEntitlements'
+
+const hasCertificateVerifications = (application: Application): boolean =>
+  getCertificateVerifications(application.jsonValue).length > 0
+
+const isPreVerified = (application: Application): boolean =>
+  getPreVerifiedEntitlementType(application.jsonValue) !== undefined
+
+const isVerifiedByOrganizations = (application: Application): boolean =>
+  (application.verifications.length > 0 || hasCertificateVerifications(application)) &&
+  application.verifications.every(verification => verification.verifiedDate !== null)
+
+const isRejectedByOrganizations = (application: Application): boolean =>
+  application.verifications.length > 0 &&
+  application.verifications.every(verification => verification.rejectedDate !== null) &&
+  !hasCertificateVerifications(application)
 
 export const barItems: { [key in string]: ApplicationStatusBarItemType } = {
   all: {
@@ -22,18 +38,15 @@ export const barItems: { [key in string]: ApplicationStatusBarItemType } = {
     applicationAdjectiveI18nKey: 'applicationAdjectiveAccepted',
     filter: (application): boolean =>
       application.status !== ApplicationStatus.Withdrawn &&
-      ((application.verifications.length > 0 &&
-        application.verifications.every(verification => verification.verifiedDate !== null)) ||
-        getPreVerifiedEntitlementType(application.jsonValue) !== undefined),
+      (isVerifiedByOrganizations(application) || isPreVerified(application)),
   },
   rejected: {
     barItemI18nKey: 'statusBarRejected',
     applicationAdjectiveI18nKey: 'applicationAdjectiveRejected',
     filter: (application): boolean =>
       application.status !== ApplicationStatus.Withdrawn &&
-      application.verifications.length > 0 &&
-      application.verifications.every(verification => verification.rejectedDate !== null) &&
-      getPreVerifiedEntitlementType(application.jsonValue) === undefined,
+      isRejectedByOrganizations(application) &&
+      !isPreVerified(application),
   },
   withdrawn: {
     barItemI18nKey: 'statusBarWithdrawn',
