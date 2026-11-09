@@ -55,11 +55,11 @@ test.describe('Bayern testing', () => {
     await expect(page.getByRole('textbox', { name: 'Land' })).toHaveValue('Deutschland')
     await page.getByRole('combobox', { name: 'Einsatzgebiet' }).click()
     await page.getByRole('option', { name: 'Sport' }).click()
-    await expect(page.getByText('Für diese ehrenamtliche Tä')).toBeVisible()
-
     await expect(page.getByRole('heading', { name: 'Nachweis der Tätigkeit' })).toBeVisible()
     await expect(
-      page.getByRole('radio', { name: 'Bestätigung durch eine Kontaktperson der Organisation' }),
+      page.getByRole('radio', {
+        name: 'Durch eine Bestätigung einer Kontaktperson der Organisation',
+      }),
     ).toBeChecked()
     await expect(
       page.getByText(
@@ -91,11 +91,8 @@ test.describe('Bayern testing', () => {
     await page
       .getByRole('textbox', { name: 'Funktion oder Tätigkeit' })
       .fill('activity about activity')
-
     await expect(page.getByRole('heading', { name: 'Nachweis der Tätigkeit' })).toBeVisible()
-    await page
-      .getByRole('radio', { name: 'Hochladen eines Tätigkeitsnachweises der Organisation' })
-      .check()
+    await page.getByRole('radio', { name: 'Mit einem Tätigkeitsnachweis der Organisation' }).check()
     await expect(page.getByRole('textbox', { name: 'Vor- und Nachname der' })).toBeHidden()
     await expect(
       page.getByText(

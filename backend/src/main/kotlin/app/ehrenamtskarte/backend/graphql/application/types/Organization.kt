@@ -14,7 +14,7 @@ data class Organization(
      * An activity at this organization is verified either by the organization contact or by an uploaded certificate.
      */
     fun requireContactOrCertificate(certificate: Attachment?) {
-        if (contact == null && certificate == null) {
+        if ((contact == null) == (certificate == null)) {
             throw InvalidJsonException("Either an organization contact or a certificate must be provided.")
         }
     }

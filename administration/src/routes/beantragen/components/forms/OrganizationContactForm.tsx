@@ -4,7 +4,6 @@ import { Trans, useTranslation } from 'react-i18next'
 
 import AlertBox from '../../../../components/AlertBox'
 import { OrganizationContactInput } from '../../../../graphql'
-import i18next from '../../../../translations/i18n'
 import { normalizeName } from '../../../../util/normalizeString'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
@@ -20,7 +19,7 @@ import ShortTextForm from '../primitive-inputs/ShortTextForm'
 
 const hasGivenPermissionOptions = {
   required: true,
-  notCheckedErrorMessage: i18next.t('applicationForms:contactHasGivenPermissionNotCheckedError'),
+  notCheckedErrorMessage: 'applicationForms:contactHasGivenPermissionNotCheckedError',
 } as const
 
 const SubForms = {
@@ -69,7 +68,10 @@ const OrganizationContactForm: Form<State, OrganizationContactInput, AdditionalP
           state={state.hasGivenPermission}
           setState={useUpdateStateCallback(setState, 'hasGivenPermission')}
           label={t('organizationContact.hasGivenPermission')}
-          options={hasGivenPermissionOptions}
+          options={{
+            ...hasGivenPermissionOptions,
+            notCheckedErrorMessage: t(hasGivenPermissionOptions.notCheckedErrorMessage),
+          }}
         />
       </>
     )

@@ -86,34 +86,23 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
       compensationType: compensationTypeOptions,
       workSinceDate: { maximumDate: undefined },
     })(state)
-    if (result.type === 'error') {
-      return result
-    }
-    const { organization, verification, ...activity } = result.value
     const compensationAmountResult = isCompensationAmountRequired(
       state.compensationType.selectedValue,
     )
       ? NumberForm.validate(state.compensationAmount, compensationAmountOptions)
       : { type: 'valid' as const, value: null }
-
+    if (result.type === 'error' || compensationAmountResult.type === 'error') {
+      return { type: 'error' }
+    }
+    const { organization, verification, ...activity } = result.value
     return {
       type: 'valid',
       value: {
         ...activity,
-        organization: { ...organization, contact: verification.contact },
-        certificate: verification.certificate,
-        isAlreadyVerified: null,
-      },
-    }
-    if (result.type === 'error' || compensationAmountResult.type === 'error') {
-      return { type: 'error' }
-    }
-    return {
-      type: 'valid',
-      value: {
-        ...result.value,
         compensationType: result.value.compensationType.shortText as CompensationType,
         compensationAmount: compensationAmountResult.value,
+        organization: { ...organization, contact: verification.contact },
+        certificate: verification.certificate,
         isAlreadyVerified: null,
         payment: null,
       },
@@ -178,25 +167,10 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
           state={state.organization}
           setState={useUpdateStateCallback(setState, 'organization')}
         />
-        <SubForms.payment.Component
-          state={state.payment}
-          setState={useUpdateStateCallback(setState, 'payment')}
-          label={t('payment')}
-          options={paymentOptions}
-        />
         <SubForms.verification.Component
           state={state.verification}
           setState={useUpdateStateCallback(setState, 'verification')}
           applicantName={applicantName}
-        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
-          {t('applicationForms:certificateHeadline')}
-        </Typography>
-        <Typography component='p'>
-          {t('applicationForms:certificateDescription')} {FileRequirementsText}
-        </Typography>
-        <SubForms.certificate.Component
-          state={state.certificate}
-          setState={useUpdateStateCallback(setState, 'certificate')}
         />
       </>
     )

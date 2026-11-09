@@ -3,7 +3,6 @@ import { Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
 import { AttachmentInput, OrganizationContactInput } from '../../../../graphql'
-import i18next from '../../../../translations/i18n'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,
@@ -21,8 +20,8 @@ type VerificationType = 'contactPerson' | 'certificate'
 
 const verificationTypeOptions: { labelByValue: { [K in VerificationType]: string } } = {
   labelByValue: {
-    contactPerson: i18next.t('applicationForms:activityVerificationByContactPerson'),
-    certificate: i18next.t('applicationForms:activityVerificationByCertificate'),
+    contactPerson: 'activityVerificationByContactPerson',
+    certificate: 'activityVerificationByCertificate',
   },
 }
 
@@ -81,7 +80,12 @@ const ActivityVerificationForm: Form<State, ValidatedInput, AdditionalProps> = {
           setState={useUpdateStateCallback(setState, 'verificationType')}
           divideItems={false}
           title={t('activityVerificationTypeTitle')}
-          options={verificationTypeOptions}
+          options={{
+            labelByValue: {
+              contactPerson: t(verificationTypeOptions.labelByValue.contactPerson),
+              certificate: t(verificationTypeOptions.labelByValue.certificate),
+            },
+          }}
         />
         <SwitchComponent value={state.verificationType.selectedValue}>
           {{
