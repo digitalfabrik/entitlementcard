@@ -12,20 +12,17 @@ import ApplicationStatusBar from './components/ApplicationStatusBar'
 import type { Application, ApplicationStatusBarItemType } from './types/types'
 import { getPreVerifiedEntitlementType } from './utils/preVerifiedEntitlements'
 
-const hasCertificateVerifications = (application: Application): boolean =>
-  getCertificateVerifications(application.jsonValue).length > 0
-
 const isPreVerified = (application: Application): boolean =>
   getPreVerifiedEntitlementType(application.jsonValue) !== undefined
 
 const isVerifiedByOrganizations = (application: Application): boolean =>
-  (application.verifications.length > 0 || hasCertificateVerifications(application)) &&
+  application.verifications.length > 0 &&
   application.verifications.every(verification => verification.verifiedDate !== null)
 
 const isRejectedByOrganizations = (application: Application): boolean =>
   application.verifications.length > 0 &&
   application.verifications.every(verification => verification.rejectedDate !== null) &&
-  !hasCertificateVerifications(application)
+  getCertificateVerifications(application.jsonValue).length === 0
 
 export const barItems: { [key in string]: ApplicationStatusBarItemType } = {
   all: {

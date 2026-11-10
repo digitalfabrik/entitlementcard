@@ -89,6 +89,7 @@ describe('PreVerifiedQuickIndicator', () => {
     ['Wehrdienst', 'MilitaryReserve'],
     ['Freiwilligendienst', 'VolunteerService'],
     ['Ehrenzeichen', 'HonoredByMinisterPresident'],
+    ['Tätigkeitsnachweis', 'ActivityCertificate'],
   ]
 
   it.each(cases)('should show %s label when type is %s', (expectedLabel, type) => {

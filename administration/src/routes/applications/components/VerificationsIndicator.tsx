@@ -102,6 +102,10 @@ const preVerifiedLabelMetaData: Record<PreVerifiedEntitlementType, PreVerifiedLa
     labelText: 'Ehrenzeichen',
     attachment: true,
   },
+  ActivityCertificate: {
+    labelText: 'Tätigkeitsnachweis',
+    attachment: true,
+  },
 }
 
 export const PreVerifiedIndicator = ({
