@@ -33,7 +33,7 @@ const VerificationTypeRadioGroupForm: typeof verificationTypeRadioGroupForm = {
 
 const SubForms = {
   verificationType: VerificationTypeRadioGroupForm,
-  contact: OrganizationContactForm,
+  contactPerson: OrganizationContactForm,
   certificate: FileInputForm,
 }
 
@@ -41,7 +41,7 @@ const validateSelected = createSwitchValidate(
   SubForms,
   { verificationType: verificationTypeOptions },
   'verificationType',
-  { contactPerson: 'contact', certificate: 'certificate' },
+  { contactPerson: 'contactPerson', certificate: 'certificate' },
 )
 
 type State = CompoundState<typeof SubForms>
@@ -62,7 +62,7 @@ const ActivityVerificationForm: Form<State, ValidatedInput, AdditionalProps> = {
       : {
           type: 'valid',
           value: {
-            contact: result.value.contact ?? null,
+            contact: result.value.contactPerson ?? null,
             certificate: result.value.certificate ?? null,
           },
         }
@@ -89,9 +89,9 @@ const ActivityVerificationForm: Form<State, ValidatedInput, AdditionalProps> = {
         <SwitchComponent value={state.verificationType.selectedValue}>
           {{
             contactPerson: (
-              <SubForms.contact.Component
-                state={state.contact}
-                setState={useUpdateStateCallback(setState, 'contact')}
+              <SubForms.contactPerson.Component
+                state={state.contactPerson}
+                setState={useUpdateStateCallback(setState, 'contactPerson')}
                 applicantName={applicantName}
               />
             ),
