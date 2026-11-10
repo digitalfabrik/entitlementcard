@@ -62,12 +62,14 @@ class EakApplicationMutationController(
 
         val attachments = files.orEmpty()
         applicationService.validateAttachmentTypes(attachments)
-        val region = transaction { RegionsRepository.findByIdInProject(project, regionId) }
-            ?: throw RegionNotFoundException()
-        applicationService.validateRegionActivatedForApplication(region)
-        applicationService.validateCardFormatsAvailableInRegion(application, region)
+        val (region, isPreVerified) = transaction {
+            val region = RegionsRepository.findByIdInProject(project, regionId) ?: throw RegionNotFoundException()
+            applicationService.validateRegionActivatedForApplication(region)
+            applicationService.validateCardFormatsAvailableInRegion(application, region)
+            region to applicationService.isValidPreVerifiedApplication(application, request)
+        }
 
-        if (applicationService.isValidPreVerifiedApplication(application, request)) {
+        if (isPreVerified) {
             return addPreVerifiedEakApplication(application, region, attachments, projectConfig)
         }
 
@@ -109,9 +111,8 @@ class EakApplicationMutationController(
         attachments: List<Part>,
         projectConfig: ProjectConfig,
     ): DataFetcherResult<Boolean> {
-        val regionId = region.id.value
         val (applicationEntity, verificationEntities) = transaction {
-            applicationService.saveApplication(application, regionId, attachments, VEREIN360)
+            applicationService.saveApplication(application, region.id.value, attachments, VEREIN360)
         }
         val errors = collectMailErrors(verificationEntities) { verification ->
             mailService.sendPreVerifiedApplicationMail(
@@ -123,7 +124,7 @@ class EakApplicationMutationController(
                 region.activeContactInformation,
             )
         }
-        mailService.sendNotificationForApplicationMails(projectConfig, regionId)
+        mailService.sendNotificationForApplicationMails(projectConfig, region.id.value)
 
         return DataFetcherResult.newResult<Boolean>().data(true).errors(errors).build()
     }

@@ -23,7 +23,6 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.Part
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.deleteWhere
-import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.stereotype.Service
 import java.io.File
 import java.nio.file.Paths
@@ -100,9 +99,7 @@ class ApplicationService(
             }
 
             isAlreadyVerifiedList.all { it == true } -> {
-                transaction {
-                    request.authenticateApiToken(ApiTokenType.VERIFIED_APPLICATION)
-                }
+                request.authenticateApiToken(ApiTokenType.VERIFIED_APPLICATION)
                 true
             }
 
