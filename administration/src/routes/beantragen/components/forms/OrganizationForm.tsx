@@ -1,10 +1,8 @@
 import { Typography } from '@mui/material'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
-import AlertBox from '../../../../components/AlertBox'
 import { OrganizationInput } from '../../../../graphql'
 import i18next from '../../../../translations/i18n'
-import { normalizeName } from '../../../../util/normalizeString'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,
@@ -13,8 +11,6 @@ import {
   createCompoundValidate,
 } from '../../util/compoundFormUtils'
 import { Form, FormComponentProps } from '../../util/formType'
-import CheckboxForm from '../primitive-inputs/CheckboxForm'
-import EmailForm from '../primitive-inputs/EmailForm'
 import SelectForm from '../primitive-inputs/SelectForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
 import AddressForm from './AddressForm'
@@ -34,53 +30,19 @@ const organizationCategoryOptions = {
   ].map(item => ({ label: i18next.t(`application:organization:${item}`), value: item })),
 }
 
-const contactHasGivenPermissionOptions = {
-  required: true,
-  notCheckedErrorMessage: i18next.t('applicationForms:contactHasGivenPermissionNotCheckedError'),
-} as const
-
 const SubForms = {
   name: ShortTextForm,
   address: AddressForm,
   category: SelectForm,
-  contactName: ShortTextForm,
-  contactEmail: EmailForm,
-  contactPhone: ShortTextForm,
-  contactHasGivenPermission: CheckboxForm,
 }
 
-const getValidatedCompoundInput = createCompoundValidate(SubForms, {
-  contactHasGivenPermission: contactHasGivenPermissionOptions,
-  category: organizationCategoryOptions,
-})
-
 type State = CompoundState<typeof SubForms>
-type AdditionalProps = { applicantName: string }
 
-const OrganizationForm: Form<State, OrganizationInput, AdditionalProps> = {
+const OrganizationForm: Form<State, Omit<OrganizationInput, 'contact'>> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: state => {
-    const compoundResult = getValidatedCompoundInput(state)
-    if (compoundResult.type === 'error') {
-      return compoundResult
-    }
-    return {
-      type: 'valid',
-      value: {
-        name: compoundResult.value.name,
-        category: compoundResult.value.category,
-        address: compoundResult.value.address,
-        contact: {
-          name: compoundResult.value.contactName,
-          email: compoundResult.value.contactEmail,
-          telephone: compoundResult.value.contactPhone,
-          hasGivenPermission: compoundResult.value.contactHasGivenPermission,
-        },
-      },
-    }
-  },
-  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => {
+  validate: createCompoundValidate(SubForms, { category: organizationCategoryOptions }),
+  Component: ({ state, setState }: FormComponentProps<State>) => {
     const { t } = useTranslation('application')
     return (
       <>
@@ -101,39 +63,6 @@ const OrganizationForm: Form<State, OrganizationInput, AdditionalProps> = {
           setState={useUpdateStateCallback(setState, 'category')}
           label={t('organization.category')}
           options={organizationCategoryOptions}
-        />
-        <Typography variant='body2bold' component='h4' sx={{ marginTop: 3, marginBottom: 1.5 }}>
-          {t('organizationContact.title')}
-        </Typography>
-        <Typography>{t('applicationForms:organizationContactPersonDescription')}</Typography>
-        {normalizeName(applicantName) === normalizeName(state.contactName.shortText) && (
-          <AlertBox
-            fullWidth
-            severity='warning'
-            sx={{ margin: '8px 0' }}
-            description={<Trans i18nKey='applicationForms:organizationContactPersonAlert' />}
-          />
-        )}
-        <ShortTextForm.Component
-          state={state.contactName}
-          setState={useUpdateStateCallback(setState, 'contactName')}
-          label={t('organizationContact.name')}
-        />
-        <EmailForm.Component
-          state={state.contactEmail}
-          setState={useUpdateStateCallback(setState, 'contactEmail')}
-          label={t('organizationContact.email')}
-        />
-        <ShortTextForm.Component
-          state={state.contactPhone}
-          setState={useUpdateStateCallback(setState, 'contactPhone')}
-          label={t('organizationContact.telephone')}
-        />
-        <CheckboxForm.Component
-          state={state.contactHasGivenPermission}
-          setState={useUpdateStateCallback(setState, 'contactHasGivenPermission')}
-          label={t('organizationContact.hasGivenPermission')}
-          options={contactHasGivenPermissionOptions}
         />
       </>
     )

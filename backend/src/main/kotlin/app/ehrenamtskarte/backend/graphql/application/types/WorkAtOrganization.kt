@@ -24,6 +24,8 @@ data class WorkAtOrganization(
     val isAlreadyVerified: Boolean?,
 ) : JsonFieldSerializable {
     init {
+        organization.requireContactOrCertificate(certificate)
+
         if (payment == null && compensationType == null) {
             throw InvalidJsonException("Either payment or compensation type must be set.")
         }

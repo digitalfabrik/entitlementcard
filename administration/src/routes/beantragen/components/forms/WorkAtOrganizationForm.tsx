@@ -15,10 +15,10 @@ import {
 } from '../../util/compoundFormUtils'
 import { Form, FormComponentProps } from '../../util/formType'
 import DateForm from '../primitive-inputs/DateForm'
-import { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
 import NumberForm from '../primitive-inputs/NumberForm'
 import SelectForm from '../primitive-inputs/SelectForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import ActivityVerificationForm from './ActivityVerificationForm'
 import OrganizationForm from './OrganizationForm'
 
 const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
@@ -66,7 +66,7 @@ const RequiredSubForms = {
   workSinceDate: DateForm,
   compensationType: SelectForm,
   responsibility: ShortTextForm,
-  certificate: OptionalFileInputForm,
+  verification: ActivityVerificationForm,
 }
 
 const SubForms = {
@@ -91,16 +91,18 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
     )
       ? NumberForm.validate(state.compensationAmount, compensationAmountOptions)
       : { type: 'valid' as const, value: null }
-
     if (result.type === 'error' || compensationAmountResult.type === 'error') {
       return { type: 'error' }
     }
+    const { organization, verification, ...activity } = result.value
     return {
       type: 'valid',
       value: {
-        ...result.value,
+        ...activity,
         compensationType: result.value.compensationType.shortText as CompensationType,
         compensationAmount: compensationAmountResult.value,
+        organization: { ...organization, contact: verification.contact },
+        certificate: verification.certificate,
         isAlreadyVerified: null,
         payment: null,
       },
@@ -164,17 +166,11 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
         <SubForms.organization.Component
           state={state.organization}
           setState={useUpdateStateCallback(setState, 'organization')}
-          applicantName={applicantName}
         />
-        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
-          {t('applicationForms:certificateHeadline')}
-        </Typography>
-        <Typography component='p'>
-          {t('applicationForms:certificateDescription')} {FileRequirementsText}
-        </Typography>
-        <SubForms.certificate.Component
-          state={state.certificate}
-          setState={useUpdateStateCallback(setState, 'certificate')}
+        <SubForms.verification.Component
+          state={state.verification}
+          setState={useUpdateStateCallback(setState, 'verification')}
+          applicantName={applicantName}
         />
       </>
     )

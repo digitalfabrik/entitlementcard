@@ -76,6 +76,10 @@ data class BlueCardWorkAtDepartmentEntitlement(
     val responsibility: ShortTextInput,
     val certificate: Attachment?,
 ) : JsonFieldSerializable, ApplicationVerificationsHolder {
+    init {
+        organization.requireContactOrCertificate(certificate)
+    }
+
     override fun toJsonField(): JsonField =
         JsonField(
             name = "blueCardWorkAtDepartmentEntitlement",
