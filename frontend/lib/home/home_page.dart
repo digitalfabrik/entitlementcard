@@ -3,7 +3,6 @@ import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/home/app_flow.dart';
 import 'package:ehrenamtskarte/home/app_flows_stack.dart';
-import 'package:ehrenamtskarte/home/filled_search_icon.dart';
 import 'package:ehrenamtskarte/home/home_navigation_bar.dart';
 import 'package:ehrenamtskarte/identification/identification_page.dart';
 import 'package:ehrenamtskarte/favorites/favorites_page.dart';
@@ -11,6 +10,7 @@ import 'package:ehrenamtskarte/map/floating_action_map_bar.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
@@ -57,8 +57,17 @@ class HomePageState extends State<HomePage> {
     return switch (tab) {
       HomeTab.search => AppFlow(
         SearchPage(),
-        const Icon(Icons.search),
-        const FilledSearchIcon(),
+        // Material Icons has no filled search icon, so a custom SVG colored by the surrounding IconTheme is used
+        Builder(
+          builder: (context) {
+            final iconTheme = IconTheme.of(context);
+            return SvgPicture.asset(
+              'assets/icons/search_filled.svg',
+              width: iconTheme.size,
+              colorFilter: ColorFilter.mode(iconTheme.color!, BlendMode.srcIn),
+            );
+          },
+        ),
         (BuildContext context) => t.search.title,
         GlobalKey<NavigatorState>(debugLabel: 'Search tab key'),
       ),
@@ -69,21 +78,18 @@ class HomePageState extends State<HomePage> {
           setFollowUserLocation: (follow) => setState(() => followUserLocation = follow),
         ),
         const Icon(Icons.map_outlined),
-        const Icon(Icons.map),
         (BuildContext context) => t.map.title,
         GlobalKey<NavigatorState>(debugLabel: 'Map tab key'),
       ),
       HomeTab.favorites => AppFlow(
         const FavoritesPage(),
         const Icon(Icons.favorite_border),
-        const Icon(Icons.favorite),
         (BuildContext context) => t.favorites.title,
         GlobalKey<NavigatorState>(debugLabel: 'Favorites tab key'),
       ),
       HomeTab.identification => AppFlow(
         IdentificationPage(initialCardIndex: widget.initialCardIndex),
         const Icon(Icons.credit_card_outlined),
-        const Icon(Icons.credit_card),
         (BuildContext context) => t.identification.title,
         GlobalKey<NavigatorState>(debugLabel: 'Auth tab key'),
       ),
@@ -91,7 +97,6 @@ class HomePageState extends State<HomePage> {
         const AboutPage(),
         // Projects with multiple languages show a menu icon, as the page also contains the language selection
         Icon(buildConfig.appLocales.length > 1 ? Icons.menu : Icons.info_outline),
-        Icon(buildConfig.appLocales.length > 1 ? Icons.menu : Icons.info),
         (BuildContext context) => t.about.title,
         GlobalKey<NavigatorState>(debugLabel: 'About tab key'),
       ),
