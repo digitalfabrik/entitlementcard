@@ -5,7 +5,6 @@ export type BuildConfigType = {
 }
 
 export type FeatureFlagsType = {
-  verification: boolean
   favorites: boolean
 }
 
