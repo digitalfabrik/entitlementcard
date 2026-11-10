@@ -4,7 +4,6 @@ import 'package:ehrenamtskarte/map/preview/accepting_store_preview.dart';
 import 'package:flutter/material.dart';
 
 const int fabPadding = 16;
-const mapTabIndex = 0;
 
 /// A bar which is shown above the map tab. It allows to navigate to the details
 /// of an accepting store as well as to navigate to the current user position.
@@ -12,13 +11,13 @@ class FloatingActionMapBar extends StatelessWidget {
   final Future<void> Function(RequestedPosition) bringCameraToUser;
   final int? selectedPhysicalStoreId;
   final bool followUserLocation;
-  final int currentTabIndex;
+  final bool isMapTabSelected;
 
   const FloatingActionMapBar({
     super.key,
     required this.bringCameraToUser,
     required this.selectedPhysicalStoreId,
-    required this.currentTabIndex,
+    required this.isMapTabSelected,
     required this.followUserLocation,
   });
 
@@ -29,7 +28,7 @@ class FloatingActionMapBar extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
-      children: currentTabIndex == mapTabIndex
+      children: isMapTabSelected
           ? [
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
