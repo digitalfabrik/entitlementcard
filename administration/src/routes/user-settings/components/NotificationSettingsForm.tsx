@@ -1,37 +1,34 @@
 import { Button, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useMutation, useQuery } from 'urql'
+import { useMutation } from 'urql'
 
 import BaseCheckbox from '../../../components/BaseCheckbox'
 import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
 import { messageFromGraphQlError } from '../../../errors'
-import {
-  GetNotificationSettingsDocument,
-  UpdateNotificationSettingsDocument,
-} from '../../../graphql'
-import getQueryResult from '../../../util/getQueryResult'
+import { GetNotificationSettingsQuery, UpdateNotificationSettingsDocument } from '../../../graphql'
 
-const NotificationSettings = (): ReactElement => {
+const NotificationSettingsForm = ({
+  notificationSettings,
+}: {
+  notificationSettings: GetNotificationSettingsQuery['notificationSettings']
+}): ReactElement => {
   const { t } = useTranslation('userSettings')
   const { enqueueSnackbar } = useSnackbar()
-  const [receiveEmailForActivation, setReceiveEmailForActivation] = useState<boolean>(false)
-  const [receiveEmailForVerification, setReceiveEmailForVerification] = useState<boolean>(false)
+  const [receiveEmailForActivation, setReceiveEmailForActivation] = useState<boolean>(
+    notificationSettings.notificationOnApplication,
+  )
+  const [receiveEmailForVerification, setReceiveEmailForVerification] = useState<boolean>(
+    notificationSettings.notificationOnVerification,
+  )
   const [updateNotificationSettingsState, updateNotificationSettingsMutation] = useMutation(
     UpdateNotificationSettingsDocument,
   )
-  const [notificationSettingsState, notificationSettingsQuery] = useQuery({
-    query: GetNotificationSettingsDocument,
-  })
 
   const reset = () => {
-    const state = notificationSettingsState.data?.notificationSettings
-
-    if (state) {
-      setReceiveEmailForActivation(state.notificationOnApplication)
-      setReceiveEmailForVerification(state.notificationOnVerification)
-    }
+    setReceiveEmailForActivation(notificationSettings.notificationOnApplication)
+    setReceiveEmailForVerification(notificationSettings.notificationOnVerification)
   }
 
   const submit = async () => {
@@ -49,22 +46,6 @@ const NotificationSettings = (): ReactElement => {
     } else {
       enqueueSnackbar(t('notificationUpdateSuccess'), { variant: 'success' })
     }
-  }
-
-  useEffect(() => {
-    // Seed local checkbox state from the fetched notification settings.
-
-    reset()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [notificationSettingsState])
-
-  const notificationQueryResult = getQueryResult(
-    notificationSettingsState,
-    notificationSettingsQuery,
-  )
-
-  if (!notificationQueryResult.successful) {
-    return notificationQueryResult.component
   }
 
   return (
@@ -100,4 +81,4 @@ const NotificationSettings = (): ReactElement => {
   )
 }
 
-export default NotificationSettings
+export default NotificationSettingsForm

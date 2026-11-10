@@ -5,7 +5,7 @@ import RenderGuard from '../../components/RenderGuard'
 import { Role } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import ChangePasswordForm from './components/ChangePasswordForm'
-import NotificationSettings from './components/NotificationSettings'
+import NotificationSettingsController from './components/NotificationSettingsController'
 
 const UserSettingsController = (): ReactElement => {
   const { applicationFeature } = useContext(ProjectConfigContext)
@@ -24,7 +24,7 @@ const UserSettingsController = (): ReactElement => {
         allowedRoles={[Role.RegionAdmin, Role.RegionManager]}
         condition={!!applicationFeature}
       >
-        <NotificationSettings />
+        <NotificationSettingsController />
       </RenderGuard>
       <ChangePasswordForm />
     </Stack>
