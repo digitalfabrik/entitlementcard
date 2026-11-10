@@ -22,9 +22,9 @@ describe('VerificationQuickIndicator', () => {
         translation: true,
       },
     )
-    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe(': 0')
-    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe(': 2')
-    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe(': 0')
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('0')
+    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe('2')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('0')
   })
 
   it('should show mixed verifications', () => {
@@ -34,9 +34,9 @@ describe('VerificationQuickIndicator', () => {
         translation: true,
       },
     )
-    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe(': 1')
-    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe(': 1')
-    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe(': 1')
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('1')
+    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe('1')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('1')
   })
 
   it('should show only rejected verifications', () => {
@@ -49,9 +49,9 @@ describe('VerificationQuickIndicator', () => {
         translation: true,
       },
     )
-    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe(': 0')
-    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe(': 0')
-    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe(': 2')
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('0')
+    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe('0')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('2')
   })
 
   it('should count certificate verifications as verified', () => {
@@ -61,9 +61,9 @@ describe('VerificationQuickIndicator', () => {
         translation: true,
       },
     )
-    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe(': 3')
-    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe(': 1')
-    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe(': 1')
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('3')
+    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe('1')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('1')
   })
 
   it('should show only verified verifications', () => {
@@ -76,9 +76,9 @@ describe('VerificationQuickIndicator', () => {
         translation: true,
       },
     )
-    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe(': 2')
-    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe(': 0')
-    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe(': 0')
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('2')
+    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe('0')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('0')
   })
 })
 

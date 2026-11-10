@@ -20,8 +20,12 @@ import { ApplicationTypeChip } from './ApplicationTypeChip'
 import { CardTypeIndicator } from './CardTypeIndicator'
 
 const VerificationItem = (p: { status: VerificationStatus; count: number }): ReactElement => (
-  <Box sx={{ display: 'inline-flex', alignItems: 'center' }} data-testid={`indicator-${p.status}`}>
-    <VerificationIcon status={p.status} />: {p.count}
+  <Box
+    sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}
+    data-testid={`indicator-${p.status}`}
+  >
+    <VerificationIcon status={p.status} />
+    {p.count}
   </Box>
 )
 
