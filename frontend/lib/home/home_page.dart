@@ -3,6 +3,8 @@ import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/home/app_flow.dart';
 import 'package:ehrenamtskarte/home/app_flows_stack.dart';
+import 'package:ehrenamtskarte/home/filled_search_icon.dart';
+import 'package:ehrenamtskarte/home/home_navigation_bar.dart';
 import 'package:ehrenamtskarte/identification/identification_page.dart';
 import 'package:ehrenamtskarte/favorites/favorites_page.dart';
 import 'package:ehrenamtskarte/map/floating_action_map_bar.dart';
@@ -13,8 +15,18 @@ import 'package:provider/provider.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
-const mapTabIndex = 0;
-const identityTabIndex = 2;
+enum HomeTab { search, map, favorites, identification, about }
+
+List<HomeTab> get homeTabs => [
+  HomeTab.search,
+  HomeTab.map,
+  if (buildConfig.featureFlags.favorites) HomeTab.favorites,
+  HomeTab.identification,
+  HomeTab.about,
+];
+
+int get mapTabIndex => homeTabs.indexOf(HomeTab.map);
+int get identityTabIndex => homeTabs.indexOf(HomeTab.identification);
 
 class HomePage extends StatefulWidget {
   final int? initialTabIndex;
@@ -28,7 +40,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   late List<AppFlow> appFlows;
-  int _currentTabIndex = mapTabIndex;
+  late int _currentTabIndex;
 
   MapPageController? mapPageController;
   int? selectedPhysicalStoreId;
@@ -37,45 +49,53 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _currentTabIndex = widget.initialTabIndex ?? mapTabIndex;
-    appFlows = [
-      AppFlow(
+    _currentTabIndex = widget.initialTabIndex ?? 0;
+    appFlows = homeTabs.map(_createAppFlow).toList();
+  }
+
+  AppFlow _createAppFlow(HomeTab tab) {
+    return switch (tab) {
+      HomeTab.search => AppFlow(
+        SearchPage(),
+        const Icon(Icons.search),
+        const FilledSearchIcon(),
+        (BuildContext context) => t.search.title,
+        GlobalKey<NavigatorState>(debugLabel: 'Search tab key'),
+      ),
+      HomeTab.map => AppFlow(
         MapPage(
           onMapCreated: (controller) => setState(() => mapPageController = controller),
           selectAcceptingStore: (id) => setState(() => selectedPhysicalStoreId = id),
           setFollowUserLocation: (follow) => setState(() => followUserLocation = follow),
         ),
-        Icons.map_outlined,
+        const Icon(Icons.map_outlined),
+        const Icon(Icons.map),
         (BuildContext context) => t.map.title,
         GlobalKey<NavigatorState>(debugLabel: 'Map tab key'),
       ),
-      AppFlow(
-        SearchPage(),
-        Icons.search_outlined,
-        (BuildContext context) => t.search.title,
-        GlobalKey<NavigatorState>(debugLabel: 'Search tab key'),
+      HomeTab.favorites => AppFlow(
+        const FavoritesPage(),
+        const Icon(Icons.favorite_border),
+        const Icon(Icons.favorite),
+        (BuildContext context) => t.favorites.title,
+        GlobalKey<NavigatorState>(debugLabel: 'Favorites tab key'),
       ),
-      if (buildConfig.featureFlags.favorites)
-        AppFlow(
-          const FavoritesPage(),
-          Icons.favorite_border_outlined,
-          (BuildContext context) => t.favorites.title,
-          GlobalKey<NavigatorState>(debugLabel: 'Favorites tab key'),
-        ),
-      if (buildConfig.featureFlags.verification)
-        AppFlow(
-          IdentificationPage(initialCardIndex: widget.initialCardIndex),
-          Icons.credit_card,
-          (BuildContext context) => t.identification.title,
-          GlobalKey<NavigatorState>(debugLabel: 'Auth tab key'),
-        ),
-      AppFlow(
+      HomeTab.identification => AppFlow(
+        IdentificationPage(initialCardIndex: widget.initialCardIndex),
+        const Icon(Icons.credit_card_outlined),
+        const Icon(Icons.credit_card),
+        (BuildContext context) => t.identification.title,
+        GlobalKey<NavigatorState>(debugLabel: 'Auth tab key'),
+      ),
+      HomeTab.about => AppFlow(
         const AboutPage(),
-        buildConfig.appLocales.length > 1 ? Icons.menu : Icons.info_outline,
+        // Projects with multiple languages show a menu icon, as the page also contains the language selection
+        Icon(buildConfig.appLocales.length > 1 ? Icons.menu : Icons.info_outline),
+        Icon(buildConfig.appLocales.length > 1 ? Icons.menu : Icons.info),
         (BuildContext context) => t.about.title,
         GlobalKey<NavigatorState>(debugLabel: 'About tab key'),
       ),
-    ];
+    };
   }
 
   @override
@@ -108,22 +128,9 @@ class HomePageState extends State<HomePage> {
         },
         selectedPhysicalStoreId: selectedPhysicalStoreId,
         followUserLocation: followUserLocation,
-        currentTabIndex: _currentTabIndex,
+        isMapTabSelected: _currentTabIndex == mapTabIndex,
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(context),
-    );
-  }
-
-  Widget _buildBottomNavigationBar(BuildContext context) {
-    final theme = Theme.of(context);
-    return BottomNavigationBar(
-      currentIndex: _currentTabIndex,
-      backgroundColor: theme.colorScheme.surfaceContainerHighest,
-      items: appFlows
-          .map((appFlow) => BottomNavigationBarItem(icon: Icon(appFlow.iconData), label: appFlow.getTitle(context)))
-          .toList(),
-      onTap: _onTabTapped,
-      type: BottomNavigationBarType.fixed,
+      bottomNavigationBar: HomeNavigationBar(appFlows: appFlows, currentIndex: _currentTabIndex, onTap: _onTabTapped),
     );
   }
 
