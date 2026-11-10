@@ -11,6 +11,11 @@ const val PRIVACY_POLICY_MAX_CHARS = 20000
 const val APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS = 1000
 const val CONTACT_INFORMATION_MAX_CHARS = 500
 
+enum class AvailableCardFormats {
+    DIGITAL,
+    DIGITAL_AND_PHYSICAL,
+}
+
 object Regions : IntIdTable() {
     val projectId = reference("projectId", Projects)
     val regionIdentifier = char("regionIdentifier", 5) // 5-stelliger Kreisschlüssel
@@ -27,6 +32,8 @@ object Regions : IntIdTable() {
     ).nullable()
     val contactInformationActivated = bool("contactInformationActivated").default(false)
     val contactInformation = text("contactInformation").nullable()
+    val availableCardFormats = enumerationByName("availableCardFormats", 30, AvailableCardFormats::class)
+        .default(AvailableCardFormats.DIGITAL_AND_PHYSICAL)
 
     init {
         uniqueIndex("unique_projectid_regionidentifier", projectId, regionIdentifier)
@@ -69,4 +76,5 @@ class RegionEntity(id: EntityID<Int>) : IntEntity(id) {
         get() = applicationConfirmationMailNote.takeIf { applicationConfirmationMailNoteActivated }
     val activeContactInformation: String?
         get() = contactInformation.takeIf { contactInformationActivated }
+    var availableCardFormats by Regions.availableCardFormats
 }

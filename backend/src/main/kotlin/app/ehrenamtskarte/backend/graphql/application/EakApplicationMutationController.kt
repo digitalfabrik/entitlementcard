@@ -9,6 +9,7 @@ import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSou
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource.VEREIN360
 import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.db.entities.NOTE_MAX_CHARS
+import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import app.ehrenamtskarte.backend.db.entities.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
 import app.ehrenamtskarte.backend.db.entities.mayUpdateApplicationsInRegion
@@ -24,6 +25,7 @@ import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidNoteSizeException
 import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
+import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import app.ehrenamtskarte.backend.shared.mail.collectMailErrors
@@ -60,13 +62,17 @@ class EakApplicationMutationController(
 
         val attachments = files.orEmpty()
         applicationService.validateAttachmentTypes(attachments)
-        applicationService.validateRegionActivatedForApplication(project, regionId)
-
-        if (applicationService.isValidPreVerifiedApplication(application, request)) {
-            return addPreVerifiedEakApplication(application, regionId, attachments, projectConfig)
+        val (region, isPreVerified) = transaction {
+            val region = RegionsRepository.findByIdInProject(project, regionId) ?: throw RegionNotFoundException()
+            applicationService.validateRegionActivatedForApplication(region)
+            applicationService.validateCardFormatsAvailableInRegion(application, region)
+            region to applicationService.isValidPreVerifiedApplication(application, request)
         }
 
-        val region = transaction { RegionsRepository.findRegionById(regionId) }
+        if (isPreVerified) {
+            return addPreVerifiedEakApplication(application, region, attachments, projectConfig)
+        }
+
         val verifications = transaction {
             val (applicationEntity, verificationEntities) = applicationService.saveApplication(
                 application,
@@ -101,13 +107,12 @@ class EakApplicationMutationController(
 
     private fun addPreVerifiedEakApplication(
         application: Application,
-        regionId: Int,
+        region: RegionEntity,
         attachments: List<Part>,
         projectConfig: ProjectConfig,
     ): DataFetcherResult<Boolean> {
-        val region = transaction { RegionsRepository.findRegionById(regionId) }
         val (applicationEntity, verificationEntities) = transaction {
-            applicationService.saveApplication(application, regionId, attachments, VEREIN360)
+            applicationService.saveApplication(application, region.id.value, attachments, VEREIN360)
         }
         val errors = collectMailErrors(verificationEntities) { verification ->
             mailService.sendPreVerifiedApplicationMail(
@@ -119,7 +124,7 @@ class EakApplicationMutationController(
                 region.activeContactInformation,
             )
         }
-        mailService.sendNotificationForApplicationMails(projectConfig, regionId)
+        mailService.sendNotificationForApplicationMails(projectConfig, region.id.value)
 
         return DataFetcherResult.newResult<Boolean>().data(true).errors(errors).build()
     }

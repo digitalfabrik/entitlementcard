@@ -186,6 +186,10 @@ export const graphQlErrorMap = (extensions?: {
       return {
         title: i18next.t('errors:regionNotActivatedForConfirmationMail'),
       }
+    case GraphQlExceptionCode.PhysicalCardNotAvailableInRegion:
+      return {
+        title: i18next.t('errors:physicalCardNotAvailableInRegion'),
+      }
     case GraphQlExceptionCode.RegionNotUnique:
       return {
         title: i18next.t('errors:regionNotUnique'),
