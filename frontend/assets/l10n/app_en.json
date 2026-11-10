@@ -21,7 +21,7 @@
     "publisher": "Publisher",
     "settingsTitle": "Settings",
     "sourceCode": "Source code",
-    "title": "About"
+    "title": "Info"
   },
   "deeplinkActivation": {
     "headline": "Activate card",
@@ -138,7 +138,7 @@
     "standardCamera": "Standard camera",
     "stopShowing": "Stop showing",
     "timeIncorrect": "The time of your device does not seem to be correct. Please synchronize the time in the system settings.",
-    "title": "Identify",
+    "title": "Cards",
     "unlimited": "unlimited",
     "validFromUntil": "Valid: {{startDate}} until {{expirationDate}}",
     "validUntil": "Valid until: {{expirationDate}}",
@@ -173,7 +173,7 @@
     "mapData": "Map data",
     "osmContributors": "OpenStreetMap Contributors",
     "showMapCopyright": "Show info about map data copyright",
-    "title": "Map"
+    "title": "Places"
   },
   "search": {
     "filterByCategories": "Filter by categories",
@@ -184,7 +184,7 @@
     "searchResults": "Search results",
     "alphabetically": "(A-Z)",
     "nearby": "(nearby)",
-    "title": "Search"
+    "title": "Offers"
   },
   "store": {
     "acceptingStore": "Acceptance point",
