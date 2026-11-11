@@ -1,5 +1,4 @@
 import {
-  Button,
   Table,
   TableBody,
   TableCell,
@@ -13,7 +12,7 @@ import { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import BaseCheckbox from '../../../components/BaseCheckbox'
-import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
+import SettingsCard from '../../../components/SettingsCard'
 import { FreinetAgency } from '../../../graphql'
 
 const WordBreakingTableCell = styled(TableCell)({
@@ -38,7 +37,10 @@ const FreinetSettingsCard = ({
   const { agencyId, apiAccessKey, agencyName } = agencyInformation
 
   return (
-    <SettingsCard title={t('freinetHeadline')}>
+    <SettingsCard
+      title={t('freinetHeadline')}
+      action={{ label: t('save'), onSubmit: () => onSave(dataTransferActivated) }}
+    >
       <Typography component='p'>
         <Trans i18nKey='regionSettings:freinetExplanation' />
       </Typography>
@@ -67,9 +69,6 @@ const FreinetSettingsCard = ({
         hasError={false}
         errorMessage={undefined}
       />
-      <SettingsCardButtonBox>
-        <Button onClick={() => onSave(dataTransferActivated)}>{t('save')}</Button>
-      </SettingsCardButtonBox>
     </SettingsCard>
   )
 }

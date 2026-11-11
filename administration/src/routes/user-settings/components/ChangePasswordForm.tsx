@@ -1,4 +1,4 @@
-import { Button, Stack, Typography } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,7 +7,7 @@ import { useMutation } from 'urql'
 import validatePasswordInput from '../../../auth/validateNewPasswordInput'
 import AlertBox from '../../../components/AlertBox'
 import PasswordInput from '../../../components/PasswordInput'
-import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
+import SettingsCard from '../../../components/SettingsCard'
 import { messageFromGraphQlError } from '../../../errors'
 import { ChangePasswordDocument } from '../../../graphql'
 import { useWhoAmI } from '../../../provider/WhoAmIProvider'
@@ -45,39 +45,35 @@ const ChangePasswordForm = (): ReactElement => {
   }
 
   return (
-    <SettingsCard title={t('changePassword')}>
+    <SettingsCard
+      title={t('changePassword')}
+      action={{
+        onSubmit: submit,
+        label: t('changePassword'),
+        disabled: !valid,
+        loading: changePasswordState.fetching,
+      }}
+    >
       <Typography component='p' sx={{ mb: 2 }}>
         {t('changePasswordExplanation')}
       </Typography>
-      <form
-        onSubmit={event => {
-          event.preventDefault()
-          submit()
-        }}
-      >
-        <Stack sx={{ gap: 2 }}>
-          <PasswordInput
-            value={currentPassword}
-            setValue={setCurrentPassword}
-            label={t('currentPassword')}
-          />
-          <PasswordInput value={newPassword} setValue={setNewPassword} label={t('newPassword')} />
-          <PasswordInput
-            value={repeatNewPassword}
-            setValue={setRepeatNewPassword}
-            label={t('newPassword')}
-          />
+      <Stack sx={{ gap: 2 }}>
+        <PasswordInput
+          value={currentPassword}
+          setValue={setCurrentPassword}
+          label={t('currentPassword')}
+        />
+        <PasswordInput value={newPassword} setValue={setNewPassword} label={t('newPassword')} />
+        <PasswordInput
+          value={repeatNewPassword}
+          setValue={setRepeatNewPassword}
+          label={t('newPassword')}
+        />
 
-          {warnMessage === null ? null : (
-            <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />
-          )}
-          <SettingsCardButtonBox>
-            <Button type='submit' disabled={!valid} loading={changePasswordState.fetching}>
-              {t('changePassword')}
-            </Button>
-          </SettingsCardButtonBox>
-        </Stack>
-      </form>
+        {warnMessage === null ? null : (
+          <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />
+        )}
+      </Stack>
     </SettingsCard>
   )
 }

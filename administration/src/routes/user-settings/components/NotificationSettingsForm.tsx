@@ -1,11 +1,11 @@
-import { Button, Typography } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from 'urql'
 
 import BaseCheckbox from '../../../components/BaseCheckbox'
-import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
+import SettingsCard from '../../../components/SettingsCard'
 import { messageFromGraphQlError } from '../../../errors'
 import { GetNotificationSettingsQuery, UpdateNotificationSettingsDocument } from '../../../graphql'
 
@@ -49,14 +49,16 @@ const NotificationSettingsForm = ({
   }
 
   return (
-    <SettingsCard title={t('notifications')}>
+    <SettingsCard
+      title={t('notifications')}
+      action={{
+        onSubmit: submit,
+        label: t('save'),
+        loading: updateNotificationSettingsState.fetching,
+      }}
+    >
       <Typography component='p'>{t('notificationsExplanation')}</Typography>
-      <form
-        onSubmit={event => {
-          event.preventDefault()
-          submit()
-        }}
-      >
+      <Stack>
         <BaseCheckbox
           checked={receiveEmailForActivation}
           onChange={checked => setReceiveEmailForActivation(checked)}
@@ -71,12 +73,7 @@ const NotificationSettingsForm = ({
           hasError={false}
           errorMessage={undefined}
         />
-        <SettingsCardButtonBox>
-          <Button type='submit' loading={updateNotificationSettingsState.fetching}>
-            {t('save')}
-          </Button>
-        </SettingsCardButtonBox>
-      </form>
+      </Stack>
     </SettingsCard>
   )
 }
