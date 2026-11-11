@@ -3,6 +3,7 @@ import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -18,6 +19,9 @@ class SliverResultsLoader extends StatefulWidget {
   final List<int> categoryIds;
 
   const SliverResultsLoader({super.key, this.coordinates, this.searchText, required this.categoryIds});
+
+  bool hasSameSearchParams(SliverResultsLoader other) =>
+      searchText == other.searchText && coordinates == other.coordinates && listEquals(categoryIds, other.categoryIds);
 
   @override
   State<StatefulWidget> createState() => SliverResultsLoaderState();
@@ -63,7 +67,9 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
   @override
   void didUpdateWidget(SliverResultsLoader oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _pagingController.refresh();
+    if (!widget.hasSameSearchParams(oldWidget)) {
+      _pagingController.refresh();
+    }
   }
 
   Future<void> _fetchPage(int pageKey) async {
@@ -99,7 +105,7 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
         throw exception;
       }
 
-      if (widget != oldWidget) {
+      if (!widget.hasSameSearchParams(oldWidget)) {
         // Params are outdated.
         // If we're still at the first key, we must manually retrigger fetching.
         if (pageKey == _pagingController.firstPageKey) {
@@ -122,7 +128,7 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
       }
     } on Exception catch (error) {
       if (!mounted) return;
-      if (widget != oldWidget) {
+      if (!widget.hasSameSearchParams(oldWidget)) {
         // Params are outdated.
         // If we're still at the first key, we must manually retrigger fetching.
         if (pageKey == _pagingController.firstPageKey) {
