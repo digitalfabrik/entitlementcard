@@ -11,13 +11,11 @@ class FloatingActionMapBar extends StatelessWidget {
   final Future<void> Function(RequestedPosition) bringCameraToUser;
   final int? selectedPhysicalStoreId;
   final bool followUserLocation;
-  final bool isMapTabSelected;
 
   const FloatingActionMapBar({
     super.key,
     required this.bringCameraToUser,
     required this.selectedPhysicalStoreId,
-    required this.isMapTabSelected,
     required this.followUserLocation,
   });
 
@@ -28,30 +26,26 @@ class FloatingActionMapBar extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
-      children: isMapTabSelected
-          ? [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  LocationButton(bringCameraToUser: bringCameraToUser, followUserLocation: followUserLocation),
-                ],
-              ),
-              AnimatedSize(
-                duration: const Duration(milliseconds: 200),
-                child: IntrinsicHeight(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    child: physicalStoreId != null
-                        ? Container(
-                            padding: EdgeInsets.only(top: fabPadding.toDouble()),
-                            child: AcceptingStorePreview(physicalStoreId: physicalStoreId),
-                          )
-                        : null,
-                  ),
-                ),
-              ),
-            ]
-          : [],
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [LocationButton(bringCameraToUser: bringCameraToUser, followUserLocation: followUserLocation)],
+        ),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 200),
+          child: IntrinsicHeight(
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: physicalStoreId != null
+                  ? Container(
+                      padding: EdgeInsets.only(top: fabPadding.toDouble()),
+                      child: AcceptingStorePreview(physicalStoreId: physicalStoreId),
+                    )
+                  : null,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

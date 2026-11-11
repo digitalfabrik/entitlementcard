@@ -125,16 +125,17 @@ class HomePageState extends State<HomePage> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: AppFlowsStack(appFlows: appFlows, currentIndex: _currentTabIndex),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionMapBar(
-        bringCameraToUser: (position) async {
-          await mapPageController?.bringCameraToUser(position);
-          if (!mounted) return;
-          setState(() => followUserLocation = true);
-        },
-        selectedPhysicalStoreId: selectedPhysicalStoreId,
-        followUserLocation: followUserLocation,
-        isMapTabSelected: _currentTabIndex == mapTabIndex,
-      ),
+      floatingActionButton: _currentTabIndex == mapTabIndex
+          ? FloatingActionMapBar(
+              bringCameraToUser: (position) async {
+                await mapPageController?.bringCameraToUser(position);
+                if (!mounted) return;
+                setState(() => followUserLocation = true);
+              },
+              selectedPhysicalStoreId: selectedPhysicalStoreId,
+              followUserLocation: followUserLocation,
+            )
+          : const SizedBox.shrink(),
       bottomNavigationBar: HomeNavigationBar(appFlows: appFlows, currentIndex: _currentTabIndex, onTap: _onTabTapped),
     );
   }
