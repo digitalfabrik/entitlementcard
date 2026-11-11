@@ -185,7 +185,8 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final List<CategoryAsset> categoryAssetList = [...categoryAssets(context).where((category) => category.id != 9)]
       ..sort((a, b) => a.shortName.length.compareTo(b.shortName.length))
       ..add(categoryAssets(context).where((category) => category.id == 9).single);
@@ -207,6 +208,8 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
         controller: textEditingController,
         focusNode: focusNode,
         hintText: t.search.searchHint,
+        hintStyle: WidgetStatePropertyAll(theme.textTheme.bodyLarge?.copyWith(color: theme.hintColor)),
+        elevation: const WidgetStatePropertyAll(1),
         constraints: const BoxConstraints(minHeight: _searchBarHeight),
         leading: Icon(Icons.search, color: colorScheme.onSurface),
         trailing: [
@@ -214,7 +217,7 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
             IconButton(
               icon: const Icon(Icons.clear),
               onPressed: _clearInput,
-              color: colorScheme.onSurfaceVariant,
+              color: colorScheme.onSurface,
               tooltip: t.search.clearSearch,
             ),
         ],
