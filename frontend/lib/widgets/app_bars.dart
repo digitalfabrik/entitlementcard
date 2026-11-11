@@ -160,6 +160,10 @@ class SliverStatusBarProtector extends StatelessWidget {
   }
 }
 
+const _searchBarHeight = 44.0;
+const _searchBarPadding = 16.0;
+const _searchAppBarToolbarHeight = _searchBarHeight + 2 * _searchBarPadding;
+
 class SliverSearchAppBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final void Function(CategoryAsset, bool) onCategoryPress;
@@ -182,7 +186,7 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    final foregroundColor = theme.appBarTheme.foregroundColor;
+    final colorScheme = theme.colorScheme;
     final List<CategoryAsset> categoryAssetList = [...categoryAssets(context).where((category) => category.id != 9)]
       ..sort((a, b) => a.shortName.length.compareTo(b.shortName.length))
       ..add(categoryAssets(context).where((category) => category.id == 9).single);
@@ -194,31 +198,35 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
       pinned: true,
       snap: true,
       floating: true,
-      expandedHeight: categoryFilterBarExpectedHeight(context, filteredAssetList.length),
-      title: TextField(
+      toolbarHeight: _searchAppBarToolbarHeight,
+      expandedHeight: categoryFilterBarExpectedHeight(context, filteredAssetList.length, _searchAppBarToolbarHeight),
+      title: SearchBar(
         onTapOutside: (PointerDownEvent event) {
           focusNode.nextFocus();
         },
         onChanged: _onSearchFieldTextChanged,
         controller: textEditingController,
         focusNode: focusNode,
-        decoration: InputDecoration.collapsed(
-          hintText: t.search.searchHint,
-          hintStyle: theme.textTheme.bodyLarge?.apply(color: foregroundColor),
-        ),
-        cursorColor: foregroundColor,
-        style: theme.textTheme.bodyLarge?.apply(color: foregroundColor),
+        hintText: t.search.searchHint,
+        hintStyle: WidgetStatePropertyAll(theme.textTheme.bodyLarge?.copyWith(color: theme.hintColor)),
+        elevation: const WidgetStatePropertyAll(1),
+        constraints: const BoxConstraints(minHeight: _searchBarHeight),
+        leading: Icon(Icons.search, color: colorScheme.onSurface),
+        trailing: [
+          if (textEditingController.value.text.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: _clearInput,
+              color: colorScheme.onSurface,
+              tooltip: t.search.clearSearch,
+            ),
+        ],
       ),
-      flexibleSpace: CategoryFilterBar(categoryAssets: filteredAssetList, onCategoryPress: onCategoryPress),
-      actionsIconTheme: IconThemeData(color: foregroundColor),
-      actions: [
-        if (textEditingController.value.text.isNotEmpty)
-          IconButton(icon: const Icon(Icons.clear), onPressed: _clearInput, color: foregroundColor),
-        Padding(
-          padding: const EdgeInsets.only(right: 15.0),
-          child: Icon(Icons.search, color: foregroundColor?.withValues(alpha: 0.9)),
-        ),
-      ],
+      flexibleSpace: CategoryFilterBar(
+        categoryAssets: filteredAssetList,
+        onCategoryPress: onCategoryPress,
+        toolbarHeight: _searchAppBarToolbarHeight,
+      ),
     );
   }
 
