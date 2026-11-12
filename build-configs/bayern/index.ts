@@ -73,7 +73,6 @@ export const bayernCommon: CommonBuildConfigType = {
     'assets/bayern/intro_slides/search_with_location.png',
   ],
   featureFlags: {
-    verification: true,
     favorites: false,
   },
   applicationUrl: {

@@ -77,7 +77,6 @@ export const nuernbergCommon: CommonBuildConfigType = {
     'assets/nuernberg/intro_slides/search_with_location.png',
   ],
   featureFlags: {
-    verification: true,
     favorites: false,
   },
   applicationUrl: {

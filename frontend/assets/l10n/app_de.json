@@ -21,7 +21,7 @@
     "publisher": "Herausgeber",
     "settingsTitle": "Einstellungen",
     "sourceCode": "Quellcode der App",
-    "title": "Über"
+    "title": "Info"
   },
   "category": {
     "clothing": "Kleidung",
@@ -138,7 +138,7 @@
     "standardCamera": "Standard-Kamera",
     "stopShowing": "Nicht mehr anzeigen",
     "timeIncorrect": "Die Uhrzeit Ihres Geräts scheint nicht zu stimmen. Bitte synchronisieren Sie die Uhrzeit in den Systemeinstellungen.",
-    "title": "Ausweisen",
+    "title": "Karten",
     "unlimited": "unbegrenzt",
     "validFromUntil": "Gültig: {{startDate}} bis {{expirationDate}}",
     "validUntil": "Gültig bis: {{expirationDate}}",
@@ -173,7 +173,7 @@
     "mapData": "Kartendaten",
     "osmContributors": "OpenStreetMap Mitwirkende",
     "showMapCopyright": "Zeige Infos über das Urheberrecht der Kartendaten",
-    "title": "Karte"
+    "title": "Orte"
   },
   "search": {
     "filterByCategories": "Nach Kategorien filtern",
@@ -185,7 +185,7 @@
     "searchResults": "Suchresultate",
     "alphabetically": "(A-Z)",
     "nearby": "(in der Nähe)",
-    "title": "Suche"
+    "title": "Angebote"
   },
   "store": {
     "acceptingStore": "Akzeptanzstelle",
