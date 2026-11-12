@@ -1,17 +1,17 @@
 import {
-  Button,
   FormControl,
   FormControlLabel,
   FormLabel,
   Radio,
   RadioGroup,
+  Stack,
   Typography,
 } from '@mui/material'
 import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import BaseCheckbox from '../../../components/BaseCheckbox'
-import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
+import SettingsCard from '../../../components/SettingsCard'
 import { AvailableCardFormats } from '../../../graphql'
 
 const RegionSettingsCard = ({
@@ -45,21 +45,31 @@ const RegionSettingsCard = ({
   )
 
   return (
-    <SettingsCard title={t('regionSettings')}>
-      <BaseCheckbox
-        checked={activatedForApplication}
-        onChange={checked => setActivatedForApplication(checked)}
-        label={<Typography>{t('activatedForApplication')}</Typography>}
-        hasError={false}
-        errorMessage={undefined}
-      />
-      <BaseCheckbox
-        checked={activatedForCardConfirmationMail}
-        onChange={checked => setActivatedForCardConfirmationMail(checked)}
-        label={<Typography>{t('activatedForCardConfirmationMail')}</Typography>}
-        hasError={false}
-        errorMessage={undefined}
-      />
+    <SettingsCard
+      title={t('regionSettings')}
+      action={{
+        label: t('save'),
+        onSubmit: () =>
+          onSave(activatedForApplication, activatedForCardConfirmationMail, availableCardFormats),
+        loading,
+      }}
+    >
+      <Stack>
+        <BaseCheckbox
+          checked={activatedForApplication}
+          onChange={checked => setActivatedForApplication(checked)}
+          label={<Typography>{t('activatedForApplication')}</Typography>}
+          hasError={false}
+          errorMessage={undefined}
+        />
+        <BaseCheckbox
+          checked={activatedForCardConfirmationMail}
+          onChange={checked => setActivatedForCardConfirmationMail(checked)}
+          label={<Typography>{t('activatedForCardConfirmationMail')}</Typography>}
+          hasError={false}
+          errorMessage={undefined}
+        />
+      </Stack>
       {showAvailableCardFormats && (
         <FormControl sx={{ mt: 3 }}>
           <FormLabel id='available-card-formats-label'>{t('availableCardFormats')}</FormLabel>
@@ -81,16 +91,6 @@ const RegionSettingsCard = ({
           </RadioGroup>
         </FormControl>
       )}
-      <SettingsCardButtonBox>
-        <Button
-          onClick={() =>
-            onSave(activatedForApplication, activatedForCardConfirmationMail, availableCardFormats)
-          }
-          loading={loading}
-        >
-          {t('save')}
-        </Button>
-      </SettingsCardButtonBox>
     </SettingsCard>
   )
 }

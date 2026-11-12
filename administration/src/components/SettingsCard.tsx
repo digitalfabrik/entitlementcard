@@ -1,21 +1,66 @@
-import { Box, Card, Typography } from '@mui/material'
-import { styled } from '@mui/material/styles'
-import { PropsWithChildren, ReactNode } from 'react'
+import { Box, Button, Card, Stack, Typography } from '@mui/material'
+import { PropsWithChildren, ReactNode, SubmitEvent } from 'react'
 
-export const SettingsCardButtonBox = styled(Box)(({ theme }) => ({
-  textAlign: 'right',
-  paddingBlock: theme.spacing(1),
-}))
-
-type SettingsCardProps = {
+const SettingsCard = ({
+  children,
+  title,
+  action,
+}: PropsWithChildren<{
   title: string
-}
-
-const SettingsCard = ({ children, title }: PropsWithChildren<SettingsCardProps>): ReactNode => (
-  <Card sx={{ width: '100%', maxWidth: '500px', padding: 3, display: 'table' }}>
-    <Typography variant='h4' component='h2'>
+  action?: {
+    label: string
+    onSubmit: () => void
+    loading?: boolean
+    disabled?: boolean
+  }
+}>): ReactNode => (
+  <Box
+    component={action === undefined ? 'section' : 'form'}
+    onSubmit={
+      action === undefined
+        ? undefined
+        : (event: SubmitEvent) => {
+            event.preventDefault()
+            action.onSubmit()
+          }
+    }
+    sx={{ padding: 3 }}
+  >
+    <Typography variant='h4' component='h2' sx={{ marginBottom: 2 }}>
       {title}
     </Typography>
+    <Stack direction='row' sx={{ alignItems: 'flex-end', gap: 8 }}>
+      <Box sx={{ flex: 1, minWidth: 0 }}>{children}</Box>
+      {action !== undefined && (
+        <Button
+          type='submit'
+          loading={action.loading}
+          disabled={action.disabled}
+          sx={{ flexShrink: 0 }}
+        >
+          {action.label}
+        </Button>
+      )}
+    </Stack>
+  </Box>
+)
+
+export const SettingsCardGroup = ({ children }: PropsWithChildren): ReactNode => (
+  <Card
+    elevation={1}
+    sx={{
+      width: '100%',
+      border: 1,
+      borderColor: 'divider',
+      maxWidth: 'md',
+      marginTop: 2,
+      flexShrink: 0,
+      '& > *:not(:last-child)': {
+        borderBottom: 2,
+        borderColor: 'divider',
+      },
+    }}
+  >
     {children}
   </Card>
 )

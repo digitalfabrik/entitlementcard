@@ -2,6 +2,7 @@ import { Stack } from '@mui/material'
 import { ReactElement, useContext } from 'react'
 
 import RenderGuard from '../../components/RenderGuard'
+import { SettingsCardGroup } from '../../components/SettingsCard'
 import { Role } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import ChangePasswordForm from './components/ChangePasswordForm'
@@ -13,20 +14,20 @@ const UserSettingsController = (): ReactElement => {
     <Stack
       sx={{
         flexGrow: 1,
-        justifyContent: 'safe center',
         alignItems: 'center',
         padding: 2,
-        gap: 2,
         overflow: 'auto',
       }}
     >
-      <RenderGuard
-        allowedRoles={[Role.RegionAdmin, Role.RegionManager]}
-        condition={!!applicationFeature}
-      >
-        <NotificationSettingsController />
-      </RenderGuard>
-      <ChangePasswordForm />
+      <SettingsCardGroup>
+        <RenderGuard
+          allowedRoles={[Role.RegionAdmin, Role.RegionManager]}
+          condition={!!applicationFeature}
+        >
+          <NotificationSettingsController />
+        </RenderGuard>
+        <ChangePasswordForm />
+      </SettingsCardGroup>
     </Stack>
   )
 }
