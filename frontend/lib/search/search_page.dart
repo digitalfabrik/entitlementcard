@@ -8,6 +8,10 @@ import 'package:flutter/material.dart';
 
 enum SortingMode { alphabetically, byDistance }
 
+const int minSearchTextLength = 2;
+
+String? effectiveSearchText(String text) => text.length >= minSearchTextLength ? text : null;
+
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
@@ -38,9 +42,7 @@ class _SearchPageState extends State<SearchPage> {
         CustomScrollView(
           slivers: [
             SliverSearchAppBar(
-              onChanged: (text) => setState(() {
-                searchFieldText = text;
-              }),
+              onChanged: (text) => setState(() => searchFieldText = effectiveSearchText(text)),
               onCategoryPress: _onCategoryPress,
             ),
             SliverToBoxAdapter(
