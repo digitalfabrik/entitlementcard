@@ -23,17 +23,19 @@ const extensionByContentType: Record<string, string> = {
 const getTranslationKey = (fieldName: string, parentName?: string) =>
   parentName ? `${parentName}.${fieldName}` : fieldName
 
-const JsonFieldAttachment = memo(
+export const AttachmentValue = memo(
   ({
-    jsonField,
+    attachment,
     baseUrl,
     attachmentAccessible,
-    parentName,
-  }: JsonFieldViewProps<JsonField<'Attachment'>>) => {
+  }: {
+    attachment: JsonField<'Attachment'>['value']
+    baseUrl: string
+    attachmentAccessible: boolean
+  }) => {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const token = useContext(AuthContext).data?.token
     const { t } = useTranslation('application')
-    const attachment = jsonField.value
 
     if (attachmentAccessible) {
       const onClick = async () => {
@@ -67,24 +69,50 @@ const JsonFieldAttachment = memo(
       }
 
       return (
-        <Stack direction='row' sx={{ alignItems: 'center', gap: 1 }}>
-          <Typography> {t(getTranslationKey(jsonField.name, parentName))}:</Typography>
+        <>
           <Button
             size='small'
             endIcon={<DownloadForOffline />}
             onClick={onClick}
             sx={{ py: 0, displayPrint: 'none', boxShadow: 0 }}
-          >{`${t('applicationsOverview:attachment')} ${jsonField.value.fileIndex + 1}`}</Button>
+          >{`${t('applicationsOverview:attachment')} ${attachment.fileIndex + 1}`}</Button>
           <Typography sx={{ display: 'none', displayPrint: 'block' }}>
-            {`(${t('applicationsOverview:seeAttachment')} ${jsonField.value.fileIndex + 1})`}
+            {`(${t('applicationsOverview:seeAttachment')} ${attachment.fileIndex + 1})`}
           </Typography>
-        </Stack>
+        </>
       )
     }
     return (
+      <Typography component='span'>{t('applicationsOverview:submittedButNotVisible')}</Typography>
+    )
+  },
+)
+
+const JsonFieldAttachment = memo(
+  ({
+    jsonField,
+    baseUrl,
+    attachmentAccessible,
+    parentName,
+  }: JsonFieldViewProps<JsonField<'Attachment'>>) => {
+    const { t } = useTranslation('application')
+    const value = (
+      <AttachmentValue
+        attachment={jsonField.value}
+        baseUrl={baseUrl}
+        attachmentAccessible={attachmentAccessible}
+      />
+    )
+
+    return attachmentAccessible ? (
+      <Stack direction='row' sx={{ alignItems: 'center', gap: 1 }}>
+        <Typography> {t(getTranslationKey(jsonField.name, parentName))}:</Typography>
+        {value}
+      </Stack>
+    ) : (
       <Typography component='p'>
         {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
-        <Typography component='span'>{t('applicationsOverview:submittedButNotVisible')}</Typography>
+        {value}
       </Typography>
     )
   },

@@ -3,7 +3,10 @@ import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ApplicationApplicant, ApplicationStatus, ApplicationVerificationView } from '../graphql'
+import { getCertificateVerifications } from '../util/certificateVerifications'
 import { VerificationStatus, verificationStatus } from '../util/verifications'
+import CertificateVerificationListItem from './CertificateVerificationListItem'
+import { JsonField } from './JsonFieldView'
 import VerificationListItem from './VerificationListItem'
 
 const VerificationContainer = styled('ul')`
@@ -16,9 +19,11 @@ const VerificationContainer = styled('ul')`
 
 const VerificationsView = ({
   application,
+  baseUrl,
   isAdminView = false,
 }: {
   application: Pick<ApplicationApplicant, 'id' | 'status'> & {
+    jsonValue: JsonField<'Array'>
     verifications: Readonly<
       Pick<
         ApplicationVerificationView,
@@ -30,10 +35,13 @@ const VerificationsView = ({
       >[]
     >
   }
+  /** Base url of the application, used to download attached certificates */
+  baseUrl: string
   /** Displayed in an administration page, so show administrative UI */
   isAdminView?: boolean
 }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
+  const certificateVerifications = getCertificateVerifications(application.jsonValue)
 
   return (
     <>
@@ -54,8 +62,16 @@ const VerificationsView = ({
             />
           )
         })}
+        {certificateVerifications.map(verification => (
+          <CertificateVerificationListItem
+            key={verification.certificate.value.fileIndex}
+            verification={verification}
+            baseUrl={baseUrl}
+            attachmentAccessible={isAdminView}
+          />
+        ))}
       </VerificationContainer>
-      {application.verifications.length === 0 ? (
+      {application.verifications.length === 0 && certificateVerifications.length === 0 ? (
         <Typography sx={{ fontStyle: 'italic' }} role='note'>
           ({t('none')})
         </Typography>

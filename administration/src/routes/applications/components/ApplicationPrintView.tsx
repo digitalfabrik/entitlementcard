@@ -94,7 +94,7 @@ export const ApplicationPrintView = forwardRef<
         expandedRoot
       />
       <hr />
-      <VerificationsView application={p.application} isAdminView />
+      <VerificationsView application={p.application} baseUrl='' isAdminView />
       <hr />
       {p.application.statusResolvedDate != null && (
         <ApplicationStatusNote

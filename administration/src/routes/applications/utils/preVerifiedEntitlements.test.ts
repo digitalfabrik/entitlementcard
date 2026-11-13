@@ -59,4 +59,72 @@ describe('getPreVerifiedEntitlementType', () => {
       getPreVerifiedEntitlementType({ name: 'application', type: 'Array', value: [] }),
     ).toBeUndefined()
   })
+
+  describe('ActivityCertificate', () => {
+    const certificate: GeneralJsonField = {
+      name: 'certificate',
+      type: 'Attachment',
+      value: { fileIndex: 0 },
+    }
+    const organization = (withContact: boolean): GeneralJsonField => ({
+      name: 'organization',
+      type: 'Array',
+      value: [
+        { name: 'name', type: 'String', value: 'Sportverein' },
+        ...(withContact
+          ? [{ name: 'organizationContact', type: 'Array' as const, value: [] }]
+          : []),
+      ],
+    })
+    const workAtOrganization = (withContact: boolean): GeneralJsonField => ({
+      name: 'workAtOrganization',
+      type: 'Array',
+      value: withContact ? [organization(true)] : [organization(false), certificate],
+    })
+    const workAtOrganizations = (
+      name: string,
+      ...activities: GeneralJsonField[]
+    ): GeneralJsonField => ({ name, type: 'Array', value: activities })
+    const workAtDepartment = (name: string): GeneralJsonField => ({
+      name,
+      type: 'Array',
+      value: [organization(false), certificate],
+    })
+
+    it.each(['blueCardWorkAtOrganizationsEntitlement', 'goldenCardWorkAtOrganizationsEntitlement'])(
+      'should detect %s with only certificates',
+      field => {
+        expect(
+          getPreVerifiedEntitlementType(
+            applicationJson([
+              workAtOrganizations(field, workAtOrganization(false), workAtOrganization(false)),
+            ]),
+          ),
+        ).toBe('ActivityCertificate')
+      },
+    )
+
+    it.each(['blueCardWorkAtDepartmentEntitlement', 'goldenCardWorkAtDepartmentEntitlement'])(
+      'should detect %s with a certificate',
+      field => {
+        expect(getPreVerifiedEntitlementType(applicationJson([workAtDepartment(field)]))).toBe(
+          'ActivityCertificate',
+        )
+      },
+    )
+
+    it('should not detect activities if one of them is verified by a contact person', () => {
+      expect(
+        getPreVerifiedEntitlementType(
+          applicationJson([
+            workAtOrganizations(
+              'blueCardWorkAtOrganizationsEntitlement',
+              workAtOrganization(false),
+              workAtOrganization(true),
+            ),
+          ]),
+        ),
+      ).toBeUndefined()
+    })
+  })
 })

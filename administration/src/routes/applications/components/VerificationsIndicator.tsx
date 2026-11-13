@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import { BaseChip } from '../../../components/BaseChip'
 import { VerificationIcon } from '../../../components/VerificationIcon'
+import { getCertificateVerifications } from '../../../util/certificateVerifications'
 import { VerificationStatus, verificationStatus } from '../../../util/verifications'
 import { Application, ApplicationVerification } from '../types/types'
 import { getApplicationCardType, getApplicationType } from '../utils/applicationDataHelper'
@@ -19,16 +20,25 @@ import { ApplicationTypeChip } from './ApplicationTypeChip'
 import { CardTypeIndicator } from './CardTypeIndicator'
 
 const VerificationItem = (p: { status: VerificationStatus; count: number }): ReactElement => (
-  <Box sx={{ display: 'inline-flex', alignItems: 'center' }} data-testid={`indicator-${p.status}`}>
-    <VerificationIcon status={p.status} />: {p.count}
+  <Box
+    sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}
+    data-testid={`indicator-${p.status}`}
+  >
+    <VerificationIcon status={p.status} />
+    {p.count}
   </Box>
 )
 
 export const VerificationIndicator = (p: {
   verifications: readonly ApplicationVerification[]
+  /** Activities verified by an uploaded certificate, which count as verified */
+  certificateVerificationCount: number
 }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
-  const verificationStatuses = p.verifications.map(verificationStatus)
+  const verificationStatuses = [
+    ...p.verifications.map(verificationStatus),
+    ...Array<VerificationStatus>(p.certificateVerificationCount).fill(VerificationStatus.Verified),
+  ]
 
   return (
     <Tooltip
@@ -96,6 +106,10 @@ const preVerifiedLabelMetaData: Record<PreVerifiedEntitlementType, PreVerifiedLa
     labelText: 'Ehrenzeichen',
     attachment: true,
   },
+  ActivityCertificate: {
+    labelText: 'Tätigkeitsnachweis',
+    attachment: true,
+  },
 }
 
 export const PreVerifiedIndicator = ({
@@ -139,7 +153,10 @@ export const ApplicationIndicators = ({
         {preVerifiedEntitlementType !== undefined ? (
           <PreVerifiedIndicator type={preVerifiedEntitlementType} />
         ) : (
-          <VerificationIndicator verifications={application.verifications} />
+          <VerificationIndicator
+            verifications={application.verifications}
+            certificateVerificationCount={getCertificateVerifications(application.jsonValue).length}
+          />
         )}
       </Stack>
     </Stack>

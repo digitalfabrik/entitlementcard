@@ -14,50 +14,71 @@ import { PreVerifiedIndicator, VerificationIndicator } from './VerificationsIndi
 describe('VerificationQuickIndicator', () => {
   it('should show only awaiting verifications', () => {
     const { getByTestId } = renderWithOptions(
-      <VerificationIndicator verifications={verificationsAwaiting} />,
+      <VerificationIndicator
+        verifications={verificationsAwaiting}
+        certificateVerificationCount={0}
+      />,
       {
         translation: true,
       },
     )
-    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe(': 0')
-    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe(': 2')
-    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe(': 0')
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('0')
+    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe('2')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('0')
   })
 
   it('should show mixed verifications', () => {
     const { getByTestId } = renderWithOptions(
-      <VerificationIndicator verifications={verificationsMixed} />,
+      <VerificationIndicator verifications={verificationsMixed} certificateVerificationCount={0} />,
       {
         translation: true,
       },
     )
-    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe(': 1')
-    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe(': 1')
-    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe(': 1')
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('1')
+    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe('1')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('1')
   })
 
   it('should show only rejected verifications', () => {
     const { getByTestId } = renderWithOptions(
-      <VerificationIndicator verifications={verificationsRejected} />,
+      <VerificationIndicator
+        verifications={verificationsRejected}
+        certificateVerificationCount={0}
+      />,
       {
         translation: true,
       },
     )
-    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe(': 0')
-    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe(': 0')
-    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe(': 2')
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('0')
+    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe('0')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('2')
+  })
+
+  it('should count certificate verifications as verified', () => {
+    const { getByTestId } = renderWithOptions(
+      <VerificationIndicator verifications={verificationsMixed} certificateVerificationCount={2} />,
+      {
+        translation: true,
+      },
+    )
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('3')
+    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe('1')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('1')
   })
 
   it('should show only verified verifications', () => {
     const { getByTestId } = renderWithOptions(
-      <VerificationIndicator verifications={verificationsVerified} />,
+      <VerificationIndicator
+        verifications={verificationsVerified}
+        certificateVerificationCount={0}
+      />,
       {
         translation: true,
       },
     )
-    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe(': 2')
-    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe(': 0')
-    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe(': 0')
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('2')
+    expect(getByTestId(`indicator-${VerificationStatus.Pending}`).textContent).toBe('0')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('0')
   })
 })
 
@@ -68,6 +89,7 @@ describe('PreVerifiedQuickIndicator', () => {
     ['Wehrdienst', 'MilitaryReserve'],
     ['Freiwilligendienst', 'VolunteerService'],
     ['Ehrenzeichen', 'HonoredByMinisterPresident'],
+    ['Tätigkeitsnachweis', 'ActivityCertificate'],
   ]
 
   it.each(cases)('should show %s label when type is %s', (expectedLabel, type) => {
