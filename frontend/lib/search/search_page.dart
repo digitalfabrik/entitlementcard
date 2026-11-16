@@ -1,6 +1,5 @@
 import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
-import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/search/results_loader.dart';
 import 'package:ehrenamtskarte/search/sorting_button.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
@@ -31,52 +30,32 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    return Stack(
-      children: [
-        CustomScrollView(
-          slivers: [
-            SliverSearchAppBar(
-              onChanged: (text) => setState(() {
-                searchFieldText = text;
-              }),
-              onCategoryPress: _onCategoryPress,
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Row(
-                  children: [
-                    Text(
-                      '${t.search.searchResults.toUpperCase()} ${_sortingMode == SortingMode.byDistance ? t.search.nearby : t.search.alphabetically}',
-                      style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
-                    ),
-                    const Expanded(
-                      child: Padding(padding: EdgeInsets.only(left: 8), child: Divider()),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SliverResultsLoader(
-              searchText: searchFieldText,
-              categoryIds: _selectedCategories.map((e) => e.id).toList(),
-              coordinates: _sortingMode == SortingMode.byDistance ? _coordinates : null,
-            ),
-          ],
-        ),
-        SortingButton(
-          setCoordinates: (position) => setState(() {
-            _coordinates = Input$CoordinatesInput(lat: position.latitude, lng: position.longitude);
-            _sortingMode = SortingMode.byDistance;
+    return CustomScrollView(
+      slivers: [
+        SliverSearchAppBar(
+          onChanged: (text) => setState(() {
+            searchFieldText = text;
           }),
-          setSortingMode: (sortingMode) {
-            if (sortingMode == SortingMode.alphabetically || _coordinates != null) {
-              setState(() => _sortingMode = sortingMode);
-            }
-          },
-          sortingMode: _sortingMode,
+          onCategoryPress: _onCategoryPress,
+          bottom: SortingBar(
+            child: SortingButton(
+              setCoordinates: (position) => setState(() {
+                _coordinates = Input$CoordinatesInput(lat: position.latitude, lng: position.longitude);
+                _sortingMode = SortingMode.byDistance;
+              }),
+              setSortingMode: (sortingMode) {
+                if (sortingMode == SortingMode.alphabetically || _coordinates != null) {
+                  setState(() => _sortingMode = sortingMode);
+                }
+              },
+              sortingMode: _sortingMode,
+            ),
+          ),
+        ),
+        SliverResultsLoader(
+          searchText: searchFieldText,
+          categoryIds: _selectedCategories.map((e) => e.id).toList(),
+          coordinates: _sortingMode == SortingMode.byDistance ? _coordinates : null,
         ),
       ],
     );
