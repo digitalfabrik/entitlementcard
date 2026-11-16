@@ -128,7 +128,7 @@ class DistanceText extends StatelessWidget {
 
   const DistanceText({super.key, required this.distance});
 
-  static String _formatDistance(double d) {
+  static String formatDistance(double d) {
     if (d < 1) {
       return '${(d * 100).round() * 10} m';
     } else if (d < 10) {
@@ -143,7 +143,7 @@ class DistanceText extends StatelessWidget {
     final theme = Theme.of(context);
     return Center(
       child: Text(
-        _formatDistance(distance),
+        formatDistance(distance),
         maxLines: 1,
         style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor),
       ),
