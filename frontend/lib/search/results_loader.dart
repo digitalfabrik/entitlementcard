@@ -1,7 +1,6 @@
 import 'package:ehrenamtskarte/app_lifecycle_observer.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
-import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -141,27 +140,28 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
 
   @override
   Widget build(BuildContext context) {
-    return PagedSliverList<int, Query$AcceptingStoresSearch$stores>.separated(
-      pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<Query$AcceptingStoresSearch$stores>(
-        itemBuilder: (context, item, index) {
-          return IntrinsicHeight(
-            child: AcceptingStoreSummary(
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      sliver: PagedSliverList<int, Query$AcceptingStoresSearch$stores>(
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate<Query$AcceptingStoresSearch$stores>(
+          itemBuilder: (context, item, index) {
+            return SearchResultCard(
               key: ValueKey(item.id),
               store: AcceptingStoreModel.fromGraphql(item),
               coordinates: widget.coordinates,
               showOnMap: (it) => HomePageData.of(context)?.navigateToMapTab(it),
-            ),
-          );
-        },
-        noMoreItemsIndicatorBuilder: _buildNoMoreItemsSpacer,
-        noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
-        firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
-        newPageErrorIndicatorBuilder: _buildErrorWithRetry,
-        newPageProgressIndicatorBuilder: _buildProgressIndicator,
-        firstPageProgressIndicatorBuilder: _buildProgressIndicator,
+              isFirst: index == 0,
+            );
+          },
+          noMoreItemsIndicatorBuilder: _buildNoMoreItemsSpacer,
+          noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
+          firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
+          newPageErrorIndicatorBuilder: _buildErrorWithRetry,
+          newPageProgressIndicatorBuilder: _buildProgressIndicator,
+          firstPageProgressIndicatorBuilder: _buildProgressIndicator,
+        ),
       ),
-      separatorBuilder: (context, index) => const Divider(height: 0),
     );
   }
 
@@ -169,7 +169,7 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
     child: Padding(padding: EdgeInsets.all(5), child: CircularProgressIndicator()),
   );
 
-  Widget _buildNoMoreItemsSpacer(BuildContext context) => const SizedBox(height: 80);
+  Widget _buildNoMoreItemsSpacer(BuildContext context) => const SizedBox(height: 16);
 
   Widget _buildErrorWithRetry(BuildContext context) {
     final t = context.t;
