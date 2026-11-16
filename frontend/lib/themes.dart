@@ -29,6 +29,7 @@ ThemeData get lightTheme {
       secondary: primaryColor,
       surface: backgroundColor,
       surfaceContainerHighest: const Color(0xffefefef),
+      outlineVariant: const Color(0xffeeeeee),
       surfaceTint: Colors.white54,
       error: const Color(0xffcc0000),
       tertiary: const Color(0xFF505050),
@@ -62,7 +63,7 @@ ThemeData get lightTheme {
       selectionHandleColor: Colors.white,
       selectionColor: Color(0xFF505050),
     ),
-    dividerTheme: DividerThemeData(color: Color(0xffeeeeee)),
+    dividerTheme: DividerThemeData(color: lightTheme.colorScheme.outlineVariant),
     appBarTheme: AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.light,
       backgroundColor: lightTheme.colorScheme.primary,
@@ -104,6 +105,8 @@ ThemeData get darkTheme {
       secondary: primaryColor,
       surface: backgroundColor,
       surfaceContainerHighest: const Color(0xff262626),
+      // Used for subtle borders and dividers. If unset, Flutter falls back to onSurface (white).
+      outlineVariant: const Color(0xFF505050),
       surfaceTint: Colors.white,
       error: const Color(0xff8b0000),
       tertiary: const Color(0xFFC6C4C4),
@@ -131,7 +134,7 @@ ThemeData get darkTheme {
       selectionHandleColor: Colors.white,
       selectionColor: Color(0xFF505050),
     ),
-    dividerTheme: DividerThemeData(color: Color(0xFF505050)),
+    dividerTheme: DividerThemeData(color: theme.colorScheme.outlineVariant),
     appBarTheme: AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.light,
       backgroundColor: theme.colorScheme.primary,
