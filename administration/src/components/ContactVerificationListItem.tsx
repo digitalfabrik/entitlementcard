@@ -33,7 +33,7 @@ const getStatusMetaData = (
   return { text, color }
 }
 
-const VerificationListItem = ({
+const ContactVerificationListItem = ({
   verification,
   applicationId,
   showResendApprovalEmailButton,
@@ -112,4 +112,4 @@ const VerificationListItem = ({
   )
 }
 
-export default VerificationListItem
+export default ContactVerificationListItem

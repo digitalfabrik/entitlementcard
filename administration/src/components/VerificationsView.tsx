@@ -6,8 +6,8 @@ import { ApplicationApplicant, ApplicationStatus, ApplicationVerificationView } 
 import { getCertificateVerifications } from '../util/certificateVerifications'
 import { VerificationStatus, verificationStatus } from '../util/verifications'
 import CertificateVerificationListItem from './CertificateVerificationListItem'
+import ContactVerificationListItem from './ContactVerificationListItem'
 import { JsonField } from './JsonFieldView'
-import VerificationListItem from './VerificationListItem'
 
 const VerificationContainer = styled('ul')`
   list-style-type: none;
@@ -50,7 +50,7 @@ const VerificationsView = ({
         {application.verifications.map(verification => {
           const key = verification.organizationName + verification.contactEmailAddress
           return (
-            <VerificationListItem
+            <ContactVerificationListItem
               key={key}
               verification={verification}
               applicationId={application.id}
