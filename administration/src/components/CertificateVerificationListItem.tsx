@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { CertificateVerification } from '../util/certificateVerifications'
 import { VerificationStatus } from '../util/verifications'
 import { AttachmentValue } from './JsonFieldElemental'
+import VerificationDetails from './VerificationDetails'
 import { VerificationIcon } from './VerificationIcon'
 
 /** An activity that is verified by an uploaded certificate instead of an organization contact person. */
@@ -25,30 +26,29 @@ const CertificateVerificationListItem = ({
       component='li'
       sx={{ borderLeft: `2px solid ${theme.palette.success.main}`, paddingLeft: 1.5 }}
     >
-      <table cellPadding='2px'>
-        <tbody>
-          <tr>
-            <td>{t('organization')}:</td>
-            <td>{verification.organizationName}</td>
-          </tr>
-          <tr>
-            <td>{t('application:certificate')}:</td>
-            <td>
+      <VerificationDetails
+        rows={[
+          { label: t('organization'), value: verification.organizationName },
+          {
+            label: t('application:certificate'),
+            value: (
               <AttachmentValue
                 attachment={verification.certificate.value}
                 baseUrl={baseUrl}
                 attachmentAccessible={attachmentAccessible}
               />
-            </td>
-          </tr>
-          <tr>
-            <td>{t('status')}:</td>
-            <td style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <VerificationIcon status={VerificationStatus.Verified} /> {t('verified')}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            ),
+          },
+          {
+            label: t('status'),
+            value: (
+              <>
+                <VerificationIcon status={VerificationStatus.Verified} /> {t('verified')}
+              </>
+            ),
+          },
+        ]}
+      />
     </Typography>
   )
 }
