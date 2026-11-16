@@ -1,6 +1,11 @@
 import { useTranslation } from 'react-i18next'
 
-import { ApplicationInput, BavariaCardType, Region } from '../../../../graphql'
+import {
+  ApplicationInput,
+  AvailableCardFormats,
+  BavariaCardType,
+  Region,
+} from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,
@@ -28,6 +33,10 @@ type ValidatedInput = [RegionId, ApplicationInput]
 type Options = { regions: Region[] }
 type AdditionalProps = { onSubmit: () => void; loading: boolean }
 
+const isPhysicalCardAvailable = (regions: Region[], selectedRegionId: string): boolean =>
+  regions.find(region => region.id.toString() === selectedRegionId)?.availableCardFormats !==
+  AvailableCardFormats.Digital
+
 const ApplicationForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: {
     ...createCompoundInitialState(SubForms),
@@ -36,7 +45,12 @@ const ApplicationForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: (state, options): ValidationResult<ValidatedInput> => {
     const stepPersonalData = PersonalDataForm.validate(state.stepPersonalData, options)
-    const stepCardType = StepCardTypeForm.validate(state.stepCardType)
+    const stepCardType = StepCardTypeForm.validate(state.stepCardType, {
+      physicalCardAvailable: isPhysicalCardAvailable(
+        options.regions,
+        state.stepPersonalData.region.region.selectedValue,
+      ),
+    })
     if (stepPersonalData.type === 'error' || stepCardType.type === 'error') {
       return { type: 'error' }
     }
@@ -97,7 +111,20 @@ const ApplicationForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
         { regions: options.regions },
         {},
       ),
-      useFormAsStep('Kartentyp', StepCardTypeForm, state, setState, 'stepCardType', {}, {}),
+      useFormAsStep(
+        'Kartentyp',
+        StepCardTypeForm,
+        state,
+        setState,
+        'stepCardType',
+        {
+          physicalCardAvailable: isPhysicalCardAvailable(
+            options.regions,
+            state.stepPersonalData.region.region.selectedValue,
+          ),
+        },
+        {},
+      ),
       useFormAsStep(
         t('applicationStepRequirements'),
         StepRequirementsForm,

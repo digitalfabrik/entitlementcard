@@ -103,6 +103,14 @@ report on:
    passed as props).
  - New user-facing strings must go through i18next (`react-i18next`), not
    be hardcoded.
+ - Translations must be resolved at render time, not at module
+   initialization. Flag new or changed `i18next.t` calls at module top level:
+   they are evaluated once on import, so they never react to language
+   changes and may return the raw key if the module loads before i18next is
+   initialized. Module-level constants should only hold translation keys, and
+   the component should translate them with `t()` from `useTranslation()`.
+   `i18next.t` calls inside functions that run during render or validation
+   are fine.
 3. Frontend (Flutter/Dart) correctness: follow Effective Dart style, prefer
  immutable widgets, watch for missing `dispose()`/listener cleanup, and
  verify that `provider` state changes don't trigger unnecessary rebuilds.

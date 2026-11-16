@@ -106,6 +106,7 @@ flutter:
     - assets/category_icons/
     - assets/detail_headers/
     - assets/ca/
+    - assets/icons/
     - path: assets/bayern/
       flavors:
         - bayern

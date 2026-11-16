@@ -3,6 +3,7 @@ import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import RenderGuard from '../../components/RenderGuard'
+import { SettingsCardGroup } from '../../components/SettingsCard'
 import { Role } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import { useWhoAmI } from '../../provider/WhoAmIProvider'
@@ -28,18 +29,18 @@ const RegionController = (): ReactElement => {
           sx={{
             flexGrow: 1,
             width: '100%',
-            justifyContent: 'safe center',
             alignItems: 'center',
             padding: 2,
-            gap: 2,
             overflow: 'auto',
           }}
         >
-          <DataPrivacyCard />
-          <RegionSettingsController regionId={region.id} />
-          <ApplicationConfirmationNoteController regionId={region.id} />
-          <ContactInformationController regionId={region.id} />
-          {freinetDataTransferEnabled && <FreinetSettingsController regionId={region.id} />}
+          <SettingsCardGroup>
+            <DataPrivacyCard />
+            <RegionSettingsController regionId={region.id} />
+            <ApplicationConfirmationNoteController regionId={region.id} />
+            <ContactInformationController regionId={region.id} />
+            {freinetDataTransferEnabled && <FreinetSettingsController regionId={region.id} />}
+          </SettingsCardGroup>
         </Stack>
       )}
     </RenderGuard>

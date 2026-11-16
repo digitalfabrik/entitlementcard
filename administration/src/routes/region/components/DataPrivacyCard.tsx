@@ -1,19 +1,19 @@
-import { Button, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
 import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
-import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
+import SettingsCard from '../../../components/SettingsCard'
 
 const DataPrivacyCard = (): ReactElement => {
   const navigate = useNavigate()
   const { t } = useTranslation('regionSettings')
   return (
-    <SettingsCard title={t('dataPrivacyHeading')}>
+    <SettingsCard
+      title={t('dataPrivacyHeading')}
+      action={{ label: t('open'), onSubmit: () => navigate('/region/data-privacy-policy') }}
+    >
       <Typography component='p'>{t('dataPrivacyExplanation')}</Typography>
-      <SettingsCardButtonBox>
-        <Button onClick={() => navigate('/region/data-privacy-policy')}>{t('open')}</Button>
-      </SettingsCardButtonBox>
     </SettingsCard>
   )
 }

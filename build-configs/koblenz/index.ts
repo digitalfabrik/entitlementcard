@@ -81,7 +81,6 @@ export const koblenzCommon: CommonBuildConfigType = {
     'assets/koblenz/intro_slides/search_with_location.png',
   ],
   featureFlags: {
-    verification: true,
     favorites: false,
   },
   applicationUrl: {

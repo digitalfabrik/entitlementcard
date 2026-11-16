@@ -3,7 +3,7 @@ import { Temporal } from 'temporal-polyfill'
 import { describe, expect, it, vi } from 'vitest'
 
 import { BavariaCardType, CardInfoSchema } from '../card_pb'
-import { Region } from '../graphql'
+import { AvailableCardFormats, Region } from '../graphql'
 import { config as bayernConfig } from '../project-configs/bayern/config'
 import { config as koblenzConfig } from '../project-configs/koblenz/config'
 import { config as nuernbergConfig } from '../project-configs/nuernberg/config'
@@ -106,6 +106,7 @@ describe('Card', () => {
       applicationConfirmationMailNote: null,
       contactInformationActivated: false,
       contactInformation: null,
+      availableCardFormats: AvailableCardFormats.DigitalAndPhysical,
       dataPrivacyPolicy: null,
       regionIdentifier: null,
     }
