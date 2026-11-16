@@ -177,15 +177,14 @@
   },
   "search": {
     "filterByCategories": "Filter by categories",
-    "findCloseBy": "Search near me",
-    "findAlphabetically": "Alphabetically",
     "noAcceptingStoresFound": "No acceptance points found matching this search.",
     "searchHint": "Search",
     "clearSearch": "Clear search",
-    "searchResults": "Search results",
-    "alphabetically": "(A-Z)",
-    "nearby": "(nearby)",
-    "title": "Offers"
+    "title": "Offers",
+    "sortBy": "Sort order",
+    "sortNearby": "Near me",
+    "sortAlphabetically": "Alphabetically",
+    "distanceAway": "{{distance}} away"
   },
   "store": {
     "acceptingStore": "Acceptance point",
