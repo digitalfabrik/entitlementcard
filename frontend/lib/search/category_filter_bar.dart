@@ -38,6 +38,7 @@ class CategoryFilterBar extends FlexibleSpaceBar {
     required this.categoryAssets,
     required this.onCategoryPress,
     required double toolbarHeight,
+    required Widget footer,
   }) : super(
          collapseMode: CollapseMode.none,
          background: Builder(
@@ -87,6 +88,7 @@ class CategoryFilterBar extends FlexibleSpaceBar {
                          ),
                        ],
                      ),
+                     footer,
                    ],
                  ),
                ),

@@ -167,9 +167,19 @@ const _searchAppBarToolbarHeight = _searchBarHeight + 2 * _searchBarPadding;
 class SliverSearchAppBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final void Function(CategoryAsset, bool) onCategoryPress;
+
+  
+  final PreferredSizeWidget footer;
   final Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 50));
 
-  SliverSearchAppBar({super.key, required this.onChanged, required this.onCategoryPress});
+  SliverSearchAppBar({
+    super.key,
+    required this.onChanged,
+    required this.onCategoryPress,
+    required this.textEditingController,
+    required this.selectedCategoryIds,
+    required this.footer,
+  });
 
   @override
   SliverSearchAppBarState createState() => SliverSearchAppBarState(onCategoryPress);
@@ -199,7 +209,9 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
       snap: true,
       floating: true,
       toolbarHeight: _searchAppBarToolbarHeight,
-      expandedHeight: categoryFilterBarExpectedHeight(context, filteredAssetList.length, _searchAppBarToolbarHeight),
+      expandedHeight:
+          categoryFilterBarExpectedHeight(context, filteredAssetList.length, _searchAppBarToolbarHeight) +
+          widget.footer.preferredSize.height,
       title: SearchBar(
         onTapOutside: (PointerDownEvent event) {
           focusNode.nextFocus();
@@ -226,6 +238,7 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
         categoryAssets: filteredAssetList,
         onCategoryPress: onCategoryPress,
         toolbarHeight: _searchAppBarToolbarHeight,
+        footer: widget.footer,
       ),
     );
   }
