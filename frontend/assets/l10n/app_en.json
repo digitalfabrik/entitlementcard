@@ -177,7 +177,9 @@
   },
   "search": {
     "filterByCategories": "Filter by categories",
-    "noAcceptingStoresFound": "No acceptance points found matching this search.",
+    "noResultsTitle": "No matching results",
+    "noResultsDescription": "We could not find any results for your filter settings. Please adjust your filters.",
+    "resetFilters": "Reset all filters",
     "searchHint": "Search",
     "clearSearch": "Clear search",
     "title": "Offers",
