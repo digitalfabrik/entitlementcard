@@ -177,7 +177,9 @@
   },
   "search": {
     "filterByCategories": "Nach Kategorien filtern",
-    "noAcceptingStoresFound": "Auf diese Suche trifft keine Akzeptanzstelle zu.",
+    "noResultsTitle": "Keine passenden Ergebnisse",
+    "noResultsDescription": "Wir konnten keine Ergebnisse für Ihre Filtereinstellungen finden. Bitte passen Sie Ihre Filter an.",
+    "resetFilters": "Alle Filter zurücksetzen",
     "searchHint": "Suchen",
     "clearSearch": "Suche löschen",
     "title": "Angebote",
