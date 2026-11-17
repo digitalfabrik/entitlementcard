@@ -16,6 +16,7 @@ class SearchResultCard extends StatelessWidget {
   final void Function(PhysicalStoreFeatureData)? showOnMap;
 
   final bool isFirst;
+  final bool isLast;
 
   const SearchResultCard({
     super.key,
@@ -23,6 +24,7 @@ class SearchResultCard extends StatelessWidget {
     this.coordinates,
     required this.showOnMap,
     required this.isFirst,
+    required this.isLast,
   });
 
   double? get _distance {
@@ -47,72 +49,81 @@ class SearchResultCard extends StatelessWidget {
     final category = store.categoryId < categories.length ? categories[store.categoryId] : null;
     final categoryName = category?.shortName ?? t.store.unknownCategory;
 
+    const radius = Radius.circular(12);
+    final borderRadius = BorderRadius.vertical(
+      top: isFirst ? radius : Radius.zero,
+      bottom: isLast ? radius : Radius.zero,
+    );
+    final shape = RoundedRectangleBorder(borderRadius: borderRadius);
     final borderSide = BorderSide(color: colorScheme.outlineVariant);
-    final ShapeBorder shape = isFirst
-        ? RoundedRectangleBorder(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-            side: borderSide,
-          )
-        : Border(left: borderSide, right: borderSide, bottom: borderSide);
+    final border = Border(
+      top: isFirst ? borderSide : BorderSide.none,
+      left: borderSide,
+      right: borderSide,
+      bottom: borderSide,
+    );
 
     return SafeArea(
       top: false,
       bottom: false,
-      child: Material(
-        color: colorScheme.surface,
-        shape: shape,
-        clipBehavior: Clip.antiAlias,
-        // Merge the contents so screen readers announce the whole entry as a single button.
-        child: MergeSemantics(
-          child: InkWell(
-            customBorder: shape,
-            onTap: () => _openDetailView(context),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _CategoryLabel(name: categoryName),
-                        const SizedBox(height: 8),
-                        Text(
-                          store.name ?? t.store.acceptingStore,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.titleSmall?.apply(color: colorScheme.onSurface),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          store.description ?? t.store.noDescriptionAvailable,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor),
-                        ),
-                        if (locationText != null) ...[
+      child: Container(
+        foregroundDecoration: BoxDecoration(border: border, borderRadius: borderRadius),
+        child: Material(
+          color: colorScheme.surface,
+          shape: shape,
+          clipBehavior: Clip.antiAlias,
+          // Merge the contents so screen readers announce the whole entry as a single button.
+          child: MergeSemantics(
+            child: InkWell(
+              customBorder: shape,
+              onTap: () => _openDetailView(context),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _CategoryLabel(name: categoryName),
                           const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Icon(Icons.location_on_outlined, size: 20, color: theme.hintColor),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: Text(
-                                  locationText,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
-                                ),
-                              ),
-                            ],
+                          Text(
+                            store.name ?? t.store.acceptingStore,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.titleSmall?.apply(color: colorScheme.onSurface),
                           ),
+                          const SizedBox(height: 4),
+                          Text(
+                            store.description ?? t.store.noDescriptionAvailable,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor),
+                          ),
+                          if (locationText != null) ...[
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Icon(Icons.location_on_outlined, size: 20, color: theme.hintColor),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    locationText,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  ExcludeSemantics(child: Icon(Icons.chevron_right, color: theme.hintColor)),
-                ],
+                    const SizedBox(width: 8),
+                    ExcludeSemantics(child: Icon(Icons.chevron_right, color: theme.hintColor)),
+                  ],
+                ),
               ),
             ),
           ),

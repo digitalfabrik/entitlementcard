@@ -157,6 +157,7 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
               coordinates: widget.coordinates,
               showOnMap: (it) => HomePageData.of(context)?.navigateToMapTab(it),
               isFirst: index == 0,
+              isLast: _isLastItem(index),
             );
           },
           noMoreItemsIndicatorBuilder: _buildNoMoreItemsSpacer,
@@ -169,6 +170,9 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
       ),
     );
   }
+
+  bool _isLastItem(int index) =>
+      _pagingController.nextPageKey == null && index == _pagingController.itemList!.length - 1;
 
   Widget _buildProgressIndicator(BuildContext context) => const Center(
     child: Padding(padding: EdgeInsets.all(5), child: CircularProgressIndicator()),
