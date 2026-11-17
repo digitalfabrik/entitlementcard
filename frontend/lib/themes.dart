@@ -12,6 +12,9 @@ final bodyMedium = const TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal
 final bodySmall = const TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal);
 final labelSmall = const TextStyle(fontSize: 10.0, fontWeight: FontWeight.normal);
 
+/// Visible minimum size of buttons. 48 dp height meets WCAG 2.5.5 Target Size (Enhanced, 44x44).
+const _buttonMinimumSize = Size(64, 48);
+
 SystemUiOverlayStyle systemOverlayStyleFromAppBarBackgroundColor(Color color) {
   return color.computeLuminance() > 0.5 ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light;
 }
@@ -71,13 +74,15 @@ ThemeData get lightTheme {
       titleTextStyle: titleMedium,
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
+      style: ButtonStyle(
+        minimumSize: const WidgetStatePropertyAll(_buttonMinimumSize),
+        side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1)),
+      ),
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: ButtonStyle(
+        minimumSize: const WidgetStatePropertyAll(_buttonMinimumSize),
         backgroundColor: WidgetStatePropertyAll(primaryColor),
-        elevation: WidgetStatePropertyAll(2),
-        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
       ),
     ),
     checkboxTheme: CheckboxThemeData(
@@ -142,13 +147,15 @@ ThemeData get darkTheme {
       titleTextStyle: titleMedium,
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
+      style: ButtonStyle(
+        minimumSize: const WidgetStatePropertyAll(_buttonMinimumSize),
+        side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1)),
+      ),
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: ButtonStyle(
+        minimumSize: const WidgetStatePropertyAll(_buttonMinimumSize),
         backgroundColor: WidgetStatePropertyAll(primaryColor),
-        elevation: WidgetStatePropertyAll(2),
-        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
       ),
     ),
     checkboxTheme: CheckboxThemeData(
