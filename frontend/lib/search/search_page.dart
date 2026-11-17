@@ -8,10 +8,6 @@ import 'package:flutter/material.dart';
 
 enum SortingMode { alphabetically, byDistance }
 
-const int minSearchTextLength = 2;
-
-String? effectiveSearchText(String text) => text.length >= minSearchTextLength ? text : null;
-
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
@@ -20,6 +16,8 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  static const int _minSearchTextLength = 2;
+
   String? searchFieldText;
   final List<CategoryAsset> _selectedCategories = [];
   Input$CoordinatesInput? _coordinates;
@@ -42,7 +40,7 @@ class _SearchPageState extends State<SearchPage> {
         CustomScrollView(
           slivers: [
             SliverSearchAppBar(
-              onChanged: (text) => setState(() => searchFieldText = effectiveSearchText(text)),
+              onChanged: (text) => setState(() => searchFieldText = _effectiveSearchText(text)),
               onCategoryPress: _onCategoryPress,
             ),
             SliverToBoxAdapter(
@@ -82,6 +80,11 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ],
     );
+  }
+
+  String? _effectiveSearchText(String text) {
+    final trimmedText = text.trim();
+    return trimmedText.length >= _minSearchTextLength ? trimmedText : null;
   }
 
   void _onCategoryPress(CategoryAsset asset, bool isSelected) {
