@@ -168,11 +168,10 @@ class SliverSearchAppBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final void Function(CategoryAsset, bool) onCategoryPress;
 
-  
   final TextEditingController textEditingController;
   final Set<int> selectedCategoryIds;
+  final PreferredSizeWidget footer;
 
-  final PreferredSizeWidgetfooter;
   final Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 50));
 
   SliverSearchAppBar({
