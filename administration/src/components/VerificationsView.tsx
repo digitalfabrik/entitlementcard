@@ -3,7 +3,7 @@ import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ApplicationApplicant, ApplicationStatus, ApplicationVerificationView } from '../graphql'
-import { getCertificateVerifications } from '../util/certificateVerifications'
+import { getCertificateVerifications } from '../routes/applications/utils/certificateVerifications'
 import { VerificationStatus, verificationStatus } from '../util/verifications'
 import CertificateVerificationListItem from './CertificateVerificationListItem'
 import ContactVerificationListItem from './ContactVerificationListItem'

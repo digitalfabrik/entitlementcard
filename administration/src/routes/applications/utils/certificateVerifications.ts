@@ -1,4 +1,4 @@
-import { GeneralJsonField, JsonField, findValue } from '../components/JsonFieldView'
+import { GeneralJsonField, JsonField, findValue } from '../../../components/JsonFieldView'
 
 export type CertificateVerification = {
   organizationName: string

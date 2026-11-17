@@ -1,5 +1,5 @@
 import { GeneralJsonField, JsonField, findValue } from '../../../components/JsonFieldView'
-import { getCertificateVerifications } from '../../../util/certificateVerifications'
+import { getCertificateVerifications } from './certificateVerifications'
 
 type ApplicationDetailsMatcher = (applicationDetails: JsonField<'Array'>) => boolean
 

@@ -6,10 +6,10 @@ import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../components/AlertBox'
 import { ApplicationStatus } from '../../graphql'
-import { getCertificateVerifications } from '../../util/certificateVerifications'
 import ApplicationCard from './components/ApplicationCard'
 import ApplicationStatusBar from './components/ApplicationStatusBar'
 import type { Application, ApplicationStatusBarItemType } from './types/types'
+import { getCertificateVerifications } from './utils/certificateVerifications'
 import { getPreVerifiedEntitlementType } from './utils/preVerifiedEntitlements'
 
 const isPreVerified = (application: Application): boolean =>

@@ -7,10 +7,10 @@ import { useTranslation } from 'react-i18next'
 
 import { BaseChip } from '../../../components/BaseChip'
 import { VerificationIcon } from '../../../components/VerificationIcon'
-import { getCertificateVerifications } from '../../../util/certificateVerifications'
 import { VerificationStatus, verificationStatus } from '../../../util/verifications'
 import { Application, ApplicationVerification } from '../types/types'
 import { getApplicationCardType, getApplicationType } from '../utils/applicationDataHelper'
+import { getCertificateVerifications } from '../utils/certificateVerifications'
 import {
   PreVerifiedEntitlementType,
   getPreVerifiedEntitlementType,

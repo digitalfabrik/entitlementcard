@@ -2,7 +2,7 @@ import { Typography, useTheme } from '@mui/material'
 import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { CertificateVerification } from '../util/certificateVerifications'
+import { CertificateVerification } from '../routes/applications/utils/certificateVerifications'
 import { VerificationStatus } from '../util/verifications'
 import { AttachmentValue } from './JsonFieldElemental'
 import VerificationDetails from './VerificationDetails'
