@@ -18,8 +18,9 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   static const int _minSearchTextLength = 2;
 
+  final TextEditingController _searchController = TextEditingController();
   String? searchFieldText;
-  final List<CategoryAsset> _selectedCategories = [];
+  final Set<int> _selectedCategoryIds = {};
   Input$CoordinatesInput? _coordinates;
   SortingMode _sortingMode = SortingMode.alphabetically;
 
@@ -58,12 +59,16 @@ class _SearchPageState extends State<SearchPage> {
         ),
         SliverResultsLoader(
           searchText: searchFieldText,
-          categoryIds: _selectedCategories.map((e) => e.id).toList(),
+          categoryIds: _selectedCategoryIds.toList(),
           coordinates: _sortingMode == SortingMode.byDistance ? _coordinates : null,
+          hasActiveFilters: _hasActiveFilters,
+          onResetFilters: _resetFilters,
         ),
       ],
     );
   }
+
+  bool get _hasActiveFilters => (searchFieldText?.isNotEmpty ?? false) || _selectedCategoryIds.isNotEmpty;
 
   String? _effectiveSearchText(String text) {
     final trimmedText = text.trim();
@@ -73,10 +78,24 @@ class _SearchPageState extends State<SearchPage> {
   void _onCategoryPress(CategoryAsset asset, bool isSelected) {
     setState(() {
       if (isSelected) {
-        _selectedCategories.add(asset);
+        _selectedCategoryIds.add(asset.id);
       } else {
-        _selectedCategories.remove(asset);
+        _selectedCategoryIds.remove(asset.id);
       }
     });
+  }
+
+  void _resetFilters() {
+    _searchController.clear();
+    setState(() {
+      searchFieldText = null;
+      _selectedCategoryIds.clear();
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 }

@@ -169,7 +169,10 @@ class SliverSearchAppBar extends StatefulWidget {
   final void Function(CategoryAsset, bool) onCategoryPress;
 
   
-  final PreferredSizeWidget footer;
+  final TextEditingController textEditingController;
+  final Set<int> selectedCategoryIds;
+
+  final PreferredSizeWidgetfooter;
   final Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 50));
 
   SliverSearchAppBar({
@@ -182,15 +185,13 @@ class SliverSearchAppBar extends StatefulWidget {
   });
 
   @override
-  SliverSearchAppBarState createState() => SliverSearchAppBarState(onCategoryPress);
+  SliverSearchAppBarState createState() => SliverSearchAppBarState();
 }
 
 class SliverSearchAppBarState extends State<SliverSearchAppBar> {
-  final TextEditingController textEditingController = TextEditingController();
   final FocusNode focusNode = FocusNode();
-  final void Function(CategoryAsset, bool) onCategoryPress;
 
-  SliverSearchAppBarState(this.onCategoryPress);
+  TextEditingController get textEditingController => widget.textEditingController;
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +237,8 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
       ),
       flexibleSpace: CategoryFilterBar(
         categoryAssets: filteredAssetList,
-        onCategoryPress: onCategoryPress,
+        selectedCategoryIds: widget.selectedCategoryIds,
+        onCategoryPress: widget.onCategoryPress,
         toolbarHeight: _searchAppBarToolbarHeight,
         footer: widget.footer,
       ),
@@ -247,7 +249,6 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
   void dispose() {
     super.dispose();
     focusNode.dispose();
-    textEditingController.dispose();
   }
 
   void _onSearchFieldTextChanged(String text) {
