@@ -32,12 +32,16 @@ double categoryFilterBarExpectedHeight(BuildContext context, int categoriesCount
 class CategoryFilterBar extends FlexibleSpaceBar {
   final void Function(CategoryAsset, bool) onCategoryPress;
   final List<CategoryAsset> categoryAssets;
+  final Set<int> selectedCategoryIds;
 
   CategoryFilterBar({
     super.key,
     required this.categoryAssets,
+    required this.selectedCategoryIds,
     required this.onCategoryPress,
     required double toolbarHeight,
+
+    double bottomHeight = 0,
   }) : super(
          collapseMode: CollapseMode.none,
          background: Builder(
@@ -46,7 +50,7 @@ class CategoryFilterBar extends FlexibleSpaceBar {
              final theme = Theme.of(context);
 
              return Container(
-               padding: EdgeInsets.fromLTRB(0, toolbarHeight + MediaQuery.of(context).padding.top, 0, 0),
+               padding: EdgeInsets.fromLTRB(0, toolbarHeight + MediaQuery.of(context).padding.top, 0, bottomHeight),
                child: Container(
                  color: theme.colorScheme.surface,
                  child: Column(
@@ -80,6 +84,7 @@ class CategoryFilterBar extends FlexibleSpaceBar {
                                      index: index,
                                      asset: category,
                                      onCategoryPress: onCategoryPress,
+                                     selected: selectedCategoryIds.contains(category.id),
                                    ),
                                  )
                                  .toList(),
