@@ -104,7 +104,7 @@ class _QRViewState extends State<QrCodeScanner> {
                 Expanded(
                   flex: 1,
                   child: FittedBox(
-                    fit: BoxFit.contain,
+                    fit: BoxFit.scaleDown,
                     child: Column(
                       children: [
                         Container(
