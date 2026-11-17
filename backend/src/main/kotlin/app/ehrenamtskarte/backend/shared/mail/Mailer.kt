@@ -424,13 +424,13 @@ private fun EmailBody.contactInformationParagraphs(contactInformation: String?, 
     if (contactInformation.isNullOrBlank()) {
         p {
             t(
-                "Falls Sie Fragen zu Ihrem Antrag haben oder Unterstützung benötigen, " +
+                "Falls Sie Fragen zum Antrag haben oder Unterstützung benötigen, " +
                     "wenden Sie sich bitte direkt an das örtliche Landratsamt bzw. die Verwaltung Ihrer " +
                     "kreisfreien Stadt.",
             )
         }
     } else {
-        p { t("Bei Fragen zu Ihrem Antrag wenden Sie sich bitte direkt an die zuständige Stelle:") }
+        p { t("Bei Fragen zum Antrag wenden Sie sich bitte direkt an die zuständige Stelle:") }
         p(highlighted) {
             plain(contactInformation)
         }
