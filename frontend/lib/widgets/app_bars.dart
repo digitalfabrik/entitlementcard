@@ -210,6 +210,7 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
       snap: true,
       floating: true,
       toolbarHeight: _searchAppBarToolbarHeight,
+      collapsedHeight: _searchAppBarToolbarHeight,
       expandedHeight:
           categoryFilterBarExpectedHeight(context, filteredAssetList.length, _searchAppBarToolbarHeight) +
           widget.footer.preferredSize.height,
