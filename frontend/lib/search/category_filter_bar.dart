@@ -32,10 +32,12 @@ double categoryFilterBarExpectedHeight(BuildContext context, int categoriesCount
 class CategoryFilterBar extends FlexibleSpaceBar {
   final void Function(CategoryAsset, bool) onCategoryPress;
   final List<CategoryAsset> categoryAssets;
+  final Set<int> selectedCategoryIds;
 
   CategoryFilterBar({
     super.key,
     required this.categoryAssets,
+    required this.selectedCategoryIds,
     required this.onCategoryPress,
     required double toolbarHeight,
     required Widget footer,
@@ -81,6 +83,7 @@ class CategoryFilterBar extends FlexibleSpaceBar {
                                      index: index,
                                      asset: category,
                                      onCategoryPress: onCategoryPress,
+                                     selected: selectedCategoryIds.contains(category.id),
                                    ),
                                  )
                                  .toList(),
