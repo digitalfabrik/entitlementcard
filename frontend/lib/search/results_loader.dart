@@ -2,6 +2,7 @@ import 'package:ehrenamtskarte/app_lifecycle_observer.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
+import 'package:ehrenamtskarte/search/no_results_found.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -16,8 +17,17 @@ class SliverResultsLoader extends StatefulWidget {
   final Input$CoordinatesInput? coordinates;
   final String? searchText;
   final List<int> categoryIds;
+  final bool hasActiveFilters;
+  final VoidCallback onResetFilters;
 
-  const SliverResultsLoader({super.key, this.coordinates, this.searchText, required this.categoryIds});
+  const SliverResultsLoader({
+    super.key,
+    this.coordinates,
+    this.searchText,
+    required this.categoryIds,
+    required this.hasActiveFilters,
+    required this.onResetFilters,
+  });
 
   bool hasSameSearchParams(SliverResultsLoader other) =>
       searchText == other.searchText && coordinates == other.coordinates && listEquals(categoryIds, other.categoryIds);
@@ -190,19 +200,8 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
     );
   }
 
-  Widget _buildNoItemsFoundIndicator(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.search_off, size: 60, color: theme.disabledColor),
-          Text(t.search.noAcceptingStoresFound, style: theme.textTheme.bodyMedium),
-        ],
-      ),
-    );
-  }
+  Widget _buildNoItemsFoundIndicator(BuildContext context) =>
+      NoResultsFound(hasActiveFilters: widget.hasActiveFilters, onResetFilters: widget.onResetFilters);
 
   @override
   void dispose() {
