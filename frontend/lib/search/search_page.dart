@@ -16,6 +16,8 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  static const int _minSearchTextLength = 2;
+
   String? searchFieldText;
   final List<CategoryAsset> _selectedCategories = [];
   Input$CoordinatesInput? _coordinates;
@@ -38,9 +40,7 @@ class _SearchPageState extends State<SearchPage> {
         CustomScrollView(
           slivers: [
             SliverSearchAppBar(
-              onChanged: (text) => setState(() {
-                searchFieldText = text;
-              }),
+              onChanged: (text) => setState(() => searchFieldText = _effectiveSearchText(text)),
               onCategoryPress: _onCategoryPress,
             ),
             SliverToBoxAdapter(
@@ -80,6 +80,11 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ],
     );
+  }
+
+  String? _effectiveSearchText(String text) {
+    final trimmedText = text.trim();
+    return trimmedText.length >= _minSearchTextLength ? trimmedText : null;
   }
 
   void _onCategoryPress(CategoryAsset asset, bool isSelected) {

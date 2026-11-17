@@ -238,7 +238,7 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
   }
 
   void _onSearchFieldTextChanged(String text) {
-    widget.debouncer.run(() => widget.onChanged(text.trim()));
+    widget.debouncer.run(() => widget.onChanged(text));
   }
 
   void _clearInput() {
