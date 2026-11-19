@@ -43,7 +43,7 @@ class NoResultsFound extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              t.search.noResultsDescription,
+              hasActiveFilters ? t.search.noResultsDescription : t.search.noAcceptingStoresAvailable,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor),
             ),
