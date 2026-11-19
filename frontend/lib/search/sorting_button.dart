@@ -24,6 +24,7 @@ enum LocationRequestStatus { requesting, requestSuccessful, requestFailed }
 
 class _SortingButtonState extends State<SortingButton> {
   LocationRequestStatus _locationStatus = LocationRequestStatus.requestSuccessful;
+  bool _isMenuOpen = false;
 
   @override
   void initState() {
@@ -45,7 +46,7 @@ class _SortingButtonState extends State<SortingButton> {
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    final foregroundColor = theme.hintColor;
+    final foregroundColor = theme.colorScheme.onSurface;
     final isRequesting = _locationStatus == LocationRequestStatus.requesting;
     final currentLabel = _label(context, widget.sortingMode);
 
@@ -54,6 +55,8 @@ class _SortingButtonState extends State<SortingButton> {
       initialValue: widget.sortingMode,
       tooltip: t.search.sortBy,
       position: PopupMenuPosition.under,
+      onOpened: () => setState(() => _isMenuOpen = true),
+      onCanceled: () => setState(() => _isMenuOpen = false),
       onSelected: _onSelected,
       itemBuilder: (context) => SortingMode.values
           .map(
@@ -76,12 +79,12 @@ class _SortingButtonState extends State<SortingButton> {
                       padding: const EdgeInsets.all(4),
                       child: CircularProgressIndicator(strokeWidth: 2, color: foregroundColor),
                     )
-                  : Icon(Icons.filter_list, color: foregroundColor),
+                  : Icon(Icons.sort, color: foregroundColor),
             ),
             const SizedBox(width: 12),
             Text(currentLabel, style: theme.textTheme.bodyLarge?.copyWith(color: foregroundColor, height: 1)),
             const SizedBox(width: 4),
-            Icon(Icons.keyboard_arrow_down, color: foregroundColor),
+            Icon(_isMenuOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, color: foregroundColor),
           ],
         ),
       ),
@@ -89,6 +92,7 @@ class _SortingButtonState extends State<SortingButton> {
   }
 
   void _onSelected(SortingMode sortingMode) {
+    setState(() => _isMenuOpen = false);
     switch (sortingMode) {
       case SortingMode.alphabetically:
         widget.setSortingMode(SortingMode.alphabetically);
