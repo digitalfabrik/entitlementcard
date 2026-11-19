@@ -177,6 +177,7 @@
   },
   "search": {
     "filterByCategories": "Filter by categories",
+    "scrollToTop": "Back to top",
     "noResultsTitle": "No matching results",
     "noResultsDescription": "We could not find any results for your search filters. Please adjust your settings.",
     "noAcceptingStoresAvailable": "There are currently no acceptance points available.",

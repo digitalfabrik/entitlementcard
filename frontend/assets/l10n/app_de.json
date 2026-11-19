@@ -177,6 +177,7 @@
   },
   "search": {
     "filterByCategories": "Nach Kategorien filtern",
+    "scrollToTop": "Nach oben",
     "noResultsTitle": "Keine passenden Ergebnisse",
     "noResultsDescription": "Wir konnten keine Ergebnisse zu Ihren Suchfiltern finden. Bitte passen Sie Ihre Einstellungen an.",
     "noAcceptingStoresAvailable": "Derzeit sind keine Akzeptanzstellen verfügbar.",
