@@ -3,6 +3,7 @@ import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/search/no_results_found.dart';
+import 'package:ehrenamtskarte/search/scroll_to_top_button.dart';
 import 'package:ehrenamtskarte/search/search_result_card.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -178,7 +179,9 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
     child: Padding(padding: EdgeInsets.all(5), child: CircularProgressIndicator()),
   );
 
-  Widget _buildNoMoreItemsSpacer(BuildContext context) => const SizedBox(height: 16);
+  // Leaves room below the last result, so it is not covered by the scroll to top button.
+  Widget _buildNoMoreItemsSpacer(BuildContext context) =>
+      const SizedBox(height: kFloatingActionButtonMargin + ScrollToTopButton.height);
 
   Widget _buildErrorWithRetry(BuildContext context) {
     final t = context.t;
