@@ -112,8 +112,8 @@ class _SearchPageState extends State<SearchPage> {
 
   void _onScroll() {
     final position = _scrollController.position;
-    // Show the button as soon as the user scrolled down by more than one screen height.
-    final showScrollToTopButton = position.pixels > position.viewportDimension;
+    // Show the button as soon as the user scrolled down by more than two screen heights.
+    final showScrollToTopButton = position.pixels > 2 * position.viewportDimension;
     if (showScrollToTopButton != _showScrollToTopButton) {
       setState(() => _showScrollToTopButton = showScrollToTopButton);
     }
