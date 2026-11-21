@@ -1,39 +1,49 @@
 import { GeneralJsonField, JsonField, findValue } from '../../../components/JsonFieldView'
+import { getCertificateVerifications } from './certificateVerifications'
 
-const preVerifiedEntitlementFields = {
-  Juleica: ['blueCardJuleicaEntitlement'],
-  Verein360: ['blueCardWorkAtOrganizationsEntitlement'],
-  MilitaryReserve: ['blueCardMilitaryReserveEntitlement', 'goldenCardMilitaryReserveEntitlement'],
-  VolunteerService: ['volunteerServiceEntitlement'],
-  HonoredByMinisterPresident: ['goldenCardHonoredByMinisterPresidentEntitlement'],
-} as const
+type ApplicationDetailsMatcher = (applicationDetails: JsonField<'Array'>) => boolean
 
-export type PreVerifiedEntitlementType = keyof typeof preVerifiedEntitlementFields
+const hasEntitlement =
+  (...entitlementNames: string[]): ApplicationDetailsMatcher =>
+  applicationDetails =>
+    entitlementNames.some(name => findValue(applicationDetails, name, 'Array') !== undefined)
 
-const verein360Matcher = (entitlement?: GeneralJsonField): boolean => {
-  const entitlements =
-    entitlement !== undefined && Array.isArray(entitlement.value) ? entitlement.value : []
-  return entitlements.some(
-    (item: GeneralJsonField) =>
-      Array.isArray(item.value) &&
-      item.value.some(
-        (subItem: GeneralJsonField) =>
-          subItem.name === 'isAlreadyVerified' && subItem.value === true,
-      ),
-  )
-}
+const isAlreadyVerifiedByVerein360: ApplicationDetailsMatcher = applicationDetails =>
+  findValue(applicationDetails, 'blueCardWorkAtOrganizationsEntitlement', 'Array')?.value.some(
+    workAtOrganization =>
+      workAtOrganization.type === 'Array' &&
+      findValue(workAtOrganization, 'isAlreadyVerified', 'Boolean')?.value === true,
+  ) ?? false
+
+const containsOrganizationContact = (field: GeneralJsonField): boolean =>
+  field.type === 'Array' &&
+  (field.name === 'organizationContact' || field.value.some(containsOrganizationContact))
+
+const isVerifiedByCertificate: ApplicationDetailsMatcher = applicationDetails =>
+  getCertificateVerifications(applicationDetails).length > 0 &&
+  !containsOrganizationContact(applicationDetails)
+
+const preVerifiedEntitlementMatchers = {
+  Juleica: hasEntitlement('blueCardJuleicaEntitlement'),
+  Verein360: isAlreadyVerifiedByVerein360,
+  MilitaryReserve: hasEntitlement(
+    'blueCardMilitaryReserveEntitlement',
+    'goldenCardMilitaryReserveEntitlement',
+  ),
+  VolunteerService: hasEntitlement('volunteerServiceEntitlement'),
+  HonoredByMinisterPresident: hasEntitlement('goldenCardHonoredByMinisterPresidentEntitlement'),
+  ActivityCertificate: isVerifiedByCertificate,
+} satisfies Record<string, ApplicationDetailsMatcher>
+
+export type PreVerifiedEntitlementType = keyof typeof preVerifiedEntitlementMatchers
 
 export const getPreVerifiedEntitlementType = (
   applicationJsonValue: JsonField<'Array'>,
 ): PreVerifiedEntitlementType | undefined => {
   const applicationDetails = findValue(applicationJsonValue, 'applicationDetails', 'Array')
-
   return applicationDetails !== undefined
-    ? (Object.keys(preVerifiedEntitlementFields) as PreVerifiedEntitlementType[]).find(type =>
-        preVerifiedEntitlementFields[type].some(field => {
-          const entitlement = findValue(applicationDetails, field, 'Array')
-          return type === 'Verein360' ? verein360Matcher(entitlement) : entitlement !== undefined
-        }),
+    ? (Object.keys(preVerifiedEntitlementMatchers) as PreVerifiedEntitlementType[]).find(type =>
+        preVerifiedEntitlementMatchers[type](applicationDetails),
       )
     : undefined
 }

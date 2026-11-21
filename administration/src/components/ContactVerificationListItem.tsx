@@ -11,6 +11,7 @@ import { useMutation } from 'urql'
 import EmailLink from '../components/EmailLink'
 import { ApplicationVerificationView, SendApprovalMailToOrganisationDocument } from '../graphql'
 import { isEmailValid, verificationStatus } from '../util/verifications'
+import VerificationDetails from './VerificationDetails'
 import { VerificationIcon } from './VerificationIcon'
 
 const getStatusMetaData = (
@@ -32,7 +33,7 @@ const getStatusMetaData = (
   return { text, color }
 }
 
-const VerificationListItem = ({
+const ContactVerificationListItem = ({
   verification,
   applicationId,
   showResendApprovalEmailButton,
@@ -75,30 +76,27 @@ const VerificationListItem = ({
       component='li'
       sx={{ borderLeft: `2px solid ${color}`, paddingLeft: 1.5, position: 'relative' }}
     >
-      <table cellPadding='2px'>
-        <tbody>
-          <tr>
-            <td>{t('organization')}:</td>
-            <td>{verification.organizationName}</td>
-          </tr>
-          <tr>
-            <td>{t('eMail')}:</td>
-            <td>
-              {isEmailValid(verification.contactEmailAddress) ? (
-                <EmailLink email={verification.contactEmailAddress} />
-              ) : (
-                <Typography component='span'>{verification.contactEmailAddress}</Typography>
-              )}
-            </td>
-          </tr>
-          <tr>
-            <td>{t('status')}:</td>
-            <td style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <VerificationIcon status={status} /> {text}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <VerificationDetails
+        rows={[
+          { label: t('organization'), value: verification.organizationName },
+          {
+            label: t('eMail'),
+            value: isEmailValid(verification.contactEmailAddress) ? (
+              <EmailLink email={verification.contactEmailAddress} />
+            ) : (
+              <Typography component='span'>{verification.contactEmailAddress}</Typography>
+            ),
+          },
+          {
+            label: t('status'),
+            value: (
+              <>
+                <VerificationIcon status={status} /> {text}
+              </>
+            ),
+          },
+        ]}
+      />
       {showResendApprovalEmailButton && (
         <Button
           variant='contained'
@@ -114,4 +112,4 @@ const VerificationListItem = ({
   )
 }
 
-export default VerificationListItem
+export default ContactVerificationListItem

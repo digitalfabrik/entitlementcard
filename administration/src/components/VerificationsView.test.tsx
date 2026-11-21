@@ -14,7 +14,7 @@ const mockProvider: CustomRenderOptions = {
 
 describe('VerificationsView', () => {
   const renderView = (application: Application) =>
-    renderWithOptions(<VerificationsView application={application} />, mockProvider)
+    renderWithOptions(<VerificationsView application={application} baseUrl='' />, mockProvider)
 
   it('should show a hint if there are no verifications', () => {
     const application: Application = {

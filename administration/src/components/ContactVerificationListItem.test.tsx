@@ -7,14 +7,14 @@ import {
   verificationsVerified,
 } from '../routes/applications/__mocks__/verificationData'
 import { CustomRenderOptions, renderWithOptions } from '../testing/render'
-import VerificationListItem from './VerificationListItem'
+import ContactVerificationListItem from './ContactVerificationListItem'
 
 const mockProvider: CustomRenderOptions = {
   translation: true,
   graphQlProvider: true,
 }
 
-describe('VerificationListItem', () => {
+describe('ContactVerificationListItem', () => {
   const renderListItem = (
     verification: Pick<
       ApplicationVerificationView,
@@ -26,7 +26,7 @@ describe('VerificationListItem', () => {
     >,
   ) =>
     renderWithOptions(
-      <VerificationListItem
+      <ContactVerificationListItem
         verification={verification}
         applicationId={1}
         showResendApprovalEmailButton
@@ -75,7 +75,7 @@ describe('VerificationListItem', () => {
 
   it('should show a resend email button when `showResendApprovalEmailButton` prop is true', () => {
     const { queryByText } = renderWithOptions(
-      <VerificationListItem
+      <ContactVerificationListItem
         verification={verificationsVerified[0]}
         applicationId={1}
         showResendApprovalEmailButton
@@ -87,7 +87,7 @@ describe('VerificationListItem', () => {
 
   it('should not show a resend email button when `showResendApprovalEmailButton` prop is omitted', () => {
     const { queryByText } = renderWithOptions(
-      <VerificationListItem
+      <ContactVerificationListItem
         verification={verificationsVerified[0]}
         applicationId={1}
         showResendApprovalEmailButton={false}

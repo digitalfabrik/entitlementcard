@@ -232,6 +232,7 @@
     "confirmationsByOrganizations": "Bestätigung(en) durch Organisationen:",
     "verified/pending/rejected": "Bestätigt/Ausstehend/Widersprochen",
     "verifiedOn": "Bestätigt am {{date, datetime(dateStyle: 'medium'; timeStyle: 'short')}}",
+    "verified": "Bestätigt",
     "pending": "Ausstehend",
     "rejectedOn": "Widersprochen am {{date, datetime(dateStyle: 'medium'; timeStyle: 'short')}}",
     "organization": "Organisation",
