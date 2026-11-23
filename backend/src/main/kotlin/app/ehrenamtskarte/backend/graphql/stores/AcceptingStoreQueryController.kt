@@ -1,4 +1,5 @@
 // AcceptingStore/PhysicalStore (V1) are kept for GraphQL backward compatibility until January 2028.
+// searchAcceptingStoresInProjectV2 is kept for GraphQL backward compatibility until December 2028.
 @file:Suppress("DEPRECATION")
 
 package app.ehrenamtskarte.backend.graphql.stores
@@ -10,6 +11,7 @@ import app.ehrenamtskarte.backend.db.repositories.PhysicalStoresRepository
 import app.ehrenamtskarte.backend.graphql.shared.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.graphql.shared.types.IdsParams
 import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStore
+import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStoreSearchResult
 import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStoreV2
 import app.ehrenamtskarte.backend.graphql.stores.types.Coordinates
 import app.ehrenamtskarte.backend.graphql.stores.types.PhysicalStore
@@ -98,6 +100,9 @@ class AcceptingStoreQueryController(
         return filteredStores
     }
 
+    @Deprecated(
+        "Use searchAcceptingStoresInProjectV3 query for the total result count. Can be safely removed in December 2028.",
+    )
     @GraphQLDescription(
         "Search for accepting stores in the given project using searchText and categoryIds.",
     )
@@ -107,6 +112,31 @@ class AcceptingStoreQueryController(
         @Argument params: SearchParams,
         dfe: DataFetchingEnvironment,
         @GraphQLIgnore @ContextValue request: HttpServletRequest,
+    ): List<AcceptingStoreV2> = searchStores(project, params, dfe, request)
+
+    @GraphQLDescription(
+        "Search for accepting stores in the given project using searchText and categoryIds. " +
+            "Additionally returns the total number of matching stores.",
+    )
+    @QueryMapping
+    fun searchAcceptingStoresInProjectV3(
+        @Argument project: String,
+        @Argument params: SearchParams,
+        dfe: DataFetchingEnvironment,
+        @GraphQLIgnore @ContextValue request: HttpServletRequest,
+    ): AcceptingStoreSearchResult =
+        AcceptingStoreSearchResult(
+            stores = searchStores(project, params, dfe, request),
+            totalCount = transaction {
+                AcceptingStoresRepository.countBySearch(project, params.searchText, params.categoryIds).toInt()
+            },
+        )
+
+    private fun searchStores(
+        project: String,
+        params: SearchParams,
+        dfe: DataFetchingEnvironment,
+        request: HttpServletRequest,
     ): List<AcceptingStoreV2> {
         val projectConfig = backendConfig.getProjectConfig(project)
         val filteredStores = transaction {
