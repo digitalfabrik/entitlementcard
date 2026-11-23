@@ -4,7 +4,6 @@ import 'dart:io' show Platform;
 import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/contact_info_row.dart';
-import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:ehrenamtskarte/util/sanitize_contact_details.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -16,10 +15,8 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 class DetailContent extends StatelessWidget {
   final AcceptingStoreModel acceptingStore;
   final void Function(PhysicalStoreFeatureData)? showOnMap;
-  final Color? accentColor;
-  final Color? readableOnAccentColor;
 
-  const DetailContent(this.acceptingStore, {super.key, this.showOnMap, this.accentColor, this.readableOnAccentColor});
+  const DetailContent(this.acceptingStore, {super.key, this.showOnMap});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +26,6 @@ class DetailContent extends StatelessWidget {
     final location = '${acceptingStore.postalCode} ${acceptingStore.location}';
     final addressString = '${street != null ? '$street\n' : ''}$location';
     final mapQueryString = '${street != null ? '$street, ' : ''}$location';
-
-    final currentAccentColor = accentColor;
-    final readableOnAccentColor = currentAccentColor == null ? null : getReadableOnColor(currentAccentColor);
 
     final storeDescription = acceptingStore.description;
     final website = acceptingStore.website;
@@ -52,8 +46,6 @@ class DetailContent extends StatelessWidget {
                   addressString,
                   t.store.address,
                   onTap: () => _launchMap(mapQueryString),
-                  iconColor: readableOnAccentColor,
-                  iconFillColor: accentColor,
                 ),
                 if (website != null)
                   ContactInfoRow(
@@ -62,8 +54,6 @@ class DetailContent extends StatelessWidget {
                     t.store.website,
                     onTap: () =>
                         launchUrlString(prepareWebsiteUrlForLaunch(website), mode: LaunchMode.externalApplication),
-                    iconColor: readableOnAccentColor,
-                    iconFillColor: accentColor,
                   ),
                 if (telephone != null)
                   ContactInfoRow(
@@ -72,8 +62,6 @@ class DetailContent extends StatelessWidget {
                     t.store.phone,
                     onTap: () =>
                         launchUrlString('tel:${sanitizePhoneNumber(telephone)}', mode: LaunchMode.externalApplication),
-                    iconColor: readableOnAccentColor,
-                    iconFillColor: accentColor,
                   ),
                 if (email != null)
                   ContactInfoRow(
@@ -81,8 +69,6 @@ class DetailContent extends StatelessWidget {
                     email,
                     t.store.email,
                     onTap: () => launchUrlString('mailto:${email.trim()}', mode: LaunchMode.externalApplication),
-                    iconColor: readableOnAccentColor,
-                    iconFillColor: accentColor,
                   ),
               ],
             ),

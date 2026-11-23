@@ -30,12 +30,10 @@ class CustomAppBar extends StatelessWidget {
 }
 
 class AppBarWithBottom extends StatelessWidget {
-  final Widget flexibleSpace;
-  final Color? color;
   final PreferredSizeWidget bottom;
   final List<Widget>? actions;
 
-  const AppBarWithBottom({super.key, required this.flexibleSpace, this.color, required this.bottom, this.actions});
+  const AppBarWithBottom({super.key, required this.bottom, this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +44,6 @@ class AppBarWithBottom extends StatelessWidget {
       height: MediaQuery.of(context).padding.top + bottom.preferredSize.height + kToolbarHeight,
       child: AppBar(
         leading: BackButton(color: foregroundColor),
-        flexibleSpace: flexibleSpace,
-        backgroundColor: color,
         bottom: bottom,
         actions: actions,
       ),

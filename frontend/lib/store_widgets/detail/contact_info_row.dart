@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:flutter/material.dart';
 
 class ContactInfoRow extends StatelessWidget {
@@ -5,22 +6,13 @@ class ContactInfoRow extends StatelessWidget {
   final String _description;
   final String _semanticLabel;
   final void Function()? onTap;
-  final Color? iconColor;
-  final Color? iconFillColor;
 
-  const ContactInfoRow(
-    this._icon,
-    this._description,
-    this._semanticLabel, {
-    super.key,
-    this.onTap,
-    this.iconColor,
-    this.iconFillColor,
-  });
+  const ContactInfoRow(this._icon, this._description, this._semanticLabel, {super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
     if (_description.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -32,8 +24,8 @@ class ContactInfoRow extends StatelessWidget {
             child: Container(
               width: 42,
               height: 42,
-              color: iconFillColor ?? theme.colorScheme.primary,
-              child: Icon(_icon, size: 28, semanticLabel: _semanticLabel, color: iconColor ?? Colors.white),
+              color: primaryColor,
+              child: Icon(_icon, size: 28, semanticLabel: _semanticLabel, color: getReadableOnColor(primaryColor)),
             ),
           ),
         ),

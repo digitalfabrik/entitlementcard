@@ -8,52 +8,22 @@ import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:ehrenamtskarte/util/messenger_utils.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:provider/provider.dart';
 
 const double bottomSize = 100;
 
-class DetailAppBarHeaderImage extends StatelessWidget {
-  final int? categoryId;
-
-  const DetailAppBarHeaderImage({super.key, this.categoryId});
-
-  @override
-  Widget build(BuildContext context) {
-    final currentCategoryId = categoryId;
-    final categories = categoryAssets(context);
-
-    if (currentCategoryId != null && currentCategoryId <= categories.length) {
-      final currentDetailIcon = categories[currentCategoryId].detailIcon;
-      if (currentDetailIcon != null) {
-        return SvgPicture.asset(
-          currentDetailIcon,
-          width: double.infinity,
-          semanticsLabel: 'Header',
-          alignment: Alignment.bottomRight,
-        );
-      }
-    }
-    return Container();
-  }
-}
-
 class DetailAppBarBottom extends StatelessWidget {
   final Color textColorGrey;
   final Color textColor;
   final String? title;
-  final int? categoryId;
   final String? categoryName;
-  final Color? accentColor;
 
   const DetailAppBarBottom({
     super.key,
     this.title,
-    this.categoryId,
     this.categoryName,
-    this.accentColor,
     required this.textColorGrey,
     required this.textColor,
   });
@@ -106,16 +76,13 @@ class DetailAppBar extends StatelessWidget {
     final category = categoryAssets(context)[categoryId];
     final isFavorite = favoritesProvider.isFavorite(storeId);
 
-    final accentColor = getDarkenedColorForCategory(context, categoryId);
     final theme = Theme.of(context);
     final foregroundColor = theme.appBarTheme.foregroundColor;
-    final backgroundColor = accentColor ?? theme.colorScheme.primary;
+    final backgroundColor = theme.colorScheme.primary;
     final textColor = getReadableOnColor(backgroundColor);
     final textColorGrey = getReadableOnColorSecondary(backgroundColor);
 
     return AppBarWithBottom(
-      flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
-      color: accentColor,
       actions: [
         if (buildConfig.featureFlags.favorites && showFavoriteButton)
           IconButton(
@@ -135,9 +102,7 @@ class DetailAppBar extends StatelessWidget {
           height: bottomSize,
           child: DetailAppBarBottom(
             title: storeName,
-            categoryId: categoryId,
             categoryName: category.name,
-            accentColor: accentColor,
             textColorGrey: textColorGrey,
             textColor: textColor,
           ),
@@ -147,18 +112,17 @@ class DetailAppBar extends StatelessWidget {
   }
 
   Future<void> _toggleFavorites(BuildContext context, FavoritesModel model) async {
-    final categoryColor = getDarkenedColorForCategory(context, categoryId);
     final errorColor = Theme.of(context).colorScheme.error;
 
     try {
       if (model.isFavorite(storeId)) {
         await model.removeFavorite(storeId);
         if (!context.mounted) return;
-        showSnackBar(context, t.favorites.favoriteHasBeenRemoved, categoryColor);
+        showSnackBar(context, t.favorites.favoriteHasBeenRemoved);
       } else {
         await model.saveFavorite(FavoriteStore(storeId, storeName, categoryId));
         if (!context.mounted) return;
-        showSnackBar(context, t.favorites.favoriteHasBeenAdded, categoryColor);
+        showSnackBar(context, t.favorites.favoriteHasBeenAdded);
       }
     } catch (error) {
       log('Failed to update favorites', error: error);
