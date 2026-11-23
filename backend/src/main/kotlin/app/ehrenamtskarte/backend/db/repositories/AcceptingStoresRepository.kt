@@ -26,6 +26,7 @@ import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.OrOp
 import org.jetbrains.exposed.v1.core.alias
 import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.countDistinct
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.doubleParam
 import org.jetbrains.exposed.v1.core.eq
@@ -50,6 +51,45 @@ object AcceptingStoresRepository {
         limit: Int,
         offset: Long,
     ): SizedIterable<AcceptingStoreEntity> {
+        val sortExpression = if (coordinates != null) {
+            DistanceFunction(
+                PhysicalStores.coordinates,
+                MakePointFunction(
+                    doubleParam(coordinates.lng),
+                    doubleParam(coordinates.lat),
+                ),
+            ).alias("dist")
+        } else {
+            AcceptingStores.name
+        }
+
+        return searchJoin
+            .select(AcceptingStores.columns + sortExpression)
+            .withDistinct()
+            .where(searchCondition(project, searchText, categoryIds))
+            .orderBy(sortExpression)
+            .limit(limit)
+            .offset(offset)
+            .let { AcceptingStoreEntity.wrapRows(it) }
+    }
+
+    /**
+     * Returns the total number of accepting stores matching the given search criteria (ignoring pagination).
+     */
+    fun countBySearch(project: String, searchText: String?, categoryIds: List<Int>?): Long {
+        // The join with descriptions yields one row per description, hence count distinct store ids
+        val distinctStoreCount = AcceptingStores.id.countDistinct()
+        return searchJoin
+            .select(distinctStoreCount)
+            .where(searchCondition(project, searchText, categoryIds))
+            .single()[distinctStoreCount]
+    }
+
+    private val searchJoin
+        get() = Projects innerJoin
+            (AcceptingStores leftJoin AcceptingStoreDescriptions leftJoin PhysicalStores leftJoin Addresses)
+
+    private fun searchCondition(project: String, searchText: String?, categoryIds: List<Int>?): Op<Boolean> {
         val categoryMatcher =
             if (categoryIds == null) {
                 Op.TRUE
@@ -72,28 +112,7 @@ object AcceptingStoresRepository {
                 )
             }
 
-        val sortExpression = if (coordinates != null) {
-            DistanceFunction(
-                PhysicalStores.coordinates,
-                MakePointFunction(
-                    doubleParam(coordinates.lng),
-                    doubleParam(coordinates.lat),
-                ),
-            ).alias("dist")
-        } else {
-            AcceptingStores.name
-        }
-
-        return (
-            Projects innerJoin
-                (AcceptingStores leftJoin AcceptingStoreDescriptions leftJoin PhysicalStores leftJoin Addresses)
-        ).select(AcceptingStores.columns + sortExpression)
-            .withDistinct()
-            .where(Projects.project eq project and categoryMatcher and textMatcher)
-            .orderBy(sortExpression)
-            .limit(limit)
-            .offset(offset)
-            .let { AcceptingStoreEntity.wrapRows(it) }
+        return Projects.project eq project and categoryMatcher and textMatcher
     }
 
     fun getIdIfExists(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?): Int? {
