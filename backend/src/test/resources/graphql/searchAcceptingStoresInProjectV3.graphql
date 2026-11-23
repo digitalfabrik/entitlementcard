@@ -1,0 +1,9 @@
+query searchAcceptingStoresInProjectV3($project: String!, $params: SearchParamsInput!) {
+  result: searchAcceptingStoresInProjectV3(project: $project, params: $params) {
+    stores {
+      id
+      name
+    }
+    totalCount
+  }
+}
