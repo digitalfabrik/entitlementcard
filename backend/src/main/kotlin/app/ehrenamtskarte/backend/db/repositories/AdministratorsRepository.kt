@@ -47,6 +47,11 @@ object AdministratorsRepository {
         role: Role,
         regionId: Int? = null,
     ): AdministratorEntity {
+        if (role == Role.PROJECT_CREATOR) {
+            // Project creators are not bound to a project, use insertProjectCreator instead
+            throw InvalidRoleException()
+        }
+
         val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
             ?: throw ProjectNotFoundException(project)
 
@@ -60,22 +65,34 @@ object AdministratorsRepository {
             throw InvalidRoleException()
         }
 
-        val passwordHash = password?.let {
-            val passwordValidation = validatePassword(it)
-            if (passwordValidation != PasswordValidationResult.VALID) {
-                throw InvalidPasswordException()
-            }
-            PasswordCrypto.hashPassword(it)
-        }
-
         return AdministratorEntity.new {
             this.email = email
             this.projectId = projectEntity.id
             this.regionId = region?.id
-            this.passwordHash = passwordHash
+            this.passwordHash = password?.let { validateAndHashPassword(it) }
             this.role = role.db_value
             this.deleted = false
         }
+    }
+
+    /**
+     * Inserts an administrator with the role PROJECT_CREATOR, which is not bound to any project or region.
+     */
+    fun insertProjectCreator(email: String, password: String): AdministratorEntity =
+        AdministratorEntity.new {
+            this.email = email
+            this.projectId = null
+            this.regionId = null
+            this.passwordHash = validateAndHashPassword(password)
+            this.role = Role.PROJECT_CREATOR.db_value
+            this.deleted = false
+        }
+
+    private fun validateAndHashPassword(password: String): ByteArray {
+        if (validatePassword(password) != PasswordValidationResult.VALID) {
+            throw InvalidPasswordException()
+        }
+        return PasswordCrypto.hashPassword(password)
     }
 
     fun changePassword(administrator: AdministratorEntity, newPassword: String) {
