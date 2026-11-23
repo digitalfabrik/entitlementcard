@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.graphql
 
+import app.ehrenamtskarte.backend.graphql.auth.AuthContext
 import app.ehrenamtskarte.backend.graphql.auth.JwtService
 import app.ehrenamtskarte.backend.graphql.auth.ProjectAuthContext
 import jakarta.servlet.http.HttpServletRequest
@@ -30,11 +31,13 @@ class GraphQLRequestInterceptor : WebGraphQlInterceptor {
     override fun intercept(request: WebGraphQlRequest, chain: WebGraphQlInterceptor.Chain): Mono<WebGraphQlResponse> {
         val servletRequest = (RequestContextHolder.getRequestAttributes() as? ServletRequestAttributes)?.request
         val jwtPayload = servletRequest?.let { JwtService.verifyRequest(it) }
-        val authContext = jwtPayload?.let { ProjectAuthContext.fromJwtPayload(it) }
+        val authContext = jwtPayload?.let { AuthContext.fromJwtPayload(it) }
+        val projectAuthContext = authContext?.let { ProjectAuthContext.fromAuthContext(it) }
 
         request.configureExecutionInput { _, builder ->
             builder.graphQLContext { ctx ->
-                authContext?.let { ctx.put(ProjectAuthContext::class, it) }
+                authContext?.let { ctx.put(AuthContext::class, it) }
+                projectAuthContext?.let { ctx.put(ProjectAuthContext::class, it) }
                 servletRequest?.let { req ->
                     ctx.put("request", req)
                     ctx.put("remoteIp", getIpAddress(req))

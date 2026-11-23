@@ -27,8 +27,7 @@ class ViewAdministratorsQueryController {
     @GraphQLDescription("Returns the requesting administrator as retrieved from his JWT token.")
     @QueryMapping
     fun whoAmI(dfe: DataFetchingEnvironment): Administrator {
-        val authContext = dfe.requireProjectAuthContext()
-        val admin = authContext.admin
+        val admin = dfe.requireAuthContext().admin
 
         return transaction {
             if (admin.deleted) {

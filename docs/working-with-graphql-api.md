@@ -43,7 +43,8 @@ Use `@GraphQLDescription` to describe what the function does.
 
 4. **Implement the logic and return the result**
 
-* Use `dfe.requireProjectAuthContext()` to get the ProjectAuthContext. This will throw an `UnauthorizedException` if the user is not properly authenticated (e.g., the JWT is missing or the admin not found in the database).
+* Use `dfe.requireProjectAuthContext()` to get the ProjectAuthContext of an administrator acting within their own project. This will throw an `UnauthorizedException` if the user is not properly authenticated (e.g., the JWT is missing or the admin not found in the database) and a `ForbiddenException` if the admin is not bound to a project (e.g., `PROJECT_CREATOR`). This is the default for project scoped operations.
+* Use `dfe.requireAuthContext()` only for operations that do not depend on the project of the administrator (e.g., `whoAmI`, `changePassword`). It returns the AuthContext of any authenticated administrator, including those without a project.
 * Check the user's permissions (e.g., `admin.mayViewApplicationsInRegion(regionId)`).
 * Wrap any database interactions in a `transaction {}` block.
 * To maintain a clean architecture, place database-specific logic in a corresponding repository (e.g., `ApplicationRepository`).

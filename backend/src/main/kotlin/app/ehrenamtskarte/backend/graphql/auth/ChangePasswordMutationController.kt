@@ -1,7 +1,9 @@
 package app.ehrenamtskarte.backend.graphql.auth
 
+import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidCredentialsException
+import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
@@ -20,15 +22,17 @@ class ChangePasswordMutationController {
         @Argument newPassword: String,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val authContext = dfe.requireProjectAuthContext()
+        val admin = dfe.requireAuthContext().admin
 
         transaction {
-            val administratorEntity =
-                AdministratorsRepository.findByAuthData(authContext.project, email, currentPassword)
-                    ?: throw InvalidCredentialsException()
+            val administratorEntity = AdministratorEntity.findById(admin.id) ?: throw UnauthorizedException()
+            val passwordHash = administratorEntity.passwordHash
 
-            if (administratorEntity.id.value != authContext.adminId) {
-                throw UnauthorizedException()
+            if (!administratorEntity.email.equals(email, ignoreCase = true) ||
+                passwordHash == null ||
+                !PasswordCrypto.verifyPassword(currentPassword, passwordHash)
+            ) {
+                throw InvalidCredentialsException()
             }
 
             AdministratorsRepository.changePassword(administratorEntity, newPassword)
