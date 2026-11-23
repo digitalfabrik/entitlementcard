@@ -46,46 +46,60 @@ class _SortingButtonState extends State<SortingButton> {
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    final foregroundColor = theme.colorScheme.onSurface;
+    final colorScheme = theme.colorScheme;
+    final foregroundColor = colorScheme.onSurface;
     final isRequesting = _locationStatus == LocationRequestStatus.requesting;
     final currentLabel = _label(context, widget.sortingMode);
 
-    return PopupMenuButton<SortingMode>(
-      enabled: !isRequesting,
-      initialValue: widget.sortingMode,
-      tooltip: t.search.sortBy,
-      position: PopupMenuPosition.under,
-      onOpened: () => setState(() => _isMenuOpen = true),
-      onCanceled: () => setState(() => _isMenuOpen = false),
-      onSelected: _onSelected,
-      itemBuilder: (context) => SortingMode.values
-          .map(
-            (mode) => CheckedPopupMenuItem<SortingMode>(
-              value: mode,
-              checked: mode == widget.sortingMode,
-              child: Text(_label(context, mode)),
+    return MenuAnchor(
+      onOpen: () => setState(() => _isMenuOpen = true),
+      onClose: () => setState(() => _isMenuOpen = false),
+      style: MenuStyle(
+        backgroundColor: WidgetStatePropertyAll(colorScheme.surfaceContainer),
+        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+        padding: const WidgetStatePropertyAll(EdgeInsets.all(8)),
+      ),
+      menuChildren: SortingMode.values.map((mode) {
+        final isSelected = mode == widget.sortingMode;
+        return MenuItemButton(
+          onPressed: () => _onSelected(mode),
+          style: MenuItemButton.styleFrom(
+            backgroundColor: isSelected ? colorScheme.surfaceContainerHighest : null,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            textStyle: theme.textTheme.bodyLarge,
+          ),
+          leadingIcon: Visibility.maintain(
+            visible: isSelected,
+            child: Icon(Icons.check, color: colorScheme.onSurface),
+          ),
+          child: Text(_label(context, mode), style: TextStyle(color: colorScheme.onSurface)),
+        );
+      }).toList(),
+      builder: (context, controller, _) => Tooltip(
+        message: t.search.sortBy,
+        child: InkWell(
+          onTap: isRequesting ? null : () => controller.isOpen ? controller.close() : controller.open(),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: kMinInteractiveDimension),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox.square(
+                  dimension: 24,
+                  child: isRequesting
+                      ? Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: CircularProgressIndicator(strokeWidth: 2, color: foregroundColor),
+                        )
+                      : Icon(Icons.sort, color: foregroundColor),
+                ),
+                const SizedBox(width: 12),
+                Text(currentLabel, style: theme.textTheme.bodyLarge?.copyWith(color: foregroundColor, height: 1)),
+                const SizedBox(width: 4),
+                Icon(_isMenuOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, color: foregroundColor),
+              ],
             ),
-          )
-          .toList(),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: kMinInteractiveDimension),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox.square(
-              dimension: 24,
-              child: isRequesting
-                  ? Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: CircularProgressIndicator(strokeWidth: 2, color: foregroundColor),
-                    )
-                  : Icon(Icons.sort, color: foregroundColor),
-            ),
-            const SizedBox(width: 12),
-            Text(currentLabel, style: theme.textTheme.bodyLarge?.copyWith(color: foregroundColor, height: 1)),
-            const SizedBox(width: 4),
-            Icon(_isMenuOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, color: foregroundColor),
-          ],
+          ),
         ),
       ),
     );
