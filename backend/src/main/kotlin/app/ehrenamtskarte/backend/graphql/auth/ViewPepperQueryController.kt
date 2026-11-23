@@ -16,7 +16,7 @@ class ViewPepperQueryController {
     @GraphQLDescription("Get the pepper for Koblenz user hashing")
     @QueryMapping
     fun getHashingPepper(dfe: DataFetchingEnvironment): String {
-        val admin = dfe.requireAuthContext().admin
+        val admin = dfe.requireProjectAuthContext().admin
 
         return transaction {
             if (!admin.mayViewHashingPepper()) {

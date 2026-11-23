@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.graphql
 
-import app.ehrenamtskarte.backend.graphql.auth.AuthContext
 import app.ehrenamtskarte.backend.graphql.auth.JwtService
+import app.ehrenamtskarte.backend.graphql.auth.ProjectAuthContext
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.graphql.server.WebGraphQlInterceptor
 import org.springframework.graphql.server.WebGraphQlRequest
@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono
  *
  * The stored values can be accessed directly via the [graphql.schema.DataFetchingEnvironment]:
  * ```
- * val authContext = dfe.graphQlContext.get<AuthContext>() ?: throw UnauthorizedException()
+ * val authContext = dfe.graphQlContext.get<ProjectAuthContext>() ?: throw UnauthorizedException()
  * ```
  *
  * Or injected into query or mutation resolvers using the @ContextValue annotation:
@@ -30,11 +30,11 @@ class GraphQLRequestInterceptor : WebGraphQlInterceptor {
     override fun intercept(request: WebGraphQlRequest, chain: WebGraphQlInterceptor.Chain): Mono<WebGraphQlResponse> {
         val servletRequest = (RequestContextHolder.getRequestAttributes() as? ServletRequestAttributes)?.request
         val jwtPayload = servletRequest?.let { JwtService.verifyRequest(it) }
-        val authContext = jwtPayload?.let { AuthContext.fromJwtPayload(it) }
+        val authContext = jwtPayload?.let { ProjectAuthContext.fromJwtPayload(it) }
 
         request.configureExecutionInput { _, builder ->
             builder.graphQLContext { ctx ->
-                authContext?.let { ctx.put(AuthContext::class, it) }
+                authContext?.let { ctx.put(ProjectAuthContext::class, it) }
                 servletRequest?.let { req ->
                     ctx.put("request", req)
                     ctx.put("remoteIp", getIpAddress(req))

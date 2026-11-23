@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.entities.mayUpdateSettingsInRegion
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.auth.requireProjectAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidApplicationConfirmationNoteSizeException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidContactInformationSizeException
 import app.ehrenamtskarte.backend.graphql.exceptions.NotEakProjectException
@@ -95,7 +95,7 @@ class RegionQueryController(
         @Argument applicationConfirmationNote: String,
         @Argument applicationConfirmationNoteActivated: Boolean,
     ): String {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         if (!authContext.admin.mayUpdateSettingsInRegion(regionId)) {
             throw ForbiddenException()
         }
@@ -120,7 +120,7 @@ class RegionQueryController(
         @Argument contactInformation: String,
         @Argument contactInformationActivated: Boolean,
     ): String {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         if (!authContext.admin.mayUpdateSettingsInRegion(regionId)) {
             throw ForbiddenException()
         }

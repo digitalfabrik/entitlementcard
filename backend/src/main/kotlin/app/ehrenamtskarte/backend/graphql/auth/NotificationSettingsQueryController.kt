@@ -11,7 +11,7 @@ class NotificationSettingsQueryController {
     @GraphQLDescription("Get the notification settings of the authenticated administrator")
     @QueryMapping
     fun getNotificationSettings(dfe: DataFetchingEnvironment): NotificationSettings {
-        val admin = dfe.requireAuthContext().admin
+        val admin = dfe.requireProjectAuthContext().admin
         return NotificationSettings(admin.notificationOnApplication, admin.notificationOnVerification)
     }
 }

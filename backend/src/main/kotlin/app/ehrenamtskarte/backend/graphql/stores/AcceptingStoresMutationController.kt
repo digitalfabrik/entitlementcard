@@ -5,8 +5,8 @@ import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.db.entities.mayUpdateStoresInProject
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
 import app.ehrenamtskarte.backend.graphql.auth.requirePermission
+import app.ehrenamtskarte.backend.graphql.auth.requireProjectAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotUniqueException
@@ -34,7 +34,7 @@ class AcceptingStoresMutationService {
         @Argument dryRun: Boolean,
         dfe: DataFetchingEnvironment,
     ): StoreImportReturnResultModel {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         requirePermission(authContext.admin.mayUpdateStoresInProject(authContext.projectId))
 
         return transaction {
@@ -79,7 +79,7 @@ class AcceptingStoresMutationService {
         @Argument store: AcceptingStoreInput,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         if (!authContext.admin.mayUpdateStoresInProject(authContext.projectId)) {
             throw ForbiddenException()
         }
@@ -110,7 +110,7 @@ class AcceptingStoresMutationService {
         @Argument store: AcceptingStoreInput,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         if (!authContext.admin.mayUpdateStoresInProject(authContext.projectId)) {
             throw ForbiddenException()
         }
@@ -134,7 +134,7 @@ class AcceptingStoresMutationService {
         @Argument storeIds: List<Int>,
         dfe: DataFetchingEnvironment,
     ): List<Int> {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         val projectId = authContext.projectId
 
         requirePermission(authContext.admin.mayUpdateStoresInProject(authContext.projectId))

@@ -19,7 +19,7 @@ import app.ehrenamtskarte.backend.graphql.application.types.Application
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationAdminGql
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantEmail
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantName
-import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.auth.requireProjectAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidApplicationStatusException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
@@ -135,7 +135,7 @@ class EakApplicationMutationController(
         @Argument applicationId: Int,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
 
         transaction {
             val application = ApplicationEntity.findById(applicationId)
@@ -218,7 +218,7 @@ class EakApplicationMutationController(
 
             applicationEntity.changeStatusOrThrow(Status.Approved)
 
-            if (dfe.requireAuthContext().admin.mayUpdateApplicationsInRegion(applicationEntity.regionId.value)) {
+            if (dfe.requireProjectAuthContext().admin.mayUpdateApplicationsInRegion(applicationEntity.regionId.value)) {
                 ApplicationAdminGql.fromDbEntity(applicationEntity)
             } else {
                 throw ForbiddenException()
@@ -239,7 +239,7 @@ class EakApplicationMutationController(
         @Argument rejectionMessage: String,
         dfe: DataFetchingEnvironment,
     ): DataFetcherResult<ApplicationAdminGql> {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
 
         return transaction {
             val application = ApplicationEntity.findById(applicationId)
@@ -282,7 +282,7 @@ class EakApplicationMutationController(
                 throw InvalidNoteSizeException(NOTE_MAX_CHARS)
             }
 
-            if (!dfe.requireAuthContext().admin.mayUpdateApplicationsInRegion(application.regionId.value)) {
+            if (!dfe.requireProjectAuthContext().admin.mayUpdateApplicationsInRegion(application.regionId.value)) {
                 throw ForbiddenException()
             }
 
@@ -296,7 +296,7 @@ class EakApplicationMutationController(
         @Argument applicationVerificationId: Int,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
 
         transaction {
             val application = ApplicationEntity.findById(applicationId)

@@ -27,7 +27,7 @@ class ViewAdministratorsQueryController {
     @GraphQLDescription("Returns the requesting administrator as retrieved from his JWT token.")
     @QueryMapping
     fun whoAmI(dfe: DataFetchingEnvironment): Administrator {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         val admin = authContext.admin
 
         return transaction {
@@ -43,7 +43,7 @@ class ViewAdministratorsQueryController {
     )
     @QueryMapping
     fun getUsersInProject(dfe: DataFetchingEnvironment): List<Administrator> {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
 
         return transaction {
             if (!authContext.admin.mayViewUsersInProject(authContext.projectId)) {
@@ -66,7 +66,7 @@ class ViewAdministratorsQueryController {
         @Argument regionId: Int,
         dfe: DataFetchingEnvironment,
     ): List<Administrator> {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
 
         return transaction {
             val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()

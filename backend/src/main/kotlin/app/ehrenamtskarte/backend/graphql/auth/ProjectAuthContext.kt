@@ -11,7 +11,7 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
-data class AuthContext(
+data class ProjectAuthContext(
     val adminId: Int,
     val admin: AdministratorEntity,
     val projectId: Int,
@@ -22,18 +22,18 @@ data class AuthContext(
 
     companion object {
         /**
-         * Creates an AuthContext from a given JWT payload by fetching
+         * Creates a ProjectAuthContext from a given JWT payload by fetching
          * the administrator and project details from the database.
          * Returns null if the administrator is not found.
          */
-        fun fromJwtPayload(payload: JwtPayload): AuthContext? =
+        fun fromJwtPayload(payload: JwtPayload): ProjectAuthContext? =
             transaction {
                 (Administrators innerJoin Projects)
                     .select(Administrators.columns + Projects.columns)
                     .where { Administrators.id eq payload.adminId }
                     .singleOrNull()
                     ?.let {
-                        AuthContext(
+                        ProjectAuthContext(
                             adminId = payload.adminId,
                             admin = AdministratorEntity.wrapRow(it),
                             projectId = it[Projects.id].value,
@@ -44,5 +44,5 @@ data class AuthContext(
     }
 }
 
-fun DataFetchingEnvironment.requireAuthContext(): AuthContext =
-    graphQlContext.get<AuthContext>() ?: throw UnauthorizedException()
+fun DataFetchingEnvironment.requireProjectAuthContext(): ProjectAuthContext =
+    graphQlContext.get<ProjectAuthContext>() ?: throw UnauthorizedException()

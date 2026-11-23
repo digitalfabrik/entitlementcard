@@ -34,7 +34,7 @@ class ManageUsersMutationController(
         @Argument sendWelcomeMail: Boolean,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         val projectConfig = backendConfig.getProjectConfig(authContext.project)
 
         transaction {
@@ -73,7 +73,7 @@ class ManageUsersMutationController(
         @Argument newRegionId: Int?,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
 
         transaction {
             val adminToEdit = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
@@ -100,7 +100,7 @@ class ManageUsersMutationController(
         @Argument adminId: Int,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
 
         transaction {
             val adminToDelete = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()

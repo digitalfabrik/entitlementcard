@@ -20,7 +20,7 @@ class ChangePasswordMutationController {
         @Argument newPassword: String,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
 
         transaction {
             val administratorEntity =

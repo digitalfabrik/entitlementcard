@@ -38,7 +38,7 @@ class ApiTokenController {
         @Argument expiresIn: Int,
         dfe: DataFetchingEnvironment,
     ): String {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
 
         val admin = authContext.admin.takeIf { it.mayAddApiTokensInProject() }
             ?: throw ForbiddenException()
@@ -69,7 +69,7 @@ class ApiTokenController {
         @Argument id: Int,
         dfe: DataFetchingEnvironment,
     ): Int {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         val admin = authContext.admin.takeIf { it.mayDeleteApiTokensInProject() }
             ?: throw ForbiddenException()
 
@@ -96,7 +96,7 @@ class ApiTokenQueryController {
     @GraphQLDescription("Gets metadata of all api tokens for a project")
     @QueryMapping
     fun getApiTokenMetaData(dfe: DataFetchingEnvironment): List<ApiTokenMetaData> {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         val admin = authContext.admin.takeIf { it.mayViewApiMetadataInProject() }
             ?: throw ForbiddenException()
 

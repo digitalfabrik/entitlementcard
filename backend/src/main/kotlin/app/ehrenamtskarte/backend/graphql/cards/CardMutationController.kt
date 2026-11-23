@@ -11,7 +11,7 @@ import app.ehrenamtskarte.backend.db.entities.mayDeleteCardInRegion
 import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
-import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.auth.requireProjectAuthContext
 import app.ehrenamtskarte.backend.graphql.cards.types.ActivationState
 import app.ehrenamtskarte.backend.graphql.cards.types.CardActivationResultModel
 import app.ehrenamtskarte.backend.graphql.cards.types.CardCreationConfirmationMailInput
@@ -268,7 +268,7 @@ class CardMutationController(
         @Argument applicationIdToMarkAsProcessed: Int? = null,
         @GraphQLIgnore @ContextValue request: HttpServletRequest,
     ): List<CardCreationResultModel> {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         val activationCodes = transaction {
@@ -407,7 +407,7 @@ class CardMutationController(
         @Argument cardInfoHashBase64List: List<String>,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         val cardInfoHashList = cardInfoHashBase64List.map { Base64.decode(it) }
 
         transaction {
@@ -428,7 +428,7 @@ class CardMutationController(
         @Argument notifications: List<CardCreationConfirmationMailInput>,
         dfe: DataFetchingEnvironment,
     ): CardCreationConfirmationMailResult {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         if (!authContext.admin.maySendMailsInRegion(regionId)) {

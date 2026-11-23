@@ -43,7 +43,7 @@ Use `@GraphQLDescription` to describe what the function does.
 
 4. **Implement the logic and return the result**
 
-* Use `dfe.requireAuthContext()` to get the AuthContext. This will throw an `UnauthorizedException` if the user is not properly authenticated (e.g., the JWT is missing or the admin not found in the database).
+* Use `dfe.requireProjectAuthContext()` to get the ProjectAuthContext. This will throw an `UnauthorizedException` if the user is not properly authenticated (e.g., the JWT is missing or the admin not found in the database).
 * Check the user's permissions (e.g., `admin.mayViewApplicationsInRegion(regionId)`).
 * Wrap any database interactions in a `transaction {}` block.
 * To maintain a clean architecture, place database-specific logic in a corresponding repository (e.g., `ApplicationRepository`).
@@ -54,7 +54,7 @@ Here is a complete example:
 @GraphQLDescription("Queries all applications for a specific region")
 @QueryMapping
 fun getApplications(@Argument regionId: Int, dfe: DataFetchingEnvironment): List<ApplicationAdminGql> { 
-    val admin = dfe.requireAuthContext().admin
+    val admin = dfe.requireProjectAuthContext().admin
     return transaction {
        if (admin.mayViewApplicationsInRegion(regionId)) {
            ApplicationRepository.getApplicationsByAdmin(regionId)

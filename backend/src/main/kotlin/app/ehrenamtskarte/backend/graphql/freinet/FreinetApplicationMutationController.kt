@@ -9,7 +9,7 @@ import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantDateOfBi
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantFirstName
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantLastName
 import app.ehrenamtskarte.backend.graphql.application.utils.getPersonalDataNode
-import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.auth.requireProjectAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.NotImplementedException
 import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetCardDataInvalidException
@@ -49,7 +49,7 @@ class FreinetApplicationMutationController(
         @Argument freinetCard: FreinetCard,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         if (projectConfig.freinet == null) {
@@ -133,7 +133,7 @@ class FreinetApplicationMutationController(
         @Argument freinetCards: List<FreinetCardWithUserId>,
         dfe: DataFetchingEnvironment,
     ): FreinetCardTransferResult {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         if (projectConfig.freinet == null) {

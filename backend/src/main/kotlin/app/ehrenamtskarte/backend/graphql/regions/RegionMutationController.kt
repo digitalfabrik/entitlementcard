@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.db.entities.AvailableCardFormats
 import app.ehrenamtskarte.backend.db.entities.PRIVACY_POLICY_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.mayUpdateSettingsInRegion
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.auth.requireProjectAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidDataPolicySizeException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -23,7 +23,7 @@ class RegionMutationController {
         @Argument regionId: Int,
         @Argument dataPrivacyText: String,
     ): Boolean {
-        if (!dfe.requireAuthContext().admin.mayUpdateSettingsInRegion(regionId)) {
+        if (!dfe.requireProjectAuthContext().admin.mayUpdateSettingsInRegion(regionId)) {
             throw ForbiddenException()
         }
         if (dataPrivacyText.length > PRIVACY_POLICY_MAX_CHARS) {
@@ -48,7 +48,7 @@ class RegionMutationController {
         @Argument activatedForConfirmationMail: Boolean,
         @Argument availableCardFormats: AvailableCardFormats,
     ): Boolean {
-        if (!dfe.requireAuthContext().admin.mayUpdateSettingsInRegion(regionId)) {
+        if (!dfe.requireProjectAuthContext().admin.mayUpdateSettingsInRegion(regionId)) {
             throw ForbiddenException()
         }
 
@@ -71,7 +71,7 @@ class RegionMutationController {
         @Argument applicationConfirmationNote: String,
         @Argument applicationConfirmationNoteActivated: Boolean,
     ): Boolean {
-        if (!dfe.requireAuthContext().admin.mayUpdateSettingsInRegion(regionId)) {
+        if (!dfe.requireProjectAuthContext().admin.mayUpdateSettingsInRegion(regionId)) {
             throw ForbiddenException()
         }
 
@@ -93,7 +93,7 @@ class RegionMutationController {
         @Argument contactInformation: String,
         @Argument contactInformationActivated: Boolean,
     ): Boolean {
-        if (!dfe.requireAuthContext().admin.mayUpdateSettingsInRegion(regionId)) {
+        if (!dfe.requireProjectAuthContext().admin.mayUpdateSettingsInRegion(regionId)) {
             throw ForbiddenException()
         }
 
