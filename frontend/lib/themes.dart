@@ -76,7 +76,7 @@ ThemeData get lightTheme {
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll(primaryColor),
         elevation: WidgetStatePropertyAll(2),
-        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
+        minimumSize: WidgetStatePropertyAll(Size(64, 48)),
       ),
     ),
     checkboxTheme: CheckboxThemeData(
@@ -145,7 +145,7 @@ ThemeData get darkTheme {
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll(primaryColor),
         elevation: WidgetStatePropertyAll(2),
-        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
+        minimumSize: WidgetStatePropertyAll(Size(64, 48)),
       ),
     ),
     checkboxTheme: CheckboxThemeData(

@@ -40,7 +40,8 @@ class DetailContent extends StatelessWidget {
             Text(t.store.offer, style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor)),
             const SizedBox(height: 8),
             Text(storeDescription ?? t.store.noDescriptionAvailable, style: theme.textTheme.bodyLarge),
-            Divider(thickness: 0.7, height: 48, color: theme.primaryColorLight),
+            const SizedBox(height: 10),
+            Divider(thickness: 0.7, height: 28, color: theme.primaryColorLight),
             Column(
               children: <Widget>[
                 ContactInfoRow(
@@ -78,7 +79,7 @@ class DetailContent extends StatelessWidget {
               Divider(thickness: 0.7, height: 48, color: theme.primaryColorLight),
               OverflowBar(
                 alignment: MainAxisAlignment.center,
-                children: [OutlinedButton(child: Text(t.store.showOnMap), onPressed: () => _showOnMap(context))],
+                children: [FilledButton(onPressed: () => _showOnMap(context), child: Text(t.store.showOnMap))],
               ),
             ],
           ],
