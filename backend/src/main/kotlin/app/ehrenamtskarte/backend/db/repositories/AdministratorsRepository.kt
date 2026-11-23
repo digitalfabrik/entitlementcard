@@ -16,6 +16,8 @@ import org.jetbrains.exposed.v1.core.LowerCase
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
+import org.jetbrains.exposed.v1.core.isNull
+import org.jetbrains.exposed.v1.core.or
 import org.jetbrains.exposed.v1.jdbc.select
 import java.time.Instant
 import java.time.Period
@@ -28,17 +30,26 @@ object AdministratorsRepository {
     fun emailAlreadyExists(email: String) =
         !AdministratorEntity.find { LowerCase(Administrators.email) eq email.lowercase() }.empty()
 
-    fun findByAuthData(project: String, email: String, password: String): AdministratorEntity? =
-        (Administrators innerJoin Projects)
+    /**
+     * Finds the administrator with the given email, who either belongs to the given project
+     * or is not bound to any project (e.g. PROJECT_CREATOR).
+     * This allows administrators without a project to sign in or reset their password from every project.
+     */
+    fun findByEmailInProjectOrWithoutProject(project: String, email: String): AdministratorEntity? =
+        (Administrators leftJoin Projects)
             .select(Administrators.columns)
-            .where((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()))
+            .where(
+                (LowerCase(Administrators.email) eq email.lowercase()) and
+                    ((Projects.project eq project) or Administrators.projectId.isNull()),
+            )
             .firstOrNull()
-            ?.let {
-                val user = AdministratorEntity.wrapRow(it)
-                val passwordHash = user.passwordHash
+            ?.let { AdministratorEntity.wrapRow(it) }
 
-                user.takeIf { passwordHash != null && PasswordCrypto.verifyPassword(password, passwordHash) }
-            }
+    fun findByAuthData(project: String, email: String, password: String): AdministratorEntity? =
+        findByEmailInProjectOrWithoutProject(project, email)?.takeIf {
+            val passwordHash = it.passwordHash
+            passwordHash != null && PasswordCrypto.verifyPassword(password, passwordHash)
+        }
 
     fun insert(
         project: String,

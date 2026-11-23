@@ -12,7 +12,9 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.isNotNull
+import org.jetbrains.exposed.v1.core.isNull
 import org.jetbrains.exposed.v1.core.not
+import org.jetbrains.exposed.v1.core.or
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -35,9 +37,9 @@ class ResetPasswordQueryController {
             val projectId = projectEntity.id.value
             val admin = AdministratorEntity
                 .find {
-                    Administrators.passwordResetKeyHash.isNotNull() and (Administrators.projectId eq projectId) and not(
-                        Administrators.deleted,
-                    )
+                    Administrators.passwordResetKeyHash.isNotNull() and
+                        ((Administrators.projectId eq projectId) or Administrators.projectId.isNull()) and
+                        not(Administrators.deleted)
                 }.firstOrNull {
                     PasswordCrypto.verifyPasswordResetKey(
                         resetKey,

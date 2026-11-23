@@ -1,9 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.auth
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
-import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
-import app.ehrenamtskarte.backend.db.entities.Administrators
-import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.graphql.exceptions.PasswordResetKeyExpiredException
@@ -12,10 +9,6 @@ import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
-import org.jetbrains.exposed.v1.core.LowerCase
-import org.jetbrains.exposed.v1.core.and
-import org.jetbrains.exposed.v1.core.eq
-import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.graphql.data.method.annotation.Argument
@@ -39,15 +32,8 @@ class ResetPasswordMutationController(
         val logger = LoggerFactory.getLogger(ResetPasswordMutationController::class.java)
         val projectConfig = backendConfig.getProjectConfig(project)
         transaction {
-            val user = Administrators.innerJoin(Projects)
-                .select(Administrators.columns)
-                .where(
-                    (Projects.project eq project) and
-                        (LowerCase(Administrators.email) eq email.lowercase()) and
-                        (Administrators.deleted eq false),
-                )
-                .singleOrNull()
-                ?.let { AdministratorEntity.wrapRow(it) }
+            val user = AdministratorsRepository.findByEmailInProjectOrWithoutProject(project, email)
+                ?.takeIf { !it.deleted }
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user != null) {
                 val key = AdministratorsRepository.setNewPasswordResetKey(user)
@@ -76,15 +62,8 @@ class ResetPasswordMutationController(
             throw ProjectNotFoundException(project)
         }
         transaction {
-            val user = Administrators.innerJoin(Projects)
-                .select(Administrators.columns)
-                .where(
-                    (Projects.project eq project) and
-                        (LowerCase(Administrators.email) eq email.lowercase()) and
-                        (Administrators.deleted eq false),
-                )
-                .singleOrNull()
-                ?.let { AdministratorEntity.wrapRow(it) }
+            val user = AdministratorsRepository.findByEmailInProjectOrWithoutProject(project, email)
+                ?.takeIf { !it.deleted }
 
             val passwordResetKeyHash = user?.passwordResetKeyHash
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
