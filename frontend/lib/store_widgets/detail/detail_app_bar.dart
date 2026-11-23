@@ -12,49 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:provider/provider.dart';
 
-const double bottomSize = 100;
-
-class DetailAppBarBottom extends StatelessWidget {
-  final Color textColorGrey;
-  final Color textColor;
-  final String? title;
-  final String? categoryName;
-
-  const DetailAppBarBottom({
-    super.key,
-    this.title,
-    this.categoryName,
-    required this.textColorGrey,
-    required this.textColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      alignment: Alignment.bottomLeft,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            categoryName ?? '',
-            style: textTheme.bodyLarge?.apply(color: textColorGrey),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          Text(
-            title ?? '',
-            style: textTheme.titleLarge?.apply(color: textColor),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class DetailAppBar extends StatelessWidget {
   final int storeId;
   final String storeName;
@@ -82,31 +39,47 @@ class DetailAppBar extends StatelessWidget {
     final textColor = getReadableOnColor(backgroundColor);
     final textColorGrey = getReadableOnColorSecondary(backgroundColor);
 
-    return AppBarWithBottom(
-      actions: [
-        if (buildConfig.featureFlags.favorites && showFavoriteButton)
-          IconButton(
-            color: foregroundColor,
-            icon: isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border_outlined),
-            iconSize: 36,
-            onPressed: () async {
-              await _toggleFavorites(context, favoritesProvider);
-            },
-          ),
-      ],
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(bottomSize),
-        // The SizedBox makes sure that the text does not move above the
-        // AppBar, but is truncated at the bottom of the "bottom" component.
-        child: SizedBox(
-          height: bottomSize,
-          child: DetailAppBarBottom(
-            title: storeName,
-            categoryName: category.name,
-            textColorGrey: textColorGrey,
-            textColor: textColor,
+    return SizedBox(
+      height: MediaQuery.paddingOf(context).top + appBarToolbarHeight,
+      child: AppBar(
+        toolbarHeight: appBarToolbarHeight,
+        leading: BackButton(color: foregroundColor),
+        // On iOS the title would be centered by default
+        centerTitle: false,
+        titleSpacing: 0,
+        title: Padding(
+          padding: const EdgeInsetsDirectional.only(end: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                storeName,
+                style: theme.textTheme.titleLarge?.apply(color: textColor),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                category.shortName.toUpperCase(),
+                style: theme.textTheme.bodySmall?.apply(color: textColorGrey),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
         ),
+        actions: [
+          if (buildConfig.featureFlags.favorites && showFavoriteButton)
+            IconButton(
+              color: foregroundColor,
+              icon: isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border_outlined),
+              iconSize: 36,
+              onPressed: () async {
+                await _toggleFavorites(context, favoritesProvider);
+              },
+            ),
+        ],
       ),
     );
   }

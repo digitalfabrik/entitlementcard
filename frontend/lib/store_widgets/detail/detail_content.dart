@@ -37,6 +37,8 @@ class DetailContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Text(t.store.offer, style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor)),
+            const SizedBox(height: 8),
             Text(storeDescription ?? t.store.noDescriptionAvailable, style: theme.textTheme.bodyLarge),
             Divider(thickness: 0.7, height: 48, color: theme.primaryColorLight),
             Column(

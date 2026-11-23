@@ -144,7 +144,7 @@ void main() {
       final detailAppBar = find.byType(DetailAppBar);
       expect(detailAppBar, findsOneWidget);
       expect(find.descendant(of: detailAppBar, matching: find.text('Test store')), findsOneWidget);
-      expect(find.descendant(of: detailAppBar, matching: find.text(t.category.other)), findsOneWidget);
+      expect(find.descendant(of: detailAppBar, matching: find.text(t.category.other.toUpperCase())), findsOneWidget);
 
       final removedStoreContent = find.byType(RemovedStoreContent);
       expect(removedStoreContent, findsOneWidget);

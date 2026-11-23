@@ -194,6 +194,7 @@
     "address": "Address",
     "email": "E-Mail",
     "loadingDataFailed": "Error loading the data.",
+    "offer": "Offer:",
     "noDescriptionAvailable": "No description available",
     "phone": "Phone",
     "showOnMap": "Show on map",

@@ -11,6 +11,8 @@ import 'package:ehrenamtskarte/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+const appBarToolbarHeight = 80.0;
+
 class CustomAppBar extends StatelessWidget {
   final String title;
   final List<Widget>? actions;
@@ -25,28 +27,6 @@ class CustomAppBar extends StatelessWidget {
       leading: BackButton(color: foregroundColor),
       title: Text(title),
       actions: actions,
-    );
-  }
-}
-
-class AppBarWithBottom extends StatelessWidget {
-  final PreferredSizeWidget bottom;
-  final List<Widget>? actions;
-
-  const AppBarWithBottom({super.key, required this.bottom, this.actions});
-
-  @override
-  Widget build(BuildContext context) {
-    final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
-    // Note: A SizedBox is required because AppBar contains a Column.
-    // If we want to add a AppBar into a column, then we need to set its size.
-    return SizedBox(
-      height: MediaQuery.of(context).padding.top + bottom.preferredSize.height + kToolbarHeight,
-      child: AppBar(
-        leading: BackButton(color: foregroundColor),
-        bottom: bottom,
-        actions: actions,
-      ),
     );
   }
 }
@@ -157,8 +137,6 @@ class SliverStatusBarProtector extends StatelessWidget {
 }
 
 const _searchBarHeight = 44.0;
-const _searchBarPadding = 16.0;
-const _searchAppBarToolbarHeight = _searchBarHeight + 2 * _searchBarPadding;
 
 class SliverSearchAppBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
@@ -194,8 +172,8 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
       pinned: true,
       snap: true,
       floating: true,
-      toolbarHeight: _searchAppBarToolbarHeight,
-      expandedHeight: categoryFilterBarExpectedHeight(context, filteredAssetList.length, _searchAppBarToolbarHeight),
+      toolbarHeight: appBarToolbarHeight,
+      expandedHeight: categoryFilterBarExpectedHeight(context, filteredAssetList.length, appBarToolbarHeight),
       title: SearchBar(
         onTapOutside: (PointerDownEvent event) {
           focusNode.nextFocus();
@@ -221,7 +199,7 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
       flexibleSpace: CategoryFilterBar(
         categoryAssets: filteredAssetList,
         onCategoryPress: onCategoryPress,
-        toolbarHeight: _searchAppBarToolbarHeight,
+        toolbarHeight: appBarToolbarHeight,
       ),
     );
   }
