@@ -14,6 +14,7 @@ import app.ehrenamtskarte.backend.db.entities.mayDeleteUser
 import app.ehrenamtskarte.backend.db.entities.mayEditUser
 import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
 import app.ehrenamtskarte.backend.db.entities.mayUpdateApplicationsInRegion
+import app.ehrenamtskarte.backend.db.entities.mayUpdateFreinetAgencyInformationInRegion
 import app.ehrenamtskarte.backend.db.entities.mayUpdateSettingsInRegion
 import app.ehrenamtskarte.backend.db.entities.mayUpdateStoresInProject
 import app.ehrenamtskarte.backend.db.entities.mayViewApiMetadataInProject
@@ -59,6 +60,9 @@ val koblenzRegionAdmin = AdministratorEntity
 val koblenzRegionManager = AdministratorEntity
     .find { Administrators.email eq TestAdministrators.KOBLENZ_REGION_MANAGER.email }
     .single()
+val projectCreator = AdministratorEntity
+    .find { Administrators.email eq TestAdministrators.PROJECT_CREATOR.email }
+    .single()
 val bayernId = bayernProjectAdmin.projectId!!.value
 val koblenzId = koblenzProjectAdmin.projectId!!.value
 val nuernbergId = nuernbergProjectAdmin.projectId!!.value
@@ -84,6 +88,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzProjectAdmin.mayCreateCardInRegion(2))
             assertFalse(koblenzRegionManager.mayCreateCardInRegion(2))
             assertFalse(nuernbergStoreManager.mayCreateCardInRegion(5))
+            assertFalse(projectCreator.mayCreateCardInRegion(bayernRegionId))
         }
     }
 
@@ -101,6 +106,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzProjectAdmin.mayDeleteCardInRegion(2))
             assertFalse(koblenzRegionManager.mayDeleteCardInRegion(2))
             assertFalse(nuernbergStoreManager.mayDeleteCardInRegion(5))
+            assertFalse(projectCreator.mayDeleteCardInRegion(bayernRegionId))
         }
     }
 
@@ -118,6 +124,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzProjectAdmin.mayViewApplicationsInRegion(2))
             assertFalse(koblenzRegionManager.mayViewApplicationsInRegion(2))
             assertFalse(nuernbergStoreManager.mayViewApplicationsInRegion(5))
+            assertFalse(projectCreator.mayViewApplicationsInRegion(bayernRegionId))
         }
     }
 
@@ -135,6 +142,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzProjectAdmin.mayUpdateApplicationsInRegion(2))
             assertFalse(koblenzRegionManager.mayUpdateApplicationsInRegion(2))
             assertFalse(nuernbergStoreManager.mayUpdateApplicationsInRegion(5))
+            assertFalse(projectCreator.mayUpdateApplicationsInRegion(bayernRegionId))
         }
     }
 
@@ -152,6 +160,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzProjectAdmin.mayDeleteApplicationsInRegion(2))
             assertFalse(koblenzRegionManager.mayDeleteApplicationsInRegion(2))
             assertFalse(nuernbergStoreManager.mayDeleteApplicationsInRegion(5))
+            assertFalse(projectCreator.mayDeleteApplicationsInRegion(bayernRegionId))
         }
     }
 
@@ -169,6 +178,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzRegionManager.mayUpdateSettingsInRegion(2))
             assertFalse(koblenzRegionManager.mayUpdateSettingsInRegion(koblenzRegionId))
             assertFalse(nuernbergStoreManager.mayUpdateSettingsInRegion(5))
+            assertFalse(projectCreator.mayUpdateSettingsInRegion(bayernRegionId))
         }
     }
 
@@ -187,6 +197,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzRegionAdmin.mayViewUsersInProject(koblenzId))
             assertFalse(koblenzRegionManager.mayViewUsersInProject(koblenzId))
             assertFalse(nuernbergStoreManager.mayViewUsersInProject(nuernbergId))
+            assertFalse(projectCreator.mayViewUsersInProject(bayernId))
         }
     }
 
@@ -205,6 +216,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzRegionAdmin.mayViewUsersInRegion(bayernRegion))
             assertFalse(koblenzRegionManager.mayViewUsersInRegion(koblenzRegion))
             assertFalse(nuernbergStoreManager.mayViewUsersInRegion(koblenzRegion))
+            assertFalse(projectCreator.mayViewUsersInRegion(bayernRegion))
         }
     }
 
@@ -222,6 +234,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzProjectAdmin.maySendMailsInRegion(2))
             assertFalse(koblenzRegionManager.maySendMailsInRegion(2))
             assertFalse(nuernbergStoreManager.maySendMailsInRegion(5))
+            assertFalse(projectCreator.maySendMailsInRegion(bayernRegionId))
         }
     }
 
@@ -240,6 +253,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzRegionAdmin.mayViewCardStatisticsInProject(koblenzId))
             assertFalse(koblenzRegionManager.mayViewCardStatisticsInProject(koblenzId))
             assertFalse(nuernbergStoreManager.mayViewCardStatisticsInProject(nuernbergId))
+            assertFalse(projectCreator.mayViewCardStatisticsInProject(bayernId))
         }
     }
 
@@ -257,6 +271,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzRegionManager.mayViewCardStatisticsInRegion(2))
             assertFalse(koblenzRegionManager.mayViewCardStatisticsInRegion(koblenzRegionId))
             assertFalse(nuernbergStoreManager.mayViewCardStatisticsInRegion(5))
+            assertFalse(projectCreator.mayViewCardStatisticsInRegion(bayernRegionId))
         }
     }
 
@@ -294,6 +309,8 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(nuernbergProjectAdmin.mayCreateUser(koblenzId, Role.PROJECT_ADMIN, null))
             assertFalse(nuernbergProjectAdmin.mayCreateUser(nuernbergId, Role.NO_RIGHTS, null))
             assertFalse(nuernbergProjectAdmin.mayCreateUser(nuernbergId, Role.EXTERNAL_VERIFIED_API_USER, null))
+            assertFalse(projectCreator.mayCreateUser(bayernId, Role.PROJECT_ADMIN, null))
+            assertFalse(bayernProjectAdmin.mayCreateUser(bayernId, Role.PROJECT_CREATOR, null))
         }
     }
 
@@ -351,6 +368,9 @@ internal class AuthorizerTest : IntegrationTest() {
                     null,
                 ),
             )
+            assertFalse(projectCreator.mayEditUser(bayernRegionAdmin, bayernId, Role.REGION_ADMIN, bayernRegion))
+            assertFalse(bayernProjectAdmin.mayEditUser(bayernRegionAdmin, bayernId, Role.PROJECT_CREATOR, null))
+            assertFalse(bayernProjectAdmin.mayEditUser(projectCreator, bayernId, Role.PROJECT_ADMIN, null))
         }
     }
 
@@ -381,6 +401,8 @@ internal class AuthorizerTest : IntegrationTest() {
 
             assertTrue(nuernbergProjectAdmin.mayDeleteUser(nuernbergProjectAdmin))
             assertFalse(nuernbergProjectAdmin.mayDeleteUser(bayernRegionAdmin))
+            assertFalse(projectCreator.mayDeleteUser(bayernRegionAdmin))
+            assertFalse(bayernProjectAdmin.mayDeleteUser(projectCreator))
         }
     }
 
@@ -397,6 +419,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzRegionManager.mayViewFreinetAgencyInformationInRegion(2))
             assertFalse(koblenzRegionManager.mayViewFreinetAgencyInformationInRegion(koblenzRegionId))
             assertFalse(nuernbergStoreManager.mayViewFreinetAgencyInformationInRegion(5))
+            assertFalse(projectCreator.mayViewFreinetAgencyInformationInRegion(bayernRegionId))
         }
     }
 
@@ -413,6 +436,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzRegionManager.mayViewFreinetAgencyInformationInRegion(2))
             assertFalse(koblenzRegionManager.mayViewFreinetAgencyInformationInRegion(koblenzRegionId))
             assertFalse(nuernbergStoreManager.mayViewFreinetAgencyInformationInRegion(5))
+            assertFalse(projectCreator.mayUpdateFreinetAgencyInformationInRegion(bayernRegionId))
         }
     }
 
@@ -430,6 +454,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzRegionManager.mayAddApiTokensInProject())
             assertFalse(nuernbergProjectAdmin.mayAddApiTokensInProject())
             assertFalse(nuernbergStoreManager.mayAddApiTokensInProject())
+            assertFalse(projectCreator.mayAddApiTokensInProject())
         }
     }
 
@@ -447,6 +472,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzRegionAdmin.mayViewApiMetadataInProject())
             assertFalse(koblenzRegionManager.mayViewApiMetadataInProject())
             assertFalse(nuernbergStoreManager.mayViewApiMetadataInProject())
+            assertFalse(projectCreator.mayViewApiMetadataInProject())
         }
     }
 
@@ -464,6 +490,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzRegionAdmin.mayDeleteApiTokensInProject())
             assertFalse(koblenzRegionManager.mayDeleteApiTokensInProject())
             assertFalse(nuernbergStoreManager.mayDeleteApiTokensInProject())
+            assertFalse(projectCreator.mayDeleteApiTokensInProject())
         }
     }
 
@@ -481,6 +508,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertFalse(koblenzRegionManager.mayViewHashingPepper())
             assertFalse(nuernbergProjectAdmin.mayViewHashingPepper())
             assertFalse(nuernbergStoreManager.mayViewHashingPepper())
+            assertFalse(projectCreator.mayViewHashingPepper())
         }
     }
 
@@ -489,6 +517,7 @@ internal class AuthorizerTest : IntegrationTest() {
         transaction {
             assertTrue(nuernbergStoreManager.mayUpdateStoresInProject(2))
             assertFalse(nuernbergProjectAdmin.mayUpdateStoresInProject(2))
+            assertFalse(projectCreator.mayUpdateStoresInProject(bayernId))
         }
     }
 }
