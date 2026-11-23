@@ -13,7 +13,7 @@ const VerificationDetails = ({ rows }: VerificationDetailsProps): ReactElement =
       gridTemplateColumns: 'auto 1fr',
       gridAutoRows: '1fr',
       alignItems: 'center',
-      gap: '4px',
+      gap: 0.5,
       margin: 0,
     }}
   >
