@@ -37,8 +37,7 @@ class _SearchPageState extends State<SearchPage> {
     return CustomScrollView(
       slivers: [
         SliverSearchAppBar(
-          onChanged: (text) => setState(() =>
-            searchFieldText = _effectiveSearchText(text)),
+          onChanged: (text) => setState(() => searchFieldText = _effectiveSearchText(text)),
           onCategoryPress: _onCategoryPress,
           textEditingController: _searchController,
           selectedCategoryIds: _selectedCategoryIds,
