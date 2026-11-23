@@ -121,7 +121,7 @@ fun AdministratorEntity.mayCreateUser(
     newAdminRole: Role,
     newAdminRegion: RegionEntity?,
 ): Boolean {
-    if (!isInProject(newAdminProjectId) || newAdminRole == Role.NO_RIGHTS) {
+    if (!isInProject(newAdminProjectId) || newAdminRole in setOf(Role.NO_RIGHTS, Role.PROJECT_CREATOR)) {
         return false
     }
     if (hasRole(Role.PROJECT_ADMIN)) {
@@ -144,7 +144,7 @@ fun AdministratorEntity.mayEditUser(
 ): Boolean {
     if (!isInProject(newAdminProjectId) ||
         !existingAdmin.isInProject(newAdminProjectId) ||
-        newAdminRole == Role.NO_RIGHTS
+        newAdminRole in setOf(Role.NO_RIGHTS, Role.PROJECT_CREATOR)
     ) {
         return false
     }
