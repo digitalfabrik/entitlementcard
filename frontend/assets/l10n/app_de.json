@@ -188,7 +188,11 @@
     "sortBy": "Sortierung",
     "sortNearby": "In meiner Nähe",
     "sortAlphabetically": "Alphabetisch",
-    "distanceAway": "{{distance}} entfernt"
+    "distanceAway": "{{distance}} entfernt",
+    "resultCount": {
+      "one": "1 Ergebnis",
+      "other": "{{n}} Ergebnisse"
+    }
   },
   "store": {
     "acceptingStore": "Akzeptanzstelle",

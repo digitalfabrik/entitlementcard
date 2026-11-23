@@ -188,7 +188,11 @@
     "sortBy": "Sort order",
     "sortNearby": "Near me",
     "sortAlphabetically": "Alphabetically",
-    "distanceAway": "{{distance}} away"
+    "distanceAway": "{{distance}} away",
+    "resultCount": {
+      "one": "1 result",
+      "other": "{{n}} results"
+    }
   },
   "store": {
     "acceptingStore": "Acceptance point",
