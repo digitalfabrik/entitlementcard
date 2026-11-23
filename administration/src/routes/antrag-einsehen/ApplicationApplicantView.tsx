@@ -82,7 +82,7 @@ const ApplicationApplicantView = ({
         expandedRoot={false}
       />
       <StyledDivider />
-      <VerificationsView application={application} />
+      <VerificationsView application={application} baseUrl={baseUrl} />
       {application.status === ApplicationStatus.Pending && (
         <>
           <StyledDivider />
