@@ -8,6 +8,8 @@ const roleToText = (role: Role): string => {
       return i18next.t('users:noRights')
     case Role.ProjectAdmin:
       return i18next.t('users:projectAdmin')
+    case Role.ProjectCreator:
+      return i18next.t('users:projectCreator')
     case Role.ProjectStoreManager:
       return i18next.t('users:projectStoreManager')
     case Role.RegionAdmin:
