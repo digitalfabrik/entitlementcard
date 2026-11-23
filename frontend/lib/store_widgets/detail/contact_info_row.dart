@@ -34,7 +34,10 @@ class ContactInfoRow extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       _description,
-                      style: theme.textTheme.bodyLarge?.copyWith(decoration: TextDecoration.underline),
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: theme.colorScheme.primary,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
                   ],
                 ),
