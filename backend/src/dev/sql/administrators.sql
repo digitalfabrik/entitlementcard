@@ -181,4 +181,17 @@ VALUES
     false,
     false,
     false
+), (
+    'project-creator@entitlementcard.app',
+    NULL,
+    NULL,
+    'PROJECT_CREATOR',
+    decode(
+        '2432612431312474535468713552594D39676C36392F4B62394F34644F64505630627169497076696631436B6143416A4C5637696A53683070694671',
+        'hex'),
+    NULL,
+    NULL,
+    false,
+    false,
+    false
 );
