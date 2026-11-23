@@ -39,5 +39,6 @@ object MigrationsRegistry {
             V0034_MoveLegacyApplicationFieldsIntoApplicationDetails(),
             V0035_Region_Contact_Information(),
             V0036_AddAvailableCardFormatsToRegions(),
+            V0037_AddProjectCreatorRole(),
         )
 }

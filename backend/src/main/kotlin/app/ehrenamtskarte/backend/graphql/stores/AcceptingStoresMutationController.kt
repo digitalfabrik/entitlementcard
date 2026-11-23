@@ -46,17 +46,17 @@ class AcceptingStoresMutationService {
 
             var numStoresCreated = 0
             var numStoresUntouched = 0
-            val acceptingStoreIdsToRemove = AcceptingStoresRepository.getAllIdsInProject(authContext.admin.projectId)
+            val acceptingStoreIdsToRemove = AcceptingStoresRepository.getAllIdsInProject(authContext.projectEntityId)
 
             stores.forEach { storeInput ->
                 val store = mapCsvToStore(storeInput)
 
                 val existingStoreId =
-                    AcceptingStoresRepository.getIdIfExists(store, authContext.admin.projectId, regionEntity.id)
+                    AcceptingStoresRepository.getIdIfExists(store, authContext.projectEntityId, regionEntity.id)
 
                 if (existingStoreId == null) {
                     if (!dryRun) {
-                        AcceptingStoresRepository.createStore(store, authContext.admin.projectId, regionEntity.id)
+                        AcceptingStoresRepository.createStore(store, authContext.projectEntityId, regionEntity.id)
                     }
                     numStoresCreated++
                 } else {
@@ -92,13 +92,13 @@ class AcceptingStoresMutationService {
             val acceptingStore = mapCsvToStore(store)
             val existingStoreId = AcceptingStoresRepository.getIdIfExists(
                 acceptingStore,
-                authContext.admin.projectId,
+                authContext.projectEntityId,
                 regionEntity.id,
             )
             if (existingStoreId != null) {
                 throw StoreAlreadyExistsException()
             }
-            AcceptingStoresRepository.createStore(acceptingStore, authContext.admin.projectId, regionEntity.id)
+            AcceptingStoresRepository.createStore(acceptingStore, authContext.projectEntityId, regionEntity.id)
         }
         return true
     }

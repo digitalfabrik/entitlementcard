@@ -59,9 +59,9 @@ val koblenzRegionAdmin = AdministratorEntity
 val koblenzRegionManager = AdministratorEntity
     .find { Administrators.email eq TestAdministrators.KOBLENZ_REGION_MANAGER.email }
     .single()
-val bayernId = bayernProjectAdmin.projectId.value
-val koblenzId = koblenzProjectAdmin.projectId.value
-val nuernbergId = nuernbergProjectAdmin.projectId.value
+val bayernId = bayernProjectAdmin.projectId!!.value
+val koblenzId = koblenzProjectAdmin.projectId!!.value
+val nuernbergId = nuernbergProjectAdmin.projectId!!.value
 val bayernRegion = RegionEntity.findById(bayernRegionAdmin.regionId!!)!!
 val koblenzRegion = RegionEntity.findById(koblenzRegionAdmin.regionId!!)!!
 val bayernRegionId = TestAdministrators.EAK_REGION_ADMIN.regionId!!

@@ -57,7 +57,7 @@ class ApiTokenController {
         val expirationDate = LocalDate.now().plusMonths(expiresIn.toLong())
 
         transaction {
-            ApiTokensRepository.insert(tokenHash, admin.id, expirationDate, admin.projectId, type)
+            ApiTokensRepository.insert(tokenHash, admin.id, expirationDate, authContext.projectEntityId, type)
         }
 
         return token
@@ -69,18 +69,19 @@ class ApiTokenController {
         @Argument id: Int,
         dfe: DataFetchingEnvironment,
     ): Int {
-        val admin = dfe.requireAuthContext().admin.takeIf { it.mayDeleteApiTokensInProject() }
+        val authContext = dfe.requireAuthContext()
+        val admin = authContext.admin.takeIf { it.mayDeleteApiTokensInProject() }
             ?: throw ForbiddenException()
 
         transaction {
             if (admin.role == Role.PROJECT_ADMIN.db_value) {
                 ApiTokens.deleteWhere {
-                    (ApiTokens.id eq id) and (projectId eq admin.projectId)
+                    (ApiTokens.id eq id) and (projectId eq authContext.projectEntityId)
                 }
             }
             if (admin.role == Role.EXTERNAL_VERIFIED_API_USER.db_value) {
                 ApiTokens.deleteWhere {
-                    (ApiTokens.id eq id) and (projectId eq admin.projectId) and
+                    (ApiTokens.id eq id) and (projectId eq authContext.projectEntityId) and
                         (type eq ApiTokenType.VERIFIED_APPLICATION)
                 }
             }
@@ -95,7 +96,8 @@ class ApiTokenQueryController {
     @GraphQLDescription("Gets metadata of all api tokens for a project")
     @QueryMapping
     fun getApiTokenMetaData(dfe: DataFetchingEnvironment): List<ApiTokenMetaData> {
-        val admin = dfe.requireAuthContext().admin.takeIf { it.mayViewApiMetadataInProject() }
+        val authContext = dfe.requireAuthContext()
+        val admin = authContext.admin.takeIf { it.mayViewApiMetadataInProject() }
             ?: throw ForbiddenException()
 
         return transaction {
@@ -105,7 +107,7 @@ class ApiTokenQueryController {
                     when (admin.role) {
                         Role.EXTERNAL_VERIFIED_API_USER.db_value -> (Administrators.email eq admin.email) and
                             (ApiTokens.type eq ApiTokenType.VERIFIED_APPLICATION)
-                        Role.PROJECT_ADMIN.db_value -> ApiTokens.projectId eq admin.projectId
+                        Role.PROJECT_ADMIN.db_value -> ApiTokens.projectId eq authContext.projectEntityId
                         else -> Op.FALSE
                     }
                 }
