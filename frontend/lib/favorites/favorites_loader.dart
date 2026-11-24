@@ -156,7 +156,7 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
           ? AcceptingStoreSummary(
               store: store,
               showOnMap: (it) => HomePageData.of(context)?.navigateToMapTab(it),
-              showLocation: true,
+              locationText: store.location,
             )
           : IntrinsicHeight(
               child: RemovedStoreSummary(storeId: item.storeId, storeName: item.storeName, categoryId: item.categoryId),
