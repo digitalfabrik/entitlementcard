@@ -6,7 +6,9 @@ import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:ehrenamtskarte/sentry.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
+import 'package:ehrenamtskarte/store_widgets/category_label.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_page.dart';
+import 'package:ehrenamtskarte/widgets/grouped_list_item.dart';
 import 'package:flutter/material.dart';
 
 class SearchResultCard extends StatelessWidget {
@@ -49,82 +51,59 @@ class SearchResultCard extends StatelessWidget {
     final category = store.categoryId < categories.length ? categories[store.categoryId] : null;
     final categoryName = category?.shortName ?? t.store.unknownCategory;
 
-    const radius = Radius.circular(12);
-    final borderRadius = BorderRadius.vertical(
-      top: isFirst ? radius : Radius.zero,
-      bottom: isLast ? radius : Radius.zero,
-    );
-    final shape = RoundedRectangleBorder(borderRadius: borderRadius);
-    final borderSide = BorderSide(color: colorScheme.outlineVariant);
-    final border = Border(
-      top: isFirst ? borderSide : BorderSide.none,
-      left: borderSide,
-      right: borderSide,
-      bottom: borderSide,
-    );
-
-    return SafeArea(
-      top: false,
-      bottom: false,
-      child: Container(
-        foregroundDecoration: BoxDecoration(border: border, borderRadius: borderRadius),
-        child: Material(
-          color: colorScheme.surface,
-          shape: shape,
-          clipBehavior: Clip.antiAlias,
-          // Merge the contents so screen readers announce the whole entry as a single button.
-          child: MergeSemantics(
-            child: InkWell(
-              customBorder: shape,
-              onTap: () => _openDetailView(context),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _CategoryLabel(name: categoryName),
-                          const SizedBox(height: 8),
-                          Text(
-                            store.name ?? t.store.acceptingStore,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.titleSmall?.apply(color: colorScheme.onSurface),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            store.description ?? t.store.noDescriptionAvailable,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor),
-                          ),
-                          if (locationText != null) ...[
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Icon(Icons.location_on_outlined, size: 20, color: theme.hintColor),
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: Text(
-                                    locationText,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
-                                  ),
-                                ),
-                              ],
+    return GroupedListItem(
+      isFirst: isFirst,
+      isLast: isLast,
+      // Merge the contents so screen readers announce the whole entry as a single button.
+      child: MergeSemantics(
+        child: InkWell(
+          onTap: () => _openDetailView(context),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CategoryLabel(name: categoryName),
+                      const SizedBox(height: 8),
+                      Text(
+                        store.name ?? t.store.acceptingStore,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleSmall?.apply(color: colorScheme.onSurface),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        store.description ?? t.store.noDescriptionAvailable,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor),
+                      ),
+                      if (locationText != null) ...[
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(Icons.location_on_outlined, size: 20, color: theme.hintColor),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                locationText,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
+                              ),
                             ),
                           ],
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    ExcludeSemantics(child: Icon(Icons.chevron_right, color: theme.hintColor)),
-                  ],
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
-              ),
+                const SizedBox(width: 8),
+                ExcludeSemantics(child: Icon(Icons.chevron_right, color: theme.hintColor)),
+              ],
             ),
           ),
         ),
@@ -141,32 +120,6 @@ class SearchResultCard extends StatelessWidget {
     Navigator.of(context, rootNavigator: true).push(
       AppRoute(
         builder: (context) => DetailPage(store: store, showOnMap: showOnMap),
-      ),
-    );
-  }
-}
-
-class _CategoryLabel extends StatelessWidget {
-  final String name;
-
-  const _CategoryLabel({required this.name});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(color: colorScheme.surfaceContainerHighest, borderRadius: BorderRadius.circular(4)),
-      child: Text(
-        name.toUpperCase(),
-        // Screen readers would spell out the upper case text letter by letter.
-        semanticsLabel: name,
-        style: theme.textTheme.bodySmall?.copyWith(
-          color: theme.hintColor,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.5,
-        ),
       ),
     );
   }
