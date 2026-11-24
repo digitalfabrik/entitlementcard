@@ -8,6 +8,7 @@ import 'package:ehrenamtskarte/sentry.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:ehrenamtskarte/store_widgets/category_label.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_page.dart';
+import 'package:ehrenamtskarte/store_widgets/store_location_row.dart';
 import 'package:ehrenamtskarte/widgets/grouped_list_item.dart';
 import 'package:flutter/material.dart';
 
@@ -81,23 +82,7 @@ class SearchResultCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor),
                       ),
-                      if (locationText != null) ...[
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(Icons.location_on_outlined, size: 20, color: theme.hintColor),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                locationText,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      if (locationText != null) ...[const SizedBox(height: 8), StoreLocationRow(text: locationText)],
                     ],
                   ),
                 ),

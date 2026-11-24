@@ -6,6 +6,7 @@ import 'package:ehrenamtskarte/routing.dart';
 import 'package:ehrenamtskarte/sentry.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_page.dart';
 import 'package:ehrenamtskarte/store_widgets/category_label.dart';
+import 'package:ehrenamtskarte/store_widgets/store_location_row.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,14 +17,16 @@ import 'package:ehrenamtskarte/map/map_page.dart';
 class AcceptingStoreSummary extends StatelessWidget {
   final AcceptingStoreModel store;
   final void Function(PhysicalStoreFeatureData)? showOnMap;
+  final bool showLocation;
 
-  const AcceptingStoreSummary({super.key, required this.store, required this.showOnMap});
+  const AcceptingStoreSummary({super.key, required this.store, required this.showOnMap, this.showLocation = false});
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
     final categories = categoryAssets(context);
+    final location = store.location;
     final category = store.categoryId < categories.length ? categories[store.categoryId] : null;
 
     return SafeArea(
@@ -55,6 +58,10 @@ class AcceptingStoreSummary extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor),
                       ),
+                      if (showLocation && location != null) ...[
+                        const SizedBox(height: 8),
+                        StoreLocationRow(text: location),
+                      ],
                     ],
                   ),
                 ),

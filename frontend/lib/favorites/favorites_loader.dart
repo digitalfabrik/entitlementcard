@@ -11,6 +11,7 @@ import 'package:ehrenamtskarte/favorites/favorite_store.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:ehrenamtskarte/store_widgets/removed_store_summary.dart';
+import 'package:ehrenamtskarte/widgets/grouped_list_item.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:provider/provider.dart';
@@ -129,35 +130,38 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
 
   @override
   Widget build(BuildContext context) {
-    return PagedSliverList<int, FavoriteStore>.separated(
-      pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<FavoriteStore>(
-        itemBuilder: _buildItem,
-        noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
-        firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
-        newPageErrorIndicatorBuilder: _buildErrorWithRetry,
-        firstPageProgressIndicatorBuilder: _buildProgressIndicator,
-        newPageProgressIndicatorBuilder: _buildProgressIndicator,
+    return SliverPadding(
+      padding: const EdgeInsets.all(16),
+      sliver: PagedSliverList<int, FavoriteStore>(
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate<FavoriteStore>(
+          itemBuilder: _buildItem,
+          noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
+          firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
+          newPageErrorIndicatorBuilder: _buildErrorWithRetry,
+          firstPageProgressIndicatorBuilder: _buildProgressIndicator,
+          newPageProgressIndicatorBuilder: _buildProgressIndicator,
+        ),
       ),
-      separatorBuilder: (context, index) => const Divider(height: 0),
     );
   }
 
-  Widget _buildItem(BuildContext context, FavoriteStore item, index) {
+  Widget _buildItem(BuildContext context, FavoriteStore item, int index) {
     final store = item.acceptingStore;
-    if (store != null) {
-      return IntrinsicHeight(
-        child: AcceptingStoreSummary(
-          key: ValueKey(store.id),
-          store: store,
-          showOnMap: (it) => HomePageData.of(context)?.navigateToMapTab(it),
-        ),
-      );
-    } else {
-      return IntrinsicHeight(
-        child: RemovedStoreSummary(storeId: item.storeId, storeName: item.storeName, categoryId: item.categoryId),
-      );
-    }
+    return GroupedListItem(
+      key: ValueKey(item.storeId),
+      isFirst: index == 0,
+      isLast: _pagingController.nextPageKey == null && index == _pagingController.itemList!.length - 1,
+      child: store != null
+          ? AcceptingStoreSummary(
+              store: store,
+              showOnMap: (it) => HomePageData.of(context)?.navigateToMapTab(it),
+              showLocation: true,
+            )
+          : IntrinsicHeight(
+              child: RemovedStoreSummary(storeId: item.storeId, storeName: item.storeName, categoryId: item.categoryId),
+            ),
+    );
   }
 
   Widget _buildProgressIndicator(BuildContext context) => const Center(
