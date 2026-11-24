@@ -3,6 +3,7 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
+import 'package:ehrenamtskarte/util/distance_utils.dart';
 import 'package:ehrenamtskarte/widgets/grouped_list_item.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +36,7 @@ class SearchResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final distance = _distance;
     final locationText = distance != null
-        ? context.t.search.distanceAway(distance: DistanceText.formatDistance(distance))
+        ? context.t.search.distanceAway(distance: formatDistance(distance))
         : store.location;
     return GroupedListItem(
       isFirst: isFirst,
