@@ -178,7 +178,7 @@
   "search": {
     "filterByCategories": "Nach Kategorien filtern",
     "noResultsTitle": "Keine passenden Ergebnisse",
-    "noResultsDescription": "Wir konnten keine Ergebnisse für Ihre Filtereinstellungen finden. Bitte passen Sie Ihre Filter an.",
+    "noResultsDescription": "Wir konnten keine Ergebnisse zu Ihren Suchfiltern finden. Bitte passen Sie Ihre Einstellungen an.",
     "noAcceptingStoresAvailable": "Derzeit sind keine Akzeptanzstellen verfügbar.",
     "resetFilters": "Alle Filter zurücksetzen",
     "searchHint": "Suchen",
