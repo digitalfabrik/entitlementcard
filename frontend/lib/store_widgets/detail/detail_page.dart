@@ -1,6 +1,5 @@
 import 'package:ehrenamtskarte/store_widgets/detail/detail_app_bar.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_content.dart';
-import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
@@ -17,8 +16,6 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final categoryId = store.categoryId;
-    final accentColor = getDarkenedColorForCategory(context, categoryId);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -30,9 +27,7 @@ class DetailPage extends StatelessWidget {
           showFavoriteButton: true,
         ),
         Expanded(
-          child: Scaffold(
-            body: DetailContent(store, showOnMap: showOnMap, accentColor: accentColor),
-          ),
+          child: Scaffold(body: DetailContent(store, showOnMap: showOnMap)),
         ),
       ],
     );
