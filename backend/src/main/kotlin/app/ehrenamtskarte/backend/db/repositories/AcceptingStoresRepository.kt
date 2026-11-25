@@ -63,7 +63,7 @@ object AcceptingStoresRepository {
             AcceptingStores.name
         }
 
-        return searchJoin
+        return searchJoin()
             .select(AcceptingStores.columns + sortExpression)
             .withDistinct()
             .where(searchCondition(project, searchText, categoryIds))
@@ -79,14 +79,14 @@ object AcceptingStoresRepository {
     fun countBySearch(project: String, searchText: String?, categoryIds: List<Int>?): Long {
         // The join with descriptions yields one row per description, hence count distinct store ids
         val distinctStoreCount = AcceptingStores.id.countDistinct()
-        return searchJoin
+        return searchJoin()
             .select(distinctStoreCount)
             .where(searchCondition(project, searchText, categoryIds))
             .single()[distinctStoreCount]
     }
 
-    private val searchJoin
-        get() = Projects innerJoin
+    private fun searchJoin() =
+        Projects innerJoin
             (AcceptingStores leftJoin AcceptingStoreDescriptions leftJoin PhysicalStores leftJoin Addresses)
 
     private fun searchCondition(project: String, searchText: String?, categoryIds: List<Int>?): Op<Boolean> {
