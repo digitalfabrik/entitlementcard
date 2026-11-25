@@ -18,8 +18,9 @@ class ContactInfoRow extends StatelessWidget {
       link: true,
       child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
           child: Row(
             children: [
               Padding(

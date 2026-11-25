@@ -83,8 +83,6 @@ ThemeData get lightTheme {
       style: ButtonStyle(
         minimumSize: const WidgetStatePropertyAll(_buttonMinimumSize),
         backgroundColor: WidgetStatePropertyAll(primaryColor),
-        elevation: WidgetStatePropertyAll(2),
-        minimumSize: WidgetStatePropertyAll(Size(64, 48)),
       ),
     ),
     checkboxTheme: CheckboxThemeData(
@@ -158,8 +156,6 @@ ThemeData get darkTheme {
       style: ButtonStyle(
         minimumSize: const WidgetStatePropertyAll(_buttonMinimumSize),
         backgroundColor: WidgetStatePropertyAll(primaryColor),
-        elevation: WidgetStatePropertyAll(2),
-        minimumSize: WidgetStatePropertyAll(Size(64, 48)),
       ),
     ),
     checkboxTheme: CheckboxThemeData(

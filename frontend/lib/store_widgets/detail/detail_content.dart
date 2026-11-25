@@ -33,15 +33,23 @@ class DetailContent extends StatelessWidget {
     final email = acceptingStore.email;
     return SingleChildScrollView(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 18),
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 6),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(t.store.offer, style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor)),
-            const SizedBox(height: 8),
-            Text(storeDescription ?? t.store.noDescriptionAvailable, style: theme.textTheme.bodyLarge),
-            const SizedBox(height: 10),
-            Divider(thickness: 0.7, height: 28, color: theme.primaryColorLight),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(t.store.offer, style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor)),
+                  const SizedBox(height: 8),
+                  Text(storeDescription ?? t.store.noDescriptionAvailable, style: theme.textTheme.bodyLarge),
+                  const SizedBox(height: 10),
+                  Divider(thickness: 0.7, height: 28, color: theme.primaryColorLight),
+                ],
+              ),
+            ),
             Column(
               children: <Widget>[
                 ContactInfoRow(
@@ -76,7 +84,7 @@ class DetailContent extends StatelessWidget {
               ],
             ),
             if (showOnMap != null && acceptingStore.coordinates != null) ...[
-              Divider(thickness: 0.7, height: 48, color: theme.primaryColorLight),
+              Divider(thickness: 0.7, height: 48, color: theme.primaryColorLight, indent: 12, endIndent: 12),
               OverflowBar(
                 alignment: MainAxisAlignment.center,
                 children: [FilledButton(onPressed: () => _showOnMap(context), child: Text(t.store.showOnMap))],
