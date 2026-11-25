@@ -1,7 +1,7 @@
 import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
-import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/search/results_loader.dart';
+import 'package:ehrenamtskarte/search/search_results_toolbar.dart';
 import 'package:ehrenamtskarte/search/sorting_button.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +18,9 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   static const int _minSearchTextLength = 2;
 
+  final TextEditingController _searchController = TextEditingController();
   String? searchFieldText;
-  final List<CategoryAsset> _selectedCategories = [];
+  final Set<int> _selectedCategoryIds = {};
   Input$CoordinatesInput? _coordinates;
   SortingMode _sortingMode = SortingMode.alphabetically;
 
@@ -33,54 +34,40 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    return Stack(
-      children: [
-        CustomScrollView(
-          slivers: [
-            SliverSearchAppBar(
-              onChanged: (text) => setState(() => searchFieldText = _effectiveSearchText(text)),
-              onCategoryPress: _onCategoryPress,
+    return CustomScrollView(
+      slivers: [
+        SliverSearchAppBar(
+          onChanged: (text) => setState(() => searchFieldText = _effectiveSearchText(text)),
+          onCategoryPress: _onCategoryPress,
+          textEditingController: _searchController,
+          selectedCategoryIds: _selectedCategoryIds,
+          footer: SearchResultsToolbar(
+            child: SortingButton(
+              setCoordinates: (position) => setState(() {
+                _coordinates = Input$CoordinatesInput(lat: position.latitude, lng: position.longitude);
+                _sortingMode = SortingMode.byDistance;
+              }),
+              setSortingMode: (sortingMode) {
+                if (sortingMode == SortingMode.alphabetically || _coordinates != null) {
+                  setState(() => _sortingMode = sortingMode);
+                }
+              },
+              sortingMode: _sortingMode,
             ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Row(
-                  children: [
-                    Text(
-                      '${t.search.searchResults.toUpperCase()} ${_sortingMode == SortingMode.byDistance ? t.search.nearby : t.search.alphabetically}',
-                      style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
-                    ),
-                    const Expanded(
-                      child: Padding(padding: EdgeInsets.only(left: 8), child: Divider()),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SliverResultsLoader(
-              searchText: searchFieldText,
-              categoryIds: _selectedCategories.map((e) => e.id).toList(),
-              coordinates: _sortingMode == SortingMode.byDistance ? _coordinates : null,
-            ),
-          ],
+          ),
         ),
-        SortingButton(
-          setCoordinates: (position) => setState(() {
-            _coordinates = Input$CoordinatesInput(lat: position.latitude, lng: position.longitude);
-            _sortingMode = SortingMode.byDistance;
-          }),
-          setSortingMode: (sortingMode) {
-            if (sortingMode == SortingMode.alphabetically || _coordinates != null) {
-              setState(() => _sortingMode = sortingMode);
-            }
-          },
-          sortingMode: _sortingMode,
+        SliverResultsLoader(
+          searchText: searchFieldText,
+          categoryIds: _selectedCategoryIds.toList(),
+          coordinates: _sortingMode == SortingMode.byDistance ? _coordinates : null,
+          hasActiveFilters: _hasActiveFilters,
+          onResetFilters: _resetFilters,
         ),
       ],
     );
   }
+
+  bool get _hasActiveFilters => (searchFieldText?.isNotEmpty ?? false) || _selectedCategoryIds.isNotEmpty;
 
   String? _effectiveSearchText(String text) {
     final trimmedText = text.trim();
@@ -90,10 +77,24 @@ class _SearchPageState extends State<SearchPage> {
   void _onCategoryPress(CategoryAsset asset, bool isSelected) {
     setState(() {
       if (isSelected) {
-        _selectedCategories.add(asset);
+        _selectedCategoryIds.add(asset.id);
       } else {
-        _selectedCategories.remove(asset);
+        _selectedCategoryIds.remove(asset.id);
       }
     });
+  }
+
+  void _resetFilters() {
+    _searchController.clear();
+    setState(() {
+      searchFieldText = null;
+      _selectedCategoryIds.clear();
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 }

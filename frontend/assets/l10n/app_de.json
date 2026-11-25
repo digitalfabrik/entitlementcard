@@ -177,15 +177,17 @@
   },
   "search": {
     "filterByCategories": "Nach Kategorien filtern",
-    "findCloseBy": "In meiner Nähe suchen",
-    "findAlphabetically": "Alphabetisch",
-    "noAcceptingStoresFound": "Auf diese Suche trifft keine Akzeptanzstelle zu.",
+    "noResultsTitle": "Keine passenden Ergebnisse",
+    "noResultsDescription": "Wir konnten keine Ergebnisse zu Ihren Suchfiltern finden. Bitte passen Sie Ihre Einstellungen an.",
+    "noAcceptingStoresAvailable": "Derzeit sind keine Akzeptanzstellen verfügbar.",
+    "resetFilters": "Alle Filter zurücksetzen",
     "searchHint": "Suchen",
     "clearSearch": "Suche löschen",
-    "searchResults": "Suchresultate",
-    "alphabetically": "(A-Z)",
-    "nearby": "(in der Nähe)",
-    "title": "Angebote"
+    "title": "Angebote",
+    "sortBy": "Sortierung",
+    "sortNearby": "In meiner Nähe",
+    "sortAlphabetically": "Alphabetisch",
+    "distanceAway": "{{distance}} entfernt"
   },
   "store": {
     "acceptingStore": "Akzeptanzstelle",
