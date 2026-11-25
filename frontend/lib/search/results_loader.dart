@@ -136,8 +136,10 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
         throw Exception('Fetched data is null.');
       }
       final newItems = newData.search.stores;
-      if (widget.hasSameSearchParams(oldWidget)) {
-        widget.onTotalCountChanged(newData.search.totalCount);
+
+      final totalCount = newData.search.totalCount;
+      if (totalCount != null && widget.hasSameSearchParams(oldWidget)) {
+        widget.onTotalCountChanged(totalCount);
       }
 
       final isLastPage = newItems.length < _pageSize;
