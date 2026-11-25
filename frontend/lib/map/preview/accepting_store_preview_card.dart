@@ -48,7 +48,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
       child: Card(
         clipBehavior: Clip.hardEdge,
         margin: EdgeInsets.zero,
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        color: Theme.of(context).colorScheme.surface,
         surfaceTintColor: Colors.transparent,
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
@@ -58,7 +58,6 @@ class AcceptingStorePreviewCard extends StatelessWidget {
               ? AcceptingStorePreviewError(refetch: refetch, errorMessage: errorMessage)
               : AcceptingStoreSummary(
                   store: currentAcceptingStore,
-                  showLocation: false,
                   key: ValueKey(currentAcceptingStore.physicalStoreId),
                   showOnMap: null,
                 ),
