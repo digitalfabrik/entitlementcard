@@ -186,14 +186,14 @@ void main() {
 
       expect(find.text(t.favorites.title), findsOneWidget);
       expect(find.text(t.favorites.loadingFailed), findsOneWidget);
-      expect(find.widgetWithText(OutlinedButton, t.common.tryAgain), findsOneWidget);
+      expect(find.widgetWithText(FilledButton, t.common.tryAgain), findsOneWidget);
 
-      await tester.tap(find.widgetWithText(OutlinedButton, t.common.tryAgain));
+      await tester.tap(find.widgetWithText(FilledButton, t.common.tryAgain));
       await tester.pumpAndSettle();
 
       expect(find.text(t.favorites.title), findsOneWidget);
       expect(find.text(t.favorites.loadingFailed), findsOneWidget);
-      expect(find.widgetWithText(OutlinedButton, t.common.tryAgain), findsOneWidget);
+      expect(find.widgetWithText(FilledButton, t.common.tryAgain), findsOneWidget);
     });
   });
 }
