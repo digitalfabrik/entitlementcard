@@ -1,10 +1,8 @@
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:ehrenamtskarte/search/search_page.dart';
-import 'package:ehrenamtskarte/widgets/extended_floating_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-
-import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class SortingButton extends StatefulWidget {
   final void Function(Position position) setCoordinates;
@@ -26,6 +24,7 @@ enum LocationRequestStatus { requesting, requestSuccessful, requestFailed }
 
 class _SortingButtonState extends State<SortingButton> {
   LocationRequestStatus _locationStatus = LocationRequestStatus.requestSuccessful;
+  bool _isMenuOpen = false;
 
   @override
   void initState() {
@@ -35,30 +34,84 @@ class _SortingButtonState extends State<SortingButton> {
     });
   }
 
+  String _label(BuildContext context, SortingMode sortingMode) {
+    final t = context.t;
+    return switch (sortingMode) {
+      SortingMode.byDistance => t.search.sortNearby,
+      SortingMode.alphabetically => t.search.sortAlphabetically,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    if (widget.sortingMode == SortingMode.alphabetically) {
-      return Container(
-        alignment: Alignment.bottomCenter,
-        padding: const EdgeInsets.all(10),
-        child: ExtendedFloatingActionButton(
-          onPressed: () => _sortByDistance(),
-          icon: Icons.my_location,
-          loading: _locationStatus == LocationRequestStatus.requesting,
-          label: t.search.findCloseBy,
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final foregroundColor = colorScheme.onSurface;
+    final isRequesting = _locationStatus == LocationRequestStatus.requesting;
+    final currentLabel = _label(context, widget.sortingMode);
+
+    return MenuAnchor(
+      onOpen: () => setState(() => _isMenuOpen = true),
+      onClose: () => setState(() => _isMenuOpen = false),
+      style: MenuStyle(
+        backgroundColor: WidgetStatePropertyAll(colorScheme.surfaceContainer),
+        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+        padding: const WidgetStatePropertyAll(EdgeInsets.all(8)),
+      ),
+      menuChildren: SortingMode.values.map((mode) {
+        final isSelected = mode == widget.sortingMode;
+        return MenuItemButton(
+          onPressed: () => _onSelected(mode),
+          style: MenuItemButton.styleFrom(
+            backgroundColor: isSelected ? colorScheme.surfaceContainerHighest : null,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            textStyle: theme.textTheme.bodyLarge,
+          ),
+          leadingIcon: Visibility.maintain(
+            visible: isSelected,
+            child: Icon(Icons.check, color: colorScheme.onSurface),
+          ),
+          child: Text(_label(context, mode), style: TextStyle(color: colorScheme.onSurface)),
+        );
+      }).toList(),
+      builder: (context, controller, _) => Tooltip(
+        message: t.search.sortBy,
+        child: InkWell(
+          onTap: isRequesting ? null : () => controller.isOpen ? controller.close() : controller.open(),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: kMinInteractiveDimension),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox.square(
+                  dimension: 24,
+                  child: isRequesting
+                      ? Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: CircularProgressIndicator(strokeWidth: 2, color: foregroundColor),
+                        )
+                      : Icon(Icons.sort, color: foregroundColor),
+                ),
+                const SizedBox(width: 12),
+                Text(currentLabel, style: theme.textTheme.bodyLarge?.copyWith(color: foregroundColor, height: 1)),
+                const SizedBox(width: 4),
+                Icon(_isMenuOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, color: foregroundColor),
+              ],
+            ),
+          ),
         ),
-      );
-    } else {
-      return Container(
-        alignment: Alignment.bottomCenter,
-        padding: const EdgeInsets.all(10),
-        child: ExtendedFloatingActionButton(
-          onPressed: () => _sortAlphabetically(),
-          label: t.search.findAlphabetically,
-          icon: Icons.sort_by_alpha,
-        ),
-      );
+      ),
+    );
+  }
+
+  void _onSelected(SortingMode sortingMode) {
+    setState(() => _isMenuOpen = false);
+    switch (sortingMode) {
+      case SortingMode.alphabetically:
+        widget.setSortingMode(SortingMode.alphabetically);
+      case SortingMode.byDistance:
+        _determinePosition(true);
     }
   }
 
@@ -77,14 +130,6 @@ class _SortingButtonState extends State<SortingButton> {
         ),
       ),
     );
-  }
-
-  void _sortAlphabetically() async {
-    widget.setSortingMode(SortingMode.alphabetically);
-  }
-
-  Future<void> _sortByDistance() async {
-    await _determinePosition(true);
   }
 
   Future<void> _determinePosition(bool userInteract) async {

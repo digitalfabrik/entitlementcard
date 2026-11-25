@@ -12,6 +12,9 @@ final bodyMedium = const TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal
 final bodySmall = const TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal);
 final labelSmall = const TextStyle(fontSize: 10.0, fontWeight: FontWeight.normal);
 
+/// Visible minimum size of buttons. 48 dp height meets WCAG 2.5.5 Target Size (Enhanced, 44x44).
+const _buttonMinimumSize = Size(64, 48);
+
 SystemUiOverlayStyle systemOverlayStyleFromAppBarBackgroundColor(Color color) {
   return color.computeLuminance() > 0.5 ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light;
 }
@@ -29,6 +32,7 @@ ThemeData get lightTheme {
       secondary: primaryColor,
       surface: backgroundColor,
       surfaceContainerHighest: const Color(0xffefefef),
+      outlineVariant: const Color(0xffeeeeee),
       surfaceTint: Colors.white54,
       error: const Color(0xffcc0000),
       tertiary: const Color(0xFF505050),
@@ -62,7 +66,7 @@ ThemeData get lightTheme {
       selectionHandleColor: Colors.white,
       selectionColor: Color(0xFF505050),
     ),
-    dividerTheme: DividerThemeData(color: Color(0xffeeeeee)),
+    dividerTheme: DividerThemeData(color: lightTheme.colorScheme.outlineVariant),
     appBarTheme: AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.light,
       backgroundColor: lightTheme.colorScheme.primary,
@@ -70,10 +74,14 @@ ThemeData get lightTheme {
       titleTextStyle: titleMedium,
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
+      style: ButtonStyle(
+        minimumSize: const WidgetStatePropertyAll(_buttonMinimumSize),
+        side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1)),
+      ),
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: ButtonStyle(
+        minimumSize: const WidgetStatePropertyAll(_buttonMinimumSize),
         backgroundColor: WidgetStatePropertyAll(primaryColor),
         elevation: WidgetStatePropertyAll(2),
         minimumSize: WidgetStatePropertyAll(Size(64, 48)),
@@ -104,6 +112,8 @@ ThemeData get darkTheme {
       secondary: primaryColor,
       surface: backgroundColor,
       surfaceContainerHighest: const Color(0xff262626),
+      // Used for subtle borders and dividers. If unset, Flutter falls back to onSurface (white).
+      outlineVariant: const Color(0xFF505050),
       surfaceTint: Colors.white,
       error: const Color(0xff8b0000),
       tertiary: const Color(0xFFC6C4C4),
@@ -131,7 +141,7 @@ ThemeData get darkTheme {
       selectionHandleColor: Colors.white,
       selectionColor: Color(0xFF505050),
     ),
-    dividerTheme: DividerThemeData(color: Color(0xFF505050)),
+    dividerTheme: DividerThemeData(color: theme.colorScheme.outlineVariant),
     appBarTheme: AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.light,
       backgroundColor: theme.colorScheme.primary,
@@ -139,10 +149,14 @@ ThemeData get darkTheme {
       titleTextStyle: titleMedium,
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
+      style: ButtonStyle(
+        minimumSize: const WidgetStatePropertyAll(_buttonMinimumSize),
+        side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1)),
+      ),
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: ButtonStyle(
+        minimumSize: const WidgetStatePropertyAll(_buttonMinimumSize),
         backgroundColor: WidgetStatePropertyAll(primaryColor),
         elevation: WidgetStatePropertyAll(2),
         minimumSize: WidgetStatePropertyAll(Size(64, 48)),
