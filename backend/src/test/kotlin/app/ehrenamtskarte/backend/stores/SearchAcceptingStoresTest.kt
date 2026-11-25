@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 internal class SearchAcceptingStoresTest : IntegrationTest() {
     private val project = "nuernberg.sozialpass.app"
@@ -62,6 +63,16 @@ internal class SearchAcceptingStoresTest : IntegrationTest() {
         val result = search(SearchParamsInput())
 
         assertEquals(1, result.findValue("totalCount").asInt())
+    }
+
+    @Test
+    fun `should only return the total count for the first page`() {
+        repeat(3) { TestData.createAcceptingStore(name = "Store $it") }
+
+        val result = search(SearchParamsInput(limit = 2, offset = "2"))
+
+        assertEquals(1, result.findValue("stores").size())
+        assertTrue(result.findValue("totalCount").isNull)
     }
 
     private fun search(params: SearchParamsInput) =

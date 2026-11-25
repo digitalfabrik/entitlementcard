@@ -5,6 +5,7 @@
 package app.ehrenamtskarte.backend.graphql.stores
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.db.entities.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.PhysicalStoresRepository
@@ -112,7 +113,12 @@ class AcceptingStoreQueryController(
         @Argument params: SearchParams,
         dfe: DataFetchingEnvironment,
         @GraphQLIgnore @ContextValue request: HttpServletRequest,
-    ): List<AcceptingStoreV2> = searchStores(project, params, dfe, request)
+    ): List<AcceptingStoreV2> {
+        val projectConfig = backendConfig.getProjectConfig(project)
+        val stores = transaction { findStores(project, params) }
+        trackSearch(projectConfig, params, dfe, request, numResults = stores.size)
+        return stores
+    }
 
     @GraphQLDescription(
         "Search for accepting stores in the given project using searchText and categoryIds. " +
@@ -124,40 +130,47 @@ class AcceptingStoreQueryController(
         @Argument params: SearchParams,
         dfe: DataFetchingEnvironment,
         @GraphQLIgnore @ContextValue request: HttpServletRequest,
-    ): AcceptingStoreSearchResult =
-        AcceptingStoreSearchResult(
-            stores = searchStores(project, params, dfe, request),
-            totalCount = transaction {
-                AcceptingStoresRepository.countBySearch(project, params.searchText, params.categoryIds).toInt()
-            },
-        )
+    ): AcceptingStoreSearchResult {
+        val projectConfig = backendConfig.getProjectConfig(project)
+        val result = transaction {
+            AcceptingStoreSearchResult(
+                stores = findStores(project, params),
+                totalCount = if ((params.offset ?: 0) == 0L) {
+                    AcceptingStoresRepository.countBySearch(project, params.searchText, params.categoryIds).toInt()
+                } else {
+                    null
+                },
+            )
+        }
+        trackSearch(projectConfig, params, dfe, request, numResults = result.stores.size)
+        return result
+    }
 
-    private fun searchStores(
-        project: String,
+    private fun findStores(project: String, params: SearchParams): List<AcceptingStoreV2> =
+        AcceptingStoresRepository.findBySearch(
+            project = project,
+            searchText = params.searchText,
+            categoryIds = params.categoryIds,
+            coordinates = params.coordinates,
+            limit = params.limit ?: Int.MAX_VALUE,
+            offset = params.offset ?: 0,
+        ).with(AcceptingStoreEntity::descriptions)
+            .map { AcceptingStoreV2.fromDbEntity(it) }
+
+    private fun trackSearch(
+        projectConfig: ProjectConfig,
         params: SearchParams,
         dfe: DataFetchingEnvironment,
         request: HttpServletRequest,
-    ): List<AcceptingStoreV2> {
-        val projectConfig = backendConfig.getProjectConfig(project)
-        val filteredStores = transaction {
-            AcceptingStoresRepository.findBySearch(
-                project = project,
-                searchText = params.searchText,
-                categoryIds = params.categoryIds,
-                coordinates = params.coordinates,
-                limit = params.limit ?: Int.MAX_VALUE,
-                offset = params.offset ?: 0,
-            ).with(AcceptingStoreEntity::descriptions)
-                .map { AcceptingStoreV2.fromDbEntity(it) }
-        }
+        numResults: Int,
+    ) {
         matomo.trackSearch(
             projectConfig = projectConfig,
             request = request,
             query = dfe.field.name,
             params = params,
-            numResults = filteredStores.size,
+            numResults = numResults,
         )
-        return filteredStores
     }
 
     @GraphQLDescription("Returns accepting stores in the given project queried by physical store ids.")

@@ -48,8 +48,8 @@ type AcceptingStore {
 type AcceptingStoreSearchResult {
   "The accepting stores of the requested page (respecting limit and offset)."
   stores: [AcceptingStoreV2!]!
-  "The total number of accepting stores matching the search params (ignoring limit and offset)."
-  totalCount: Int!
+  "The total number of accepting stores matching the search params (ignoring limit and offset). Only returned for the first page (offset 0), as it does not change when paginating."
+  totalCount: Int
 }
 
 type AcceptingStoreV2 {
