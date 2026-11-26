@@ -767,16 +767,81 @@
 <h1 id="karte-uber-einen-vorausgefullten-link-erstellen">Karte über einen vorausgefüllten Link erstellen</h1>
 <h2 id="karte-uber-einen-vorausgefullten-link-erstellen-und-drucken">Karte über einen vorausgefüllten Link erstellen und drucken</h2>
 <p><strong>Verfügbar für Rollen:</strong> Regionsadministrator, Regionsverwalter</p>
-<p>Andere Systeme können die Verwaltung über einen Link öffnen, der die Kartendaten bereits enthält, z.B. <code>/cards/add?Name=…&amp;Geburtsdatum=…&amp;Pass-ID=…</code>. Sie müssen die Daten dann nur noch prüfen.</p>
+<p>Andere Systeme können die Verwaltung über einen Link öffnen, der die Kartendaten bereits enthält. Sie müssen die Daten dann nur noch prüfen. Der Link enthält folgende Parameter:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Bedeutung</th>
+<th>Pflicht</th>
+<th>Beispiel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Name</code></td>
+<td>Vor- und Nachname</td>
+<td>ja</td>
+<td>Anna Anschrift</td>
+</tr>
+<tr>
+<td><code>Ablaufdatum</code></td>
+<td>Ende der Gültigkeit im Format TT.MM.JJJJ</td>
+<td>ja</td>
+<td>31.12.2035</td>
+</tr>
+<tr>
+<td><code>Startdatum</code></td>
+<td>Beginn der Gültigkeit im Format TT.MM.JJJJ</td>
+<td>ja</td>
+<td>01.01.2030</td>
+</tr>
+<tr>
+<td><code>Geburtsdatum</code></td>
+<td>Geburtsdatum im Format TT.MM.JJJJ</td>
+<td>ja</td>
+<td>20.06.1990</td>
+</tr>
+<tr>
+<td><code>Pass-ID</code></td>
+<td>Nummer des Nürnberg-Passes</td>
+<td>ja</td>
+<td>67890</td>
+</tr>
+<tr>
+<td><code>Adresszeile 1</code></td>
+<td>Straße und Hausnummer</td>
+<td>nein</td>
+<td>Hauptstraße 1</td>
+</tr>
+<tr>
+<td><code>Adresszeile 2</code></td>
+<td>Adresszusatz, z.B. c/o</td>
+<td>nein</td>
+<td>–</td>
+</tr>
+<tr>
+<td><code>PLZ</code></td>
+<td>Postleitzahl (5 Ziffern)</td>
+<td>nein</td>
+<td>90402</td>
+</tr>
+<tr>
+<td><code>Ort</code></td>
+<td>Wohnort</td>
+<td>nein</td>
+<td>Nürnberg</td>
+</tr>
+</tbody>
+</table>
+<p>Sonderzeichen wie Leerzeichen und Umlaute müssen im Link kodiert sein. Beispiel:</p>
+<pre><code>/cards/add?Name=Anna+Anschrift&amp;Ablaufdatum=31.12.2035&amp;Startdatum=01.01.2030&amp;Geburtsdatum=20.06.1990&amp;Pass-ID=67890&amp;Adresszeile+1=Hauptstra%C3%9Fe+1&amp;Adresszeile+2=&amp;PLZ=90402&amp;Ort=N%C3%BCrnberg
+</code></pre>
 <ul>
 <li>Öffnen Sie den Link mit den vorausgefüllten Kartendaten.</li>
-<li>Geben Sie Ihre <strong>Email-Adresse</strong> und Ihr <strong>Passwort</strong> ein und klicken Sie auf <strong>Anmelden</strong>.</li>
-</ul>
-<p><img alt="Geben Sie Ihre Email-Adresse und Ihr Passwort ein und klicken Sie auf Anmelden." src="../images/create-card-prefilled-1.png" /></p>
-<ul>
 <li>Klicken Sie auf <strong>QR-Codes drucken</strong>.</li>
 </ul>
-<p><img alt="Klicken Sie auf QR-Codes drucken." src="../images/create-card-prefilled-2.png" /></p>
+<p><img alt="Klicken Sie auf QR-Codes drucken." src="../images/create-card-prefilled-1.png" /></p>
 <p>Das System übernimmt die Daten aus dem Link in das Formular, erstellt die Karte und lädt das PDF herunter.</p>
 
 
