@@ -1,5 +1,7 @@
 import { type Locator, type Page } from '@playwright/test'
 
+import { step } from '../user-manual'
+
 /** Login page of the administration, the same for all projects */
 export class LoginPage {
   private readonly emailInput: Locator
@@ -20,16 +22,23 @@ export class LoginPage {
   }
 
   async goto(): Promise<void> {
-    await this.page.goto('/')
+    await step('Öffnen Sie die Verwaltung im Browser.', async () => {
+      await this.page.goto('/')
+    })
   }
 
   async login(credentials: { email: string; password: string }): Promise<void> {
-    await this.emailInput.fill(credentials.email)
-    await this.passwordInput.fill(credentials.password)
-    await this.submitButton.click()
+    await step(
+      'Geben Sie Ihre **Email-Adresse** und Ihr **Passwort** ein und klicken Sie auf **Anmelden**.',
+      async () => {
+        await this.emailInput.fill(credentials.email)
+        await this.passwordInput.fill(credentials.password)
+        await this.submitButton.click()
+      },
+    )
   }
 
   async clickForgotPassword(): Promise<void> {
-    await this.forgotPasswordLink.click()
+    await step('Klicken Sie auf **Passwort vergessen**.', () => this.forgotPasswordLink.click())
   }
 }
