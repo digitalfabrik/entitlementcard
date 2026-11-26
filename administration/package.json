@@ -96,6 +96,7 @@
     "start:ci": "vite preview --port 3000",
     "test": "vitest run",
     "test:e2e": "npx playwright test",
+    "test:e2e:docs": "npx playwright test --grep @doc --reporter=list,./e2e-tests/shared/user-manual/reporter.ts",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "ts:check": "tsc --build"
