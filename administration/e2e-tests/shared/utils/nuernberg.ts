@@ -4,6 +4,9 @@ import { PDFParse } from 'pdf-parse'
 import { NuernbergApplicant } from '../data/nuernberg-applicants'
 import { maskRegions } from './image'
 
+/** The validity range is printed with a two-digit year: dd.MM.yyyy -> dd.MM.yy */
+const toShortDate = (date: string): string => date.replace(/\.\d{2}(\d{2})$/, '.$1')
+
 export function normalizeNameForFilename(name: string): string {
   return name
     .toLowerCase()
@@ -94,7 +97,9 @@ async function verifyPdfPage(
   expect(pageText).toContain(applicant.name)
   expect(pageText).toContain('Pass-ID: ' + applicant.passId)
   expect(pageText).toContain('Geburtsdatum: ' + applicant.birthDate)
-  expect(pageText).toContain(`Gültig: ${applicant.startDate} bis ${applicant.expiryDate}`)
+  expect(pageText).toContain(
+    `Gültig: ${toShortDate(applicant.startDate)} bis ${toShortDate(applicant.expiryDate)}`,
+  )
 
   const masked = await maskRegions(screenshotData, PDF_MASK_REGIONS)
   expect(masked).toMatchSnapshot(snapshot)

@@ -6,10 +6,12 @@ import { nuernberg } from '../tenants'
 export class StoresPage {
   readonly successToast: (type: 'hinzu' | 'geändert' | 'gelöscht') => Locator
   private readonly searchInput: Locator
+  private readonly emptyListHeading: Locator
 
   constructor(public readonly page: Page) {
     this.successToast = type => page.getByRole('alert').filter({ hasText: new RegExp(type) })
     this.searchInput = page.getByRole('searchbox')
+    this.emptyListHeading = page.getByRole('heading', { name: 'Noch keine Einträge' })
   }
 
   async search(query: string): Promise<void> {
@@ -68,6 +70,11 @@ export class StoresPage {
   }
 
   async deleteIfExists(storeName: string): Promise<void> {
+    // Without any stores, an empty state is shown instead of the list and its search
+    await this.searchInput.or(this.emptyListHeading).first().waitFor()
+    if (await this.emptyListHeading.isVisible()) {
+      return
+    }
     await this.search(storeName)
 
     try {
@@ -75,6 +82,7 @@ export class StoresPage {
       await this.openRowMenu(storeName)
       await this.clickDeleteMenuItem()
       await this.confirmDelete()
+      await this.storeRow(storeName).waitFor({ state: 'hidden' })
     } catch {
       // row not found
     }

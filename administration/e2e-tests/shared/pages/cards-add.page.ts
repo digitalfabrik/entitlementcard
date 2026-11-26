@@ -15,15 +15,9 @@ export class CardsAddPage {
 
   constructor(public readonly page: Page) {
     this.nameInput = page.locator('#name-input')
-    this.birthDateInput = page
-      .getByRole('group', { name: nuernberg.labels.birthDate })
-      .getByLabel(nuernberg.labels.birthDate)
-    this.startDateInput = page
-      .getByRole('group', { name: nuernberg.labels.startDate })
-      .getByLabel(nuernberg.labels.startDate)
-    this.expiryDateInput = page
-      .getByRole('group', { name: nuernberg.labels.expiryDate })
-      .getByLabel(nuernberg.labels.expiryDate)
+    this.birthDateInput = this.dateInput(nuernberg.labels.birthDate)
+    this.startDateInput = this.dateInput(nuernberg.labels.startDate)
+    this.expiryDateInput = this.dateInput(nuernberg.labels.expiryDate)
     this.passIdInput = page.locator('#nuernberg-pass-id-input')
     this.addCardButton = page.getByRole('button', { name: nuernberg.labels.addCard })
     this.printQrCodesButton = page.getByRole('button', { name: nuernberg.labels.printCards })
@@ -51,22 +45,26 @@ export class CardsAddPage {
 
   async fillCard(applicant: NuernbergApplicant, index = 0): Promise<void> {
     await this.nameInput.nth(index).fill(applicant.name)
-    await this.page
-      .getByRole('group', { name: nuernberg.labels.birthDate })
-      .getByLabel(nuernberg.labels.birthDate)
-      .nth(index)
-      .fill(applicant.birthDate)
-    await this.page
-      .getByRole('group', { name: nuernberg.labels.startDate })
-      .getByLabel(nuernberg.labels.startDate)
-      .nth(index)
-      .fill(applicant.startDate)
-    await this.page
-      .getByRole('group', { name: nuernberg.labels.expiryDate })
-      .getByLabel(nuernberg.labels.expiryDate)
-      .nth(index)
-      .fill(applicant.expiryDate)
+    await this.fillDate(nuernberg.labels.birthDate, applicant.birthDate, index)
+    await this.fillDate(nuernberg.labels.startDate, applicant.startDate, index)
+    await this.fillDate(nuernberg.labels.expiryDate, applicant.expiryDate, index)
     await this.passIdInput.nth(index).fill(applicant.passId)
+  }
+
+  // The date pickers consist of one spin button per date section (day, month, year).
+  // The selected date is stored in a hidden input.
+  private dateGroup(label: string): Locator {
+    return this.page.getByRole('group', { name: label, exact: true })
+  }
+
+  private dateInput(label: string): Locator {
+    return this.dateGroup(label).locator('input')
+  }
+
+  /** Fills a date in the format dd.MM.yyyy */
+  private async fillDate(label: string, date: string, index: number): Promise<void> {
+    await this.dateGroup(label).nth(index).getByRole('spinbutton', { name: 'Tag' }).click()
+    await this.page.keyboard.type(date.replaceAll('.', ''))
   }
 
   async addCard(applicant: NuernbergApplicant): Promise<void> {

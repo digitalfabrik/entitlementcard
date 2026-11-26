@@ -19,8 +19,9 @@ export const nuernberg = {
     passId: 'Nürnberg-Pass-ID',
   },
   credentials: {
-    admin: {
-      email: 'project-admin@nuernberg.sozialpass.app',
+    // Only region administrators and managers are allowed to create cards
+    regionAdmin: {
+      email: 'region-admin@nuernberg.sozialpass.app',
       password: devPassword,
     },
     storeManager: {
