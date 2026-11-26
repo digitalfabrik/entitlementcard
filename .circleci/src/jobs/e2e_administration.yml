@@ -73,4 +73,8 @@ steps:
   - store_artifacts:
       path: ~/project/administration/playwright-report
       destination: playwright-report
+  - persist_to_workspace:
+      root: ~/project
+      paths:
+        - administration/user-manual/docs
   - notify
