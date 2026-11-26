@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import app.ehrenamtskarte.backend.db.entities.mayViewCardStatisticsInProject
 import app.ehrenamtskarte.backend.db.entities.mayViewCardStatisticsInRegion
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
-import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.auth.requireProjectAuthContext
 import app.ehrenamtskarte.backend.graphql.cards.types.CardStatisticsResultModel
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
@@ -29,7 +29,7 @@ class CardStatisticsQueryController(
         @Argument dateEnd: String,
         dfe: DataFetchingEnvironment,
     ): List<CardStatisticsResultModel> {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         return transaction {
@@ -56,7 +56,7 @@ class CardStatisticsQueryController(
         @Argument dateEnd: String,
         dfe: DataFetchingEnvironment,
     ): List<CardStatisticsResultModel> {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         return transaction {

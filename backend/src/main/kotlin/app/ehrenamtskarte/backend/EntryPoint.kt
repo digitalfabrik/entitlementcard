@@ -186,6 +186,22 @@ class CreateAdmin : CliktCommand("create-admin") {
     }
 }
 
+class CreateProjectCreator : CliktCommand("create-project-creator") {
+    private val config by requireObject<BackendConfiguration>()
+
+    private val email by argument()
+    private val password by argument()
+
+    override fun help(context: Context): String =
+        "Creates a project creator account with the specified email and password. " +
+            "Project creators are not bound to any project."
+
+    override fun run() {
+        Database.setupWithInitialDataAndMigrationChecks(config)
+        Database.createProjectCreatorAccount(email, password)
+    }
+}
+
 class Execute : CliktCommand() {
     private val config by requireObject<BackendConfiguration>()
 
@@ -279,6 +295,7 @@ fun main(args: Array<String>) {
         MigrateSkipBaseline(),
         DbClear(),
         CreateAdmin(),
+        CreateProjectCreator(),
         GraphQLExport(),
     ).main(args)
 }

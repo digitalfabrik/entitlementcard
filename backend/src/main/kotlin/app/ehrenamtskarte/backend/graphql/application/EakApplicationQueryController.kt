@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.graphql.application.types.ApplicationAdminGql
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationApplicantGql
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationVerificationView
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationVerifierGql
-import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.auth.requireProjectAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -25,7 +25,7 @@ class EakApplicationQueryController {
         dfe: DataFetchingEnvironment,
         @Argument regionId: Int,
     ): List<ApplicationAdminGql> {
-        val admin = dfe.requireAuthContext().admin
+        val admin = dfe.requireProjectAuthContext().admin
         return transaction {
             if (admin.mayViewApplicationsInRegion(regionId)) {
                 ApplicationRepository.getApplicationsByAdmin(regionId)

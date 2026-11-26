@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.graphql.freinet
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.mayViewFreinetAgencyInformationInRegion
 import app.ehrenamtskarte.backend.db.repositories.FreinetAgencyRepository
-import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.auth.requireProjectAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.NotImplementedException
 import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetAgency
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
@@ -27,7 +27,7 @@ class FreinetAgencyQueryController(
         @Argument regionId: Int,
     ): FreinetAgency? =
         transaction {
-            val authContext = dfe.requireAuthContext()
+            val authContext = dfe.requireProjectAuthContext()
             val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
             if (projectConfig.freinet == null) {

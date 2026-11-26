@@ -21,7 +21,7 @@ import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 object Administrators : IntIdTable() {
     val email = varchar("email", 254)
-    val projectId = reference("projectId", Projects)
+    val projectId = optReference("projectId", Projects)
     val regionId = optReference("regionId", Regions)
     val role = varchar("role", 32)
     val passwordHash = binary("passwordHash").nullable()
@@ -37,6 +37,7 @@ object Administrators : IntIdTable() {
             Role.NO_RIGHTS,
             Role.PROJECT_STORE_MANAGER,
             Role.EXTERNAL_VERIFIED_API_USER,
+            Role.PROJECT_CREATOR,
         )
         val regionCompatibleRoles = listOf(Role.REGION_MANAGER, Role.REGION_ADMIN, Role.NO_RIGHTS)
         check("roleRegionCombinationConstraint") {
@@ -46,6 +47,10 @@ object Administrators : IntIdTable() {
         check("deletedIfAndOnlyIfNoRights") {
             (deleted eq Op.TRUE and (role eq Role.NO_RIGHTS.db_value)) or
                 (deleted eq Op.FALSE and (role neq Role.NO_RIGHTS.db_value))
+        }
+        check("roleProjectCombinationConstraint") {
+            (projectId.isNull() and (role eq Role.PROJECT_CREATOR.db_value)) or
+                (projectId.isNotNull() and (role neq Role.PROJECT_CREATOR.db_value))
         }
         uniqueIndex(customIndexName = "email_lower_idx", functions = listOf(email.lowerCase()))
     }
@@ -65,14 +70,14 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
     var notificationOnVerification by Administrators.notificationOnVerification
     var deleted by Administrators.deleted
 
-    val project by ProjectEntity referencedOn Administrators.projectId
+    val project by ProjectEntity optionalReferencedOn Administrators.projectId
 
     fun hasRole(role: Role, vararg other: Role): Boolean =
         this.role == role.db_value || other.any { this.role == it.db_value }
 
-    fun isInProject(project: String): Boolean = this.project.project == project
+    fun isInProject(project: String): Boolean = this.project?.project == project
 
-    fun isInProject(projectId: Int): Boolean = this.projectId.value == projectId
+    fun isInProject(projectId: Int): Boolean = this.projectId?.value == projectId
 
     fun isInRegion(regionId: Int): Boolean = this.regionId?.value == regionId
 }
@@ -116,7 +121,7 @@ fun AdministratorEntity.mayCreateUser(
     newAdminRole: Role,
     newAdminRegion: RegionEntity?,
 ): Boolean {
-    if (projectId.value != newAdminProjectId || newAdminRole == Role.NO_RIGHTS) {
+    if (!isInProject(newAdminProjectId) || newAdminRole in setOf(Role.NO_RIGHTS, Role.PROJECT_CREATOR)) {
         return false
     }
     if (hasRole(Role.PROJECT_ADMIN)) {
@@ -139,7 +144,7 @@ fun AdministratorEntity.mayEditUser(
 ): Boolean {
     if (!isInProject(newAdminProjectId) ||
         !existingAdmin.isInProject(newAdminProjectId) ||
-        newAdminRole == Role.NO_RIGHTS
+        newAdminRole in setOf(Role.NO_RIGHTS, Role.PROJECT_CREATOR)
     ) {
         return false
     }
@@ -157,7 +162,7 @@ fun AdministratorEntity.mayEditUser(
 }
 
 fun AdministratorEntity.mayDeleteUser(existingAdmin: AdministratorEntity): Boolean {
-    if (projectId != existingAdmin.projectId) {
+    if (projectId == null || projectId != existingAdmin.projectId) {
         return false
     }
     if (hasRole(Role.PROJECT_ADMIN)) {
@@ -167,7 +172,7 @@ fun AdministratorEntity.mayDeleteUser(existingAdmin: AdministratorEntity): Boole
 }
 
 fun AdministratorEntity.mayUpdateStoresInProject(projectId: Int): Boolean =
-    this.projectId.value == projectId && hasRole(Role.PROJECT_STORE_MANAGER)
+    isInProject(projectId) && hasRole(Role.PROJECT_STORE_MANAGER)
 
 fun AdministratorEntity.mayViewFreinetAgencyInformationInRegion(regionId: Int): Boolean =
     hasRole(Role.REGION_ADMIN) && isInRegion(regionId) && isInProject(EAK_BAYERN_PROJECT)

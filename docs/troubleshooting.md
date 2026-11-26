@@ -12,6 +12,7 @@ To connect on our servers you need a working yubikey.
 5) Check available debian package versions: `ll -trh /srv/local-apt-repository`
 6) Check if latest database migration was applied: `sudo -u backend psql entitlementcard` then `SELECT * from migrations;`
 7) Create admin/store manager accounts: `sudo -u backend /opt/ehrenamtskarte/backend/bin/backend create-admin <command>`. You can find example in [runConfigs](../.idea/runConfigurations)
+   Project creator accounts are not bound to a project and are created with `sudo -u backend /opt/ehrenamtskarte/backend/bin/backend create-project-creator <email> <password>`.
 8) Check if webhook for the debian package installation worked: `journalctl -x --since "48 hours ago" | grep webhook` and find info about the debian package installation: `vim /var/log/apt/history.log`
 
 ### Import EAK accepting stores

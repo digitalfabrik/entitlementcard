@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.mayUpdateFreinetAgencyInformationInRegion
 import app.ehrenamtskarte.backend.db.repositories.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.auth.requireProjectAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.NotImplementedException
 import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetAgencyNotFoundException
 import app.ehrenamtskarte.backend.graphql.freinet.util.validateFreinetDataTransferPermission
@@ -27,7 +27,7 @@ class FreinetAgencyMutationController(
         @Argument regionId: Int,
         @Argument dataTransferActivated: Boolean,
     ): Boolean {
-        val authContext = dfe.requireAuthContext()
+        val authContext = dfe.requireProjectAuthContext()
         val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         if (projectConfig.freinet == null) {

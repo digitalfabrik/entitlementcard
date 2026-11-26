@@ -17,7 +17,7 @@ class NotificationSettingsMutationController {
         @Argument notificationSettings: NotificationSettings,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val admin = dfe.requireAuthContext().admin
+        val admin = dfe.requireProjectAuthContext().admin
 
         transaction {
             AdministratorsRepository.updateNotificationSettings(admin, notificationSettings)

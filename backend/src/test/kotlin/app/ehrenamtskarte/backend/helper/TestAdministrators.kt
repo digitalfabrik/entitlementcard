@@ -12,7 +12,7 @@ import org.jetbrains.exposed.v1.jdbc.upsert
 
 enum class TestAdministrators(
     val id: Int,
-    val project: String,
+    val project: String?,
     val email: String,
     val password: String = "Administrator!",
     val role: Role,
@@ -97,10 +97,18 @@ enum class TestAdministrators(
         role = Role.REGION_ADMIN,
         regionId = 94,
     ),
+    PROJECT_CREATOR(
+        id = 13,
+        project = null,
+        email = "project-creator@entitlementcard.app",
+        role = Role.PROJECT_CREATOR,
+    ),
     ;
 
     fun getJwtToken(): String {
-        val adminEntity = transaction { AdministratorsRepository.findByAuthData(project, email, password) }
+        // Administrators without project can sign in from every project
+        val signInProject = project ?: "bayern.ehrenamtskarte.app"
+        val adminEntity = transaction { AdministratorsRepository.findByAuthData(signInProject, email, password) }
             ?: throw Exception("Test administrator not found!")
         val admin = Administrator.fromDbEntity(adminEntity)
         return JwtService.createToken(admin)
@@ -111,10 +119,12 @@ enum class TestAdministrators(
             transaction {
                 val projectMap = ProjectEntity.all().associateBy { it.project }
                 TestAdministrators.entries.forEach { admin ->
-                    val project = projectMap[admin.project] ?: throw Exception("Project ${admin.project} not found!")
+                    val project = admin.project?.let {
+                        projectMap[it] ?: throw Exception("Project $it not found!")
+                    }
                     Administrators.upsert(Administrators.id) {
                         it[Administrators.id] = admin.id
-                        it[projectId] = project.id
+                        it[projectId] = project?.id
                         it[email] = admin.email
                         it[passwordHash] = PasswordCrypto.hashPassword(admin.password)
                         it[role] = admin.role.db_value

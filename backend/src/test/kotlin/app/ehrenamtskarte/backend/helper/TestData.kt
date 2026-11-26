@@ -70,7 +70,7 @@ object TestData {
         type: ApiTokenType,
     ): Int {
         val tokenHash = PasswordCrypto.hashWithSHA256(token.toByteArray())
-        val projectId = findAdmin(creatorId).projectId
+        val projectId = findAdmin(creatorId).projectId!!
         return transaction {
             ApiTokens.insertAndGetId {
                 it[ApiTokens.tokenHash] = tokenHash

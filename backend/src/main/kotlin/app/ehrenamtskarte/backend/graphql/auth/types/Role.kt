@@ -21,6 +21,9 @@ enum class Role(val db_value: String) {
 
     // Users with this role do not have any rights.
     NO_RIGHTS("NO_RIGHTS"),
+
+    // A Project Creator is not bound to any project and may create new projects.
+    PROJECT_CREATOR("PROJECT_CREATOR"),
     ;
 
     companion object {
