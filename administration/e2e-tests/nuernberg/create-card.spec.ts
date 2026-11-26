@@ -17,8 +17,10 @@ const currentYear = new Date().getFullYear()
 
 test.describe('Karten erstellen', () => {
   test.beforeEach(async ({ tenant, cardsAddPage, loginPage }) => {
-    await cardsAddPage.goto()
+    await loginPage.goto()
     await loginPage.login(tenant.credentials.regionAdmin)
+    await cardsAddPage.openCardsFromDashboard()
+    await cardsAddPage.openSingleCardCreation()
   })
 
   ;[

@@ -1,4 +1,4 @@
-import { type Page, test as base } from '@playwright/test'
+import { type Locator, type Page, test as base } from '@playwright/test'
 
 /**
  * Helpers to write e2e tests which also generate the user manual (see docs/user-manual.md).
@@ -58,21 +58,84 @@ const waitForPendingRequests = async (page: Page): Promise<void> => {
   }
 }
 
+/**
+ * Waits until running animations are finished, e.g. expanding an accordion.
+ * Otherwise, the page layout changes after scrolling to the focused element.
+ */
+const waitForAnimations = (page: Page): Promise<void> =>
+  page.evaluate(async () => {
+    const finiteAnimations = document
+      .getAnimations()
+      .filter(animation => animation.effect?.getComputedTiming().endTime !== Infinity)
+    const timeout = new Promise(resolve => {
+      setTimeout(resolve, 2000)
+    })
+    // Cancelled animations reject their finished promise, which can be ignored
+    await Promise.race([
+      Promise.allSettled(finiteAnimations.map(animation => animation.finished)),
+      timeout,
+    ])
+  })
+
+/**
+ * Waits until no loading indicator is visible, e.g. while a form loads its data.
+ * The requests may start after the page was rendered, so waiting for pending requests is not enough.
+ */
+const waitForLoadingIndicators = async (page: Page): Promise<void> => {
+  try {
+    await page.waitForFunction(
+      () =>
+        Array.from(document.querySelectorAll('[role="progressbar"]')).every(
+          element => !element.checkVisibility(),
+        ),
+      undefined,
+      { timeout: 10000 },
+    )
+  } catch {
+    // Take the screenshot anyway, e.g. for a progress bar shown permanently
+  }
+}
+
 // Buttons to switch the project, which are only shown in local development (see ProjectSwitcher)
 const devOnlyElements = (page: Page) => page.getByRole('button', { name: /^Switch to / })
 
-const takeScreenshot = async (): Promise<void> => {
+/** Scrolls to the element of the step and highlights it, returns a function to remove the highlight */
+const highlight = async (focus: Locator): Promise<() => Promise<void>> => {
+  const element = focus.first()
+  try {
+    // The element may appear with a delay (e.g. after expanding) or not exist anymore (e.g. after closing a dialog)
+    await element.waitFor({ state: 'visible', timeout: 2000 })
+  } catch {
+    return () => Promise.resolve()
+  }
+  await element.scrollIntoViewIfNeeded()
+  await element.evaluate(it => {
+    it.style.setProperty('outline', '3px solid #d32f2f')
+    it.style.setProperty('outline-offset', '2px')
+  })
+  return () =>
+    element.evaluate(it => {
+      it.style.removeProperty('outline')
+      it.style.removeProperty('outline-offset')
+    })
+}
+
+const takeScreenshot = async (focus: Locator | undefined): Promise<void> => {
   // Only user manual tests need screenshots, all other tests are not slowed down
   const page = currentPage
   if (page === undefined || !test.info().tags.includes(userManualTag)) {
     return
   }
   await waitForPendingRequests(page)
+  await waitForLoadingIndicators(page)
+  await waitForAnimations(page)
+  const removeHighlight = focus === undefined ? undefined : await highlight(focus)
   await devOnlyElements(page).evaluateAll(elements =>
     elements.forEach(element => element.style.setProperty('visibility', 'hidden')),
   )
   // Finish animations, e.g. of closing menus
   const screenshot = await page.screenshot({ animations: 'disabled' })
+  await removeHighlight?.()
   await devOnlyElements(page).evaluateAll(elements =>
     elements.forEach(element => element.style.removeProperty('visibility')),
   )
@@ -86,6 +149,11 @@ type StepOptions = {
    * false for steps without a meaningful screen (e.g. before navigating).
    */
   screenshot?: 'before' | 'after' | false
+  /**
+   * Element the user should look at, e.g. the button to click.
+   * It is scrolled into view and highlighted in the screenshot.
+   */
+  focus?: Locator
 }
 
 /**
@@ -97,15 +165,15 @@ type StepOptions = {
 export const step = <T>(
   title: string,
   body: () => Promise<T>,
-  { screenshot = 'before' }: StepOptions = {},
+  { screenshot = 'before', focus }: StepOptions = {},
 ): Promise<T> =>
   test.step(title, async () => {
     if (screenshot === 'before') {
-      await takeScreenshot()
+      await takeScreenshot(focus)
     }
     const result = await body()
     if (screenshot === 'after') {
-      await takeScreenshot()
+      await takeScreenshot(focus)
     }
     return result
   })
@@ -157,6 +225,7 @@ export const testDoc = {
 
   /** Clicks an element as a step of the user manual. */
   async click(page: Page, role: AriaRole, name: string): Promise<void> {
-    await step(`Klicken Sie auf **${name}**.`, () => page.getByRole(role, { name }).click())
+    const element = page.getByRole(role, { name })
+    await step(`Klicken Sie auf **${name}**.`, () => element.click(), { focus: element })
   },
 }

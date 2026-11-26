@@ -16,15 +16,18 @@ export class StoresPage {
   }
 
   async search(query: string): Promise<void> {
-    await step('Suchen Sie die Akzeptanzstelle über das Suchfeld.', () =>
-      this.searchInput.fill(query),
-    )
+    const element = this.searchInput
+    await step('Suchen Sie die Akzeptanzstelle über das Suchfeld.', () => element.fill(query), {
+      focus: element,
+    })
   }
 
   async goto(): Promise<void> {
-    await step('Öffnen Sie **Akzeptanzpartner verwalten**.', async () => {
-      await this.page.goto(nuernberg.urls.stores)
-    })
+    await step(
+      'Öffnen Sie **Akzeptanzpartner verwalten**.',
+      () => this.page.goto(nuernberg.urls.stores),
+      { screenshot: false },
+    )
   }
 
   async waitFor(): Promise<void> {
@@ -32,21 +35,25 @@ export class StoresPage {
   }
 
   async openCreateDialog(): Promise<void> {
-    await step('Klicken Sie auf **Neu hinzufügen**.', () =>
-      this.page.getByRole('button', { name: 'Neu hinzufügen' }).click(),
-    )
+    const element = this.page.getByRole('button', { name: 'Neu hinzufügen' })
+    await step('Klicken Sie auf **Neu hinzufügen**.', () => element.click(), { focus: element })
   }
 
   async fillForm(store: NuernbergStore): Promise<void> {
-    await step('Füllen Sie das Formular aus.', async () => {
-      await testDoc.note('Alle mit * markierten Felder sind Pflichtfelder.')
-      await testDoc.note(
-        'Sie müssen eine gültige Adresse angeben. Im Hintergrund ermittelt das System die zugehörigen ' +
-          'GPS-Koordinaten. Falls das System die Adresse nicht ermitteln kann, erscheint eine Fehlermeldung. ' +
-          'Der Eintrag kann erst nach einer erfolgreichen Adressvalidierung gespeichert werden.',
-      )
-      await this.fillFormFields(store)
-    })
+    await step(
+      'Füllen Sie das Formular aus.',
+      async () => {
+        await testDoc.note('Alle mit * markierten Felder sind Pflichtfelder.')
+        await testDoc.note(
+          'Sie müssen eine gültige Adresse angeben. Im Hintergrund ermittelt das System die zugehörigen ' +
+            'GPS-Koordinaten. Falls das System die Adresse nicht ermitteln kann, erscheint eine Fehlermeldung. ' +
+            'Der Eintrag kann erst nach einer erfolgreichen Adressvalidierung gespeichert werden.',
+        )
+        await this.fillFormFields(store)
+      },
+      // The opened form, the filled form is shown in the screenshot of saving
+      { screenshot: 'before' },
+    )
   }
 
   private async fillFormFields(store: NuernbergStore): Promise<void> {
@@ -65,34 +72,39 @@ export class StoresPage {
   }
 
   async saveDialog(): Promise<void> {
-    await step('Klicken Sie auf **Speichern**.', () =>
-      this.page.getByRole('button', { name: 'Speichern' }).click(),
-    )
+    const element = this.page.getByRole('button', { name: 'Speichern' })
+    await step('Klicken Sie auf **Speichern**.', () => element.click(), { focus: element })
   }
 
   async openRowMenu(storeName: string): Promise<void> {
-    await step('Klicken Sie auf das **Drei-Punkte-Menü** am Anfang der Zeile.', () =>
-      this.storeRow(storeName).getByLabel('Akzeptanzstellen Menü').click(),
+    const element = this.storeRow(storeName).getByLabel('Akzeptanzstellen Menü')
+    await step(
+      'Klicken Sie auf das **Drei-Punkte-Menü** am Anfang der Zeile.',
+      () => element.click(),
+      { focus: element },
     )
   }
 
   async clickEditMenuItem(): Promise<void> {
-    await step('Klicken Sie im Menü auf **Bearbeiten**.', () =>
-      this.page.getByRole('menuitem', { name: 'Bearbeiten' }).click(),
-    )
+    const element = this.page.getByRole('menuitem', { name: 'Bearbeiten' })
+    await step('Klicken Sie im Menü auf **Bearbeiten**.', () => element.click(), { focus: element })
   }
 
   async clickDeleteMenuItem(): Promise<void> {
-    await step('Klicken Sie im Menü auf **Löschen**.', async () => {
-      await this.page.getByRole('menuitem', { name: 'Löschen' }).click()
-      await testDoc.note('Ein Bestätigungsdialog erscheint.')
-    })
+    const element = this.page.getByRole('menuitem', { name: 'Löschen' })
+    await step(
+      'Klicken Sie im Menü auf **Löschen**.',
+      async () => {
+        await element.click()
+        await testDoc.note('Ein Bestätigungsdialog erscheint.')
+      },
+      { focus: element },
+    )
   }
 
   async confirmDelete(): Promise<void> {
-    await step('Klicken Sie im Dialog auf **Löschen**.', () =>
-      this.page.getByRole('dialog').getByRole('button', { name: 'Löschen' }).click(),
-    )
+    const element = this.page.getByRole('dialog').getByRole('button', { name: 'Löschen' })
+    await step('Klicken Sie im Dialog auf **Löschen**.', () => element.click(), { focus: element })
   }
 
   async deleteIfExists(storeName: string): Promise<void> {

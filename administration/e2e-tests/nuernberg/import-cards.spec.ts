@@ -15,6 +15,7 @@ test.describe('Karten importieren', () => {
   test.beforeEach(async ({ tenant, loginPage, cardsImportPage }) => {
     await cardsImportPage.goto()
     await loginPage.login(tenant.credentials.regionAdmin)
+    await cardsImportPage.openImport()
   })
 
   test(

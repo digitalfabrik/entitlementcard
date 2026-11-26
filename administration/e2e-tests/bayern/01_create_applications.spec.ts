@@ -6,9 +6,11 @@ test.describe('Ehrenamtskarte beantragen', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
     await page.getByRole('button', { name: 'Switch to Ehrenamtskarte' }).click({ force: true })
-    await step('Öffnen Sie im Browser die Seite zum Beantragen der Ehrenamtskarte.', async () => {
-      await page.goto('/beantragen')
-    })
+    await step(
+      'Öffnen Sie im Browser die Seite zum Beantragen der Ehrenamtskarte.',
+      () => page.goto('/beantragen'),
+      { screenshot: false },
+    )
   })
 
   const testImageFileSelection = async (page: Page, buttonName) => {

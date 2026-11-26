@@ -16,8 +16,15 @@ export class CardsImportPage {
   }
 
   async goto(): Promise<void> {
-    await step('Öffnen Sie **Mehrere Karten importieren**.', async () => {
-      await this.page.goto(nuernberg.urls.cardsImport)
+    await step('Öffnen Sie **Karten erstellen**.', () => this.page.goto(nuernberg.urls.cards), {
+      screenshot: false,
+    })
+  }
+
+  async openImport(): Promise<void> {
+    const element = this.page.getByRole('link', { name: 'Mehrere Karten importieren' })
+    await step('Öffnen Sie **Mehrere Karten importieren**.', () => element.click(), {
+      focus: element,
     })
   }
 
@@ -61,13 +68,16 @@ export class CardsImportPage {
           buffer: Buffer.from(csv),
         })
       },
+      { screenshot: 'after' },
     )
   }
 
   async downloadPdf(): Promise<Download> {
     const [download] = await Promise.all([
       this.page.waitForEvent('download'),
-      step('Klicken Sie auf **QR-Codes drucken**.', () => this.printQrCodesButton.click()),
+      step('Klicken Sie auf **QR-Codes drucken**.', () => this.printQrCodesButton.click(), {
+        focus: this.printQrCodesButton,
+      }),
     ])
     return download
   }
@@ -75,7 +85,9 @@ export class CardsImportPage {
   async downloadCsv(): Promise<Download> {
     const [download] = await Promise.all([
       this.page.waitForEvent('download'),
-      step('Klicken Sie auf **CSV Export**.', () => this.csvExportButton.click()),
+      step('Klicken Sie auf **CSV Export**.', () => this.csvExportButton.click(), {
+        focus: this.csvExportButton,
+      }),
     ])
     return download
   }

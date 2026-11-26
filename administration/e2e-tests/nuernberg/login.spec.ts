@@ -17,7 +17,7 @@ test.describe('Anmelden', () => {
           '**Passwort vergessen**.',
       )
 
-      await loginPage.login(tenant.credentials.regionAdmin)
+      await loginPage.loginWithCredentials(tenant.credentials.regionAdmin)
 
       await testDoc.result(
         'Das System meldet Sie an und zeigt die Startseite der Verwaltung an.',

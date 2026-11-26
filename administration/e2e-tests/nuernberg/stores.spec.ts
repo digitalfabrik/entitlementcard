@@ -1,7 +1,7 @@
 import { editedName, stores } from '../shared/data/nuernberg-stores'
 import { expect, test } from '../shared/fixtures/nuernberg'
 import { roles, testDoc, userManualTag } from '../shared/user-manual'
-import { mockGeocoding } from '../shared/utils'
+import { closeToasts, mockGeocoding } from '../shared/utils'
 
 test.describe(
   'Akzeptanzstellen verwalten',
@@ -54,6 +54,7 @@ test.describe(
         await storesPage.fillForm(stores.edit)
         await storesPage.saveDialog()
         await expect(storesPage.successToast('hinzu')).toBeVisible()
+        await closeToasts(storesPage.page)
       })
 
       await storesPage.search(stores.edit.name)
@@ -80,6 +81,7 @@ test.describe(
         await storesPage.fillForm(stores.delete)
         await storesPage.saveDialog()
         await expect(storesPage.successToast('hinzu')).toBeVisible()
+        await closeToasts(storesPage.page)
       })
 
       await storesPage.search(stores.delete.name)

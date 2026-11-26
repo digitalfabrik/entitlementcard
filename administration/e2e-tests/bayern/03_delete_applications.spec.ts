@@ -1,6 +1,8 @@
 import { APIRequestContext, expect } from '@playwright/test'
 
+import { LoginPage } from '../shared/pages'
 import { roles, step, test, testDoc, userManualTag } from '../shared/user-manual'
+import { closeToasts } from '../shared/utils'
 
 const backendUrl = 'http://localhost:8000'
 
@@ -64,20 +66,12 @@ const createApplication = async (request: APIRequestContext, forenames: string) 
 
 test.describe('Anträge bearbeiten', () => {
   test.beforeEach(async ({ page }) => {
-    await step('Öffnen Sie die Verwaltung im Browser.', async () => {
-      await page.goto('/')
-    })
+    await step('Öffnen Sie die Verwaltung im Browser.', () => page.goto('/'), { screenshot: false })
     await page.getByRole('button', { name: 'Switch to Ehrenamtskarte' }).click()
-    await step(
-      'Geben Sie Ihre **Email-Adresse** und Ihr **Passwort** ein und klicken Sie auf **Anmelden**.',
-      async () => {
-        await page
-          .getByRole('textbox', { name: 'Email-Adresse' })
-          .fill('region-admin-augsburg@bayern.ehrenamtskarte.app')
-        await page.getByPlaceholder('Passwort').fill('Administrator!')
-        await page.getByRole('button', { name: 'Anmelden' }).click()
-      },
-    )
+    await new LoginPage(page).login({
+      email: 'region-admin-augsburg@bayern.ehrenamtskarte.app',
+      password: 'Administrator!',
+    })
   })
 
   test('Antrag ablehnen und löschen', { tag: [userManualTag] }, async ({ page, request }) => {
@@ -95,11 +89,20 @@ test.describe('Anträge bearbeiten', () => {
       .locator('.MuiAccordion-root')
       .filter({ has: page.getByRole('heading', { name: `Doe, ${forenames}`, exact: true }) })
 
-    await step('Klicken Sie auf **Eingehende Anträge**.', () =>
-      page.getByRole('link', { name: 'Eingehende Anträge' }).nth(1).click(),
-    )
+    const applicationsLink = page.getByRole('link', { name: 'Eingehende Anträge' }).nth(1)
+    await step('Klicken Sie auf **Eingehende Anträge**.', () => applicationsLink.click(), {
+      focus: applicationsLink,
+    })
     await expect(application).toHaveCount(1)
-    await step('Klicken Sie auf den Antrag, um alle Angaben anzuzeigen.', () => application.click())
+    await step(
+      'Klicken Sie auf den Antrag, um alle Angaben anzuzeigen.',
+      () => application.click(),
+      {
+        focus: application,
+      },
+    )
+
+    const rejectButton = application.getByRole('button', { name: 'Antrag ablehnen' })
 
     await step(
       'Klicken Sie auf **Antrag ablehnen**, wählen Sie unter **Grund** einen Ablehnungsgrund aus und klicken ' +
@@ -108,7 +111,7 @@ test.describe('Anträge bearbeiten', () => {
         await testDoc.note(
           'Die antragstellende Person wird per E-Mail über die Ablehnung informiert.',
         )
-        await application.getByRole('button', { name: 'Antrag ablehnen' }).click()
+        await rejectButton.click()
         await page.getByRole('dialog').getByRole('combobox', { name: 'Grund' }).click()
         await page
           .getByRole('option', {
@@ -118,14 +121,23 @@ test.describe('Anträge bearbeiten', () => {
           .click()
         await page.getByRole('button', { name: 'Ablehnung bestätigen' }).click()
       },
+      { focus: rejectButton },
     )
+    // The toast of the rejection would cover the screenshot of the next step
+    await expect(
+      page.getByRole('alert').filter({ hasText: 'Der Antrag wurde abgelehnt.' }),
+    ).toBeVisible()
+    await closeToasts(page)
+
+    const deleteButton = application.getByRole('button', { name: 'Antrag löschen' })
 
     await step(
       'Klicken Sie auf **Antrag löschen** und bestätigen Sie mit **Bestätigen**.',
       async () => {
-        await application.getByRole('button', { name: 'Antrag löschen' }).click()
+        await deleteButton.click()
         await page.getByRole('dialog').getByRole('button', { name: 'Bestätigen' }).click()
       },
+      { focus: deleteButton },
     )
 
     await testDoc.result(

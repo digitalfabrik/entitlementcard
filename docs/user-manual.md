@@ -81,10 +81,20 @@ step('Füllen Sie das Formular aus.', () => this.fillFormFields(store), { screen
 step('Öffnen Sie **Akzeptanzpartner verwalten**.', () => this.page.goto(url), { screenshot: false }) // empty page
 ```
 
+Pass the element the user should look at as `focus`, e.g. the button to click.
+It is scrolled into view and highlighted with a red outline:
+
+```typescript
+const saveButton = this.page.getByRole('button', { name: 'Speichern' })
+await step('Klicken Sie auf **Speichern**.', () => saveButton.click(), { focus: saveButton })
+```
+
 Screenshots are only taken in tests with the `userManualTag`, which use the `test` of the
 [fixtures](../administration/e2e-tests/shared/fixtures) or of `e2e-tests/shared/user-manual`.
-Before the screenshot, pending requests are awaited, animations are finished and the project switcher of local
+Before the screenshot, pending requests, loading indicators and running animations are awaited and the project switcher of local
 development is hidden.
+Toasts of preconditions cover the following screenshots, so close them with `closeToasts(page)` of
+`e2e-tests/shared/utils`.
 
 ### Helpers
 
@@ -121,7 +131,7 @@ test.describe(
 )
 ```
 
-Generated section (the first two steps come from the `beforeEach` hook):
+Generated section (the first step comes from the `beforeEach` hook, the login is a precondition):
 
 ```markdown
 ## Akzeptanzstelle löschen
@@ -131,7 +141,6 @@ Generated section (the first two steps come from the `beforeEach` hook):
 **Achtung:** Das Löschen kann nicht rückgängig gemacht werden.
 
 - Öffnen Sie **Akzeptanzpartner verwalten**.
-- Geben Sie Ihre **Email-Adresse** und Ihr **Passwort** ein und klicken Sie auf **Anmelden**.
 - Suchen Sie die Akzeptanzstelle über das Suchfeld.
 - Klicken Sie auf das **Drei-Punkte-Menü** am Anfang der Zeile.
 - Klicken Sie im Menü auf **Löschen**.
@@ -155,6 +164,8 @@ Only one variant of parameterized tests should be part of the user manual, other
 - Mention required fields only once in a note ("Alle mit * markierten Felder sind Pflichtfelder."), not per field.
 - Keep sentences short and avoid technical terms. Spell out abbreviations on first use.
 - Do not mention workarounds of the tests, e.g. switching the project in local development.
+- Do not repeat the login in each chapter, it is only described in the chapter *Anmelden*.
+  `loginPage.login()` is a precondition, `loginPage.loginWithCredentials()` a step of the user manual.
 
 ## Generating the user manual locally
 

@@ -29,9 +29,11 @@ export class SelfServicePage {
   }
 
   async goto(): Promise<void> {
-    await step('Öffnen Sie im Browser die Seite zum Erstellen des KoblenzPasses.', async () => {
-      await this.page.goto(koblenz.urls.selfServiceCreate)
-    })
+    await step(
+      'Öffnen Sie im Browser die Seite zum Erstellen des KoblenzPasses.',
+      () => this.page.goto(koblenz.urls.selfServiceCreate),
+      { screenshot: false },
+    )
   }
 
   async fillCard(applicant: KoblenzApplicant): Promise<void> {
@@ -46,22 +48,29 @@ export class SelfServicePage {
         await this.page.getByLabel(koblenz.labels.fileReference).fill(applicant.fileReference)
         await this.page.getByLabel(koblenz.labels.privacyPolicy).check()
       },
+      { screenshot: 'after' },
     )
   }
 
   async submit(): Promise<void> {
-    await step('Klicken Sie auf **KoblenzPass erstellen**.', () => this.submitButton.click())
+    await step('Klicken Sie auf **KoblenzPass erstellen**.', () => this.submitButton.click(), {
+      focus: this.submitButton,
+    })
   }
 
   async proceed(): Promise<void> {
-    await step('Klicken Sie auf **Weiter zur Aktivierung**.', () => this.proceedButton.click())
+    await step('Klicken Sie auf **Weiter zur Aktivierung**.', () => this.proceedButton.click(), {
+      focus: this.proceedButton,
+    })
   }
 
   async downloadPdf(): Promise<Download> {
     const [download] = await Promise.all([
       this.page.waitForEvent('download'),
-      step('Klicken Sie auf **KoblenzPass PDF**, um den Pass als PDF herunterzuladen.', () =>
-        this.downloadPdfButton.click(),
+      step(
+        'Klicken Sie auf **KoblenzPass PDF**, um den Pass als PDF herunterzuladen.',
+        () => this.downloadPdfButton.click(),
+        { focus: this.downloadPdfButton },
       ),
     ])
     return download

@@ -45,16 +45,25 @@ export class CardsAddPage {
     this.csvExportButton = page.getByRole('button', { name: nuernberg.labels.csvExport })
   }
 
-  async goto(): Promise<void> {
-    await step('Öffnen Sie **Karten erstellen**.', async () => {
-      await this.page.goto(nuernberg.urls.cardsAdd)
+  async openCardsFromDashboard(): Promise<void> {
+    // The first link with this name is part of the navigation bar
+    const element = this.page.getByRole('link', { name: 'Karten erstellen' }).last()
+    await step('Klicken Sie auf **Karten erstellen**.', () => element.click(), { focus: element })
+  }
+
+  async openSingleCardCreation(): Promise<void> {
+    const element = this.page.getByRole('link', { name: 'Einzelne Karten erstellen' })
+    await step('Öffnen Sie **Einzelne Karten erstellen**.', () => element.click(), {
+      focus: element,
     })
   }
 
   async gotoPrefilledCard(applicant: NuernbergApplicant): Promise<void> {
-    await step('Öffnen Sie den Link mit den vorausgefüllten Kartendaten.', async () => {
-      await this.page.goto(prefilledCardUrl(applicant))
-    })
+    await step(
+      'Öffnen Sie den Link mit den vorausgefüllten Kartendaten.',
+      () => this.page.goto(prefilledCardUrl(applicant)),
+      { screenshot: false },
+    )
   }
 
   async fillCard(applicant: NuernbergApplicant, index = 0): Promise<void> {
@@ -67,6 +76,7 @@ export class CardsAddPage {
         await this.fillDate(nuernberg.labels.expiryDate, applicant.expiryDate, index)
         await this.passIdInput.nth(index).fill(applicant.passId)
       },
+      { screenshot: 'after' },
     )
   }
 
@@ -93,13 +103,16 @@ export class CardsAddPage {
         await cards.nth(countBefore).waitFor({ state: 'visible' })
         await this.fillCard(applicant, countBefore)
       },
+      { screenshot: 'after' },
     )
   }
 
   async downloadPdf(): Promise<Download> {
     const [download] = await Promise.all([
       this.page.waitForEvent('download'),
-      step('Klicken Sie auf **QR-Codes drucken**.', () => this.printQrCodesButton.click()),
+      step('Klicken Sie auf **QR-Codes drucken**.', () => this.printQrCodesButton.click(), {
+        focus: this.printQrCodesButton,
+      }),
     ])
     return download
   }
@@ -107,7 +120,9 @@ export class CardsAddPage {
   async downloadCsv(): Promise<Download> {
     const [download] = await Promise.all([
       this.page.waitForEvent('download'),
-      step('Klicken Sie auf **CSV Export**.', () => this.csvExportButton.click()),
+      step('Klicken Sie auf **CSV Export**.', () => this.csvExportButton.click(), {
+        focus: this.csvExportButton,
+      }),
     ])
     return download
   }
