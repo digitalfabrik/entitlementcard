@@ -13,7 +13,10 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 3 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  /* In CI, the JUnit results are additionally stored, so CircleCI shows failed and flaky tests */
+  reporter: process.env.CI
+    ? [['html'], ['junit', { outputFile: 'test-results/junit.xml' }]]
+    : 'html',
   /* Snapshots (e.g. of generated PDFs) are stored next to the tests, separately per platform */
   snapshotPathTemplate: '{testDir}/{testFileDir}/snapshots/{arg}{-snapshotSuffix}{ext}',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
