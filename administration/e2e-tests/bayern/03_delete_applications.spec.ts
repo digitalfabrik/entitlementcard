@@ -1,6 +1,6 @@
-import { APIRequestContext, expect, test } from '@playwright/test'
+import { APIRequestContext, expect } from '@playwright/test'
 
-import { roles, step, testDoc, userManualTag } from '../shared/user-manual'
+import { roles, step, test, testDoc, userManualTag } from '../shared/user-manual'
 
 const backendUrl = 'http://localhost:8000'
 

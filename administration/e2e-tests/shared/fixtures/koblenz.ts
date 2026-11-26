@@ -1,7 +1,6 @@
-import { test as base } from '@playwright/test'
-
 import { ImportUsersApi, SelfServicePage } from '../pages'
 import { koblenz } from '../tenants'
+import { test as base } from '../user-manual'
 import { selectProject } from './project'
 
 type KoblenzFixture = {

@@ -17,7 +17,8 @@ Only workflows covered by a passing e2e test are part of it, so the manual never
 1. E2e tests tagged with `@doc` describe their steps, roles and results with the helpers in
    [`e2e-tests/shared/user-manual`](../administration/e2e-tests/shared/user-manual/index.ts).
 2. The [user manual reporter](../administration/e2e-tests/shared/user-manual/reporter.ts) writes one markdown file per
-   test file to `administration/user-manual/docs/<project>/<test file>.md`, e.g. `nuernberg/stores.md`.
+   test file to `administration/user-manual/docs/<project>/<test file>.md`, e.g. `nuernberg/stores.md`,
+   and the screenshots of the steps to `administration/user-manual/docs/<project>/images`.
    These files are not checked in.
 3. [MkDocs](https://www.mkdocs.org/) with the [Material theme](https://squidfunk.github.io/mkdocs-material/) builds
    the website from the generated chapters, the start page `administration/user-manual/docs/index.md` and the
@@ -69,6 +70,21 @@ async saveDialog(): Promise<void> {
 If an action consists of several interactions, wrap them in a single step, e.g. filling a form.
 For simple actions directly in the test, `testDoc.click(page, role, name)` and `testDoc.goto(page, url, label)`
 create the step title from the element name.
+
+### Screenshots
+
+Each step takes a screenshot of the visible page, which is shown below the step in the user manual.
+By default, the screenshot is taken before the action, so it shows where to click. Choose another moment if needed:
+
+```typescript
+step('Füllen Sie das Formular aus.', () => this.fillFormFields(store), { screenshot: 'after' }) // the filled form
+step('Öffnen Sie **Akzeptanzpartner verwalten**.', () => this.page.goto(url), { screenshot: false }) // empty page
+```
+
+Screenshots are only taken in tests with the `userManualTag`, which use the `test` of the
+[fixtures](../administration/e2e-tests/shared/fixtures) or of `e2e-tests/shared/user-manual`.
+Before the screenshot, pending requests are awaited, animations are finished and the project switcher of local
+development is hidden.
 
 ### Helpers
 

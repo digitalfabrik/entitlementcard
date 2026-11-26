@@ -1,6 +1,6 @@
-import { Page, expect, test } from '@playwright/test'
+import { Page, expect } from '@playwright/test'
 
-import { step, testDoc, userManualTag } from '../shared/user-manual'
+import { step, test, testDoc, userManualTag } from '../shared/user-manual'
 
 test.describe('Ehrenamtskarte beantragen', () => {
   test.beforeEach(async ({ page }) => {

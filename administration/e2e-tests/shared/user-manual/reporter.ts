@@ -9,13 +9,14 @@ import type {
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { userManualTag } from './index'
+import { screenshotAttachment, userManualTag } from './index'
 
 type Options = { outputDir?: string }
 
 /**
  * Generates the user manual as markdown from the e2e tests tagged with userManualTag.
- * Writes one file per project (tenant) and feature, e.g. user-manual/docs/nuernberg/stores.md.
+ * Writes one file per project (tenant) and feature, e.g. user-manual/docs/nuernberg/stores.md,
+ * and the screenshots of the steps to user-manual/docs/nuernberg/images/stores-1.png.
  * Only passed tests are included, so the user manual never describes a broken workflow.
  */
 class UserManualReporter implements Reporter {
@@ -55,20 +56,33 @@ class UserManualReporter implements Reporter {
         .replace(/\.spec\.ts$/, '')
         .split('.')[0]
 
-      const lines: string[] = []
-      renderSuite(tests[0].parent, new Set(tests), lines)
-      while (lines.at(-1) === '') {
-        lines.pop()
+      const chapter: Chapter = { feature, lines: [], images: [] }
+      renderSuite(tests[0].parent, new Set(tests), chapter)
+      while (chapter.lines.at(-1) === '') {
+        chapter.lines.pop()
       }
 
-      fs.mkdirSync(path.join(this.outputDir, tenant), { recursive: true })
-      fs.writeFileSync(path.join(this.outputDir, tenant, `${feature}.md`), `${lines.join('\n')}\n`)
+      const tenantDir = path.join(this.outputDir, tenant)
+      fs.mkdirSync(path.join(tenantDir, imagesDir), { recursive: true })
+      fs.writeFileSync(path.join(tenantDir, `${feature}.md`), `${chapter.lines.join('\n')}\n`)
+      for (const image of chapter.images) {
+        fs.writeFileSync(path.join(tenantDir, image.path), image.body)
+      }
     }
   }
 
   printsToStdio(): boolean {
     return false
   }
+}
+
+const imagesDir = 'images'
+
+/** Markdown lines and screenshots of a chapter (test file) */
+type Chapter = {
+  feature: string
+  lines: string[]
+  images: { path: string; body: Buffer }[]
 }
 
 const isPassed = (test: TestCase): boolean => test.results.at(-1)?.status === 'passed'
@@ -87,16 +101,16 @@ const containsTest = (suite: Suite, tests: Set<TestCase>): boolean =>
   suite.allTests().some(test => tests.has(test))
 
 /** Renders all describe blocks and tests of the file, which contain user manual tests */
-const renderSuite = (anySuite: Suite, tests: Set<TestCase>, lines: string[]): void => {
+const renderSuite = (anySuite: Suite, tests: Set<TestCase>, chapter: Chapter): void => {
   const render = (suite: Suite, level: number) => {
     for (const entry of suite.entries()) {
       if (entry.type === 'test') {
         if (tests.has(entry)) {
-          renderTest(entry, lines, level)
+          renderTest(entry, chapter, level)
         }
       } else if (containsTest(entry, tests)) {
-        lines.push(heading(level, entry.title), '')
-        renderChapterIntro(entry, lines)
+        chapter.lines.push(heading(level, entry.title), '')
+        renderChapterIntro(entry, chapter.lines)
         render(entry, level + 1)
       }
     }
@@ -128,11 +142,27 @@ const renderChapterIntro = (suite: Suite, lines: string[]): void => {
   }
 }
 
-const renderTest = (test: TestCase, lines: string[], level: number): void => {
+/** Adds the screenshots of a step to the chapter and returns their markdown */
+const renderScreenshots = (step: TestStep, chapter: Chapter): string[] =>
+  // Attachments are reported as child steps of the step they were taken in
+  step.steps
+    .filter(child => child.category === 'test.attach')
+    .flatMap(child => child.attachments)
+    .filter(attachment => attachment.name === screenshotAttachment)
+    .map(attachment => {
+      const body = attachment.body ?? fs.readFileSync(attachment.path ?? '')
+      const imagePath = `${imagesDir}/${chapter.feature}-${chapter.images.length + 1}.png`
+      chapter.images.push({ path: imagePath, body })
+      // The step title without markdown formatting is used as alternative text
+      return `![${step.title.replaceAll('*', '')}](${imagePath})`
+    })
+
+const renderTest = (test: TestCase, chapter: Chapter, level: number): void => {
   const result = test.results.at(-1)
   if (result === undefined) {
     return
   }
+  const { lines } = chapter
   lines.push(heading(level, test.title), '')
 
   const roles = result.annotations.filter(it => it.type === 'role').map(it => it.description)
@@ -151,15 +181,19 @@ const renderTest = (test: TestCase, lines: string[], level: number): void => {
   )
   for (const step of steps) {
     lines.push(`- ${step.title}`)
-    const notes = step.steps.filter(child => child.title.startsWith('note:'))
-    for (const note of notes) {
-      lines.push('', `  ${note.title.replace(/^note:\s*/, '')}`)
+    const notes = step.steps
+      .filter(child => child.title.startsWith('note:'))
+      .map(note => note.title.replace(/^note:\s*/, ''))
+    // Notes and screenshots are indented, so they belong to the list item of the step
+    const details = [...notes, ...renderScreenshots(step, chapter)]
+    for (const detail of details) {
+      lines.push('', `  ${detail}`)
     }
-    if (notes.length > 0) {
+    if (details.length > 0) {
       lines.push('')
     }
   }
-  if (steps.length > 0) {
+  if (steps.length > 0 && lines.at(-1) !== '') {
     lines.push('')
   }
 
