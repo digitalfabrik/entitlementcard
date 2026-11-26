@@ -15,7 +15,7 @@ type Options = { outputDir?: string }
 
 /**
  * Generates the user manual as markdown from the e2e tests tagged with userManualTag.
- * Writes one file per project (tenant) and feature, e.g. user-manual/nuernberg/stores.md.
+ * Writes one file per project (tenant) and feature, e.g. user-manual/docs/nuernberg/stores.md.
  * Only passed tests are included, so the user manual never describes a broken workflow.
  */
 class UserManualReporter implements Reporter {
@@ -24,7 +24,7 @@ class UserManualReporter implements Reporter {
   private readonly tests: TestCase[] = []
 
   constructor(options: Options = {}) {
-    this.outputDir = path.resolve(options.outputDir ?? 'user-manual')
+    this.outputDir = path.resolve(options.outputDir ?? 'user-manual/docs')
   }
 
   onBegin(config: FullConfig, suite: Suite): void {
@@ -39,7 +39,13 @@ class UserManualReporter implements Reporter {
       testsByFile.set(test.location.file, [...tests, test])
     }
 
-    fs.rmSync(this.outputDir, { recursive: true, force: true })
+    // Replace the generated chapters of previous runs, but keep the static pages (e.g. index.md)
+    fs.mkdirSync(this.outputDir, { recursive: true })
+    for (const entry of fs.readdirSync(this.outputDir, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        fs.rmSync(path.join(this.outputDir, entry.name), { recursive: true, force: true })
+      }
+    }
     for (const [file, tests] of testsByFile) {
       // e.g. nuernberg/stores.spec.ts -> nuernberg/stores.md
       const relativePath = path.relative(this.rootDir, file)

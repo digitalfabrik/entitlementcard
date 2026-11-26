@@ -25,5 +25,6 @@ src-gen/
 /blob-report/
 /playwright/.cache/
 
-# Generated user manual (see docs/user-manual.md)
-/user-manual/
+# Generated user manual chapters and site (see docs/user-manual.md)
+/user-manual/docs/*/
+/user-manual/site/

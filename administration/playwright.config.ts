@@ -19,7 +19,7 @@ export default defineConfig({
     ? [
         ['html'],
         ['junit', { outputFile: 'test-results/junit.xml' }],
-        ['./e2e-tests/shared/user-manual/reporter.ts', { outputDir: 'user-manual' }],
+        ['./e2e-tests/shared/user-manual/reporter.ts', { outputDir: 'user-manual/docs' }],
       ]
     : 'html',
   /* Snapshots (e.g. of generated PDFs) are stored next to the tests, separately per platform */
