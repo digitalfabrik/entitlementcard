@@ -2,6 +2,7 @@ import { type Download, type Locator, type Page } from '@playwright/test'
 
 import { NuernbergApplicant } from '../data/nuernberg-applicants'
 import { nuernberg } from '../tenants'
+import { fillDatePicker } from './date-picker'
 
 export class CardsAddPage {
   readonly nameInput: Locator
@@ -51,8 +52,7 @@ export class CardsAddPage {
     await this.passIdInput.nth(index).fill(applicant.passId)
   }
 
-  // The date pickers consist of one spin button per date section (day, month, year).
-  // The selected date is stored in a hidden input.
+  // The selected date of a date picker is stored in a hidden input
   private dateGroup(label: string): Locator {
     return this.page.getByRole('group', { name: label, exact: true })
   }
@@ -61,10 +61,8 @@ export class CardsAddPage {
     return this.dateGroup(label).locator('input')
   }
 
-  /** Fills a date in the format dd.MM.yyyy */
   private async fillDate(label: string, date: string, index: number): Promise<void> {
-    await this.dateGroup(label).nth(index).getByRole('spinbutton', { name: 'Tag' }).click()
-    await this.page.keyboard.type(date.replaceAll('.', ''))
+    await fillDatePicker(this.dateGroup(label).nth(index), date)
   }
 
   async addCard(applicant: NuernbergApplicant): Promise<void> {

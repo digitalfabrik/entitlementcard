@@ -2,6 +2,7 @@ import { type Download, type Locator, type Page } from '@playwright/test'
 
 import { KoblenzApplicant } from '../data/koblenz-applicants'
 import { koblenz } from '../tenants'
+import { fillDatePicker } from './date-picker'
 
 export class SelfServicePage {
   readonly welcomeHeading: Locator
@@ -32,7 +33,10 @@ export class SelfServicePage {
 
   async fillCard(applicant: KoblenzApplicant): Promise<void> {
     await this.page.getByLabel(koblenz.labels.firstName).fill(applicant.name)
-    await this.page.getByLabel(koblenz.labels.birthDate).fill(applicant.birthDate)
+    await fillDatePicker(
+      this.page.getByRole('group', { name: koblenz.labels.birthDate, exact: true }),
+      applicant.birthDate,
+    )
     await this.page.getByLabel(koblenz.labels.fileReference).fill(applicant.fileReference)
     await this.page.getByLabel(koblenz.labels.privacyPolicy).check()
   }
