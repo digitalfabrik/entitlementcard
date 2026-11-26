@@ -33,13 +33,11 @@ export default defineConfig({
       name: '02_check_applications',
       testMatch: '02_check_applications.spec.ts',
       use: { ...devices['Desktop Chrome'] },
-      dependencies: ['01_create_applications'],
     },
     {
       name: '03_delete_applications',
       testMatch: '03_delete_applications.spec.ts',
       use: { ...devices['Desktop Chrome'] },
-      dependencies: ['02_check_applications'],
     },
 
     // {

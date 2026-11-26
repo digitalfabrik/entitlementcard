@@ -1,4 +1,64 @@
-import { expect, test } from '@playwright/test'
+import { APIRequestContext, expect, test } from '@playwright/test'
+
+const backendUrl = 'http://localhost:8000'
+
+const address = {
+  street: { shortText: 'street' },
+  houseNumber: { shortText: '1' },
+  postalCode: { shortText: '86150' },
+  location: { shortText: 'Augsburg' },
+  country: { shortText: 'Deutschland' },
+}
+
+/** Creates a pending application in the region "Augsburg (Stadt)" via the backend API. */
+const createApplication = async (request: APIRequestContext, forenames: string) => {
+  const response = await request.post(backendUrl, {
+    data: {
+      query:
+        'mutation addEakApplication($regionId: Int!, $application: ApplicationInput!, $project: String!) { result: addEakApplication(regionId: $regionId, application: $application, project: $project) }',
+      variables: {
+        regionId: 9,
+        project: 'bayern.ehrenamtskarte.app',
+        application: {
+          personalData: {
+            forenames: { shortText: forenames },
+            surname: { shortText: 'Doe' },
+            address,
+            dateOfBirth: { date: '1999-10-10' },
+            emailAddress: { email: 'example@example.org' },
+          },
+          applicationDetails: {
+            cardType: 'BLUE',
+            applicationType: 'FIRST_APPLICATION',
+            wantsDigitalCard: true,
+            wantsPhysicalCard: false,
+            hasAcceptedPrivacyPolicy: true,
+            hasAcceptedEmailUsage: false,
+            givenInformationIsCorrectAndComplete: true,
+            blueCardEntitlement: {
+              entitlementType: 'WORK_AT_DEPARTMENT',
+              workAtDepartmentEntitlement: {
+                responsibility: { shortText: 'activity' },
+                organization: {
+                  name: { shortText: 'organization' },
+                  category: { shortText: 'Sport' },
+                  address,
+                  contact: {
+                    name: { shortText: 'Contact' },
+                    email: { email: 'contact@example.org' },
+                    telephone: { shortText: '0123' },
+                    hasGivenPermission: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  expect(await response.json()).toEqual({ data: { result: true } })
+}
 
 test.describe('DeleteApplications', () => {
   test.beforeEach(async ({ page }) => {
@@ -6,60 +66,34 @@ test.describe('DeleteApplications', () => {
     await page.getByRole('button', { name: 'Switch to Ehrenamtskarte' }).click()
     await page
       .getByRole('textbox', { name: 'Email-Adresse' })
-      .fill('region-admin@bayern.ehrenamtskarte.app')
+      .fill('region-admin-augsburg@bayern.ehrenamtskarte.app')
     await page.getByPlaceholder('Passwort').fill('Administrator!')
     await page.getByRole('button', { name: 'Anmelden' }).click()
   })
 
-  test('should test applications be deleted', async ({ page, browserName }) => {
-    test.setTimeout(200_000)
-    await expect(page.getByRole('link', { name: 'Eingehende Anträge' }).nth(1)).toBeVisible()
+  test('should reject and delete an application', async ({ page, request }) => {
+    // Use a unique name, so the test does not depend on leftovers of previous runs
+    const forenames = `delete-${Date.now()}`
+    await createApplication(request, forenames)
+
     await page.getByRole('link', { name: 'Eingehende Anträge' }).nth(1).click()
-    await expect(page.getByText('Status', { exact: true })).toBeVisible()
+    const application = page
+      .locator('.MuiAccordion-root')
+      .filter({ has: page.getByRole('heading', { name: `Doe, ${forenames}`, exact: true }) })
+    await expect(application).toHaveCount(1)
+    await application.click()
 
-    while (true) {
-      try {
-        await expect(page.getByRole('dialog')).toBeHidden({ timeout: 200 })
-      } catch {}
+    // Pending applications have to be rejected before they can be deleted
+    await application.getByRole('button', { name: 'Antrag ablehnen' }).click()
+    await page.getByRole('dialog').getByRole('combobox', { name: 'Grund' }).click()
+    await page
+      .getByRole('option', { name: 'Anwartschaftszeit blau (2 Jahre) nicht erreicht', exact: true })
+      .click()
+    await page.getByRole('button', { name: 'Ablehnung bestätigen' }).click()
 
-      const items = await page
-        .locator('.MuiAccordion-root')
-        .filter({ hasText: 'Antrag vom' })
-        .filter({ hasText: `${browserName}` })
-        .all()
-      // console.log(`Found ${items.length} items for ${browserName}`)
-
-      if (items.length === 0) {
-        break
-      }
-
-      const item = items[0]
-
-      await item.click()
-
-      const confirmButton = item.getByRole('button', { name: 'Antrag bestätigen' }).first()
-      if (await confirmButton.isVisible()) {
-        await item.getByRole('button', { name: 'Antrag ablehnen' }).click()
-
-        // Wait for the dropdown to appear and become interactive
-        const dropdownSelector = page.getByText('Bitte wählen Sie einen')
-        await expect(dropdownSelector).toBeVisible({ timeout: 3000 })
-        await dropdownSelector.click()
-
-        await page
-          .getByRole('option', {
-            name: 'Anwartschaftszeit blau (2 Jahre) nicht erreicht',
-            exact: true,
-          })
-          .click()
-        await page.getByRole('button', { name: 'Ablehnung bestätigen' }).click()
-        await page.waitForTimeout(200)
-      }
-      await expect(item.getByRole('button', { name: 'Antrag löschen' })).toBeVisible()
-      await item.getByRole('button', { name: 'Antrag löschen' }).click()
-      await expect(page.getByRole('dialog')).toBeVisible()
-      await page.getByRole('dialog').getByRole('button', { name: 'Antrag löschen' }).click()
-      await expect(page.getByRole('dialog')).toBeHidden()
-    }
+    await application.getByRole('button', { name: 'Antrag löschen' }).click()
+    await page.getByRole('dialog').getByRole('button', { name: 'Bestätigen' }).click()
+    await expect(page.getByRole('dialog')).toBeHidden()
+    await expect(application).toHaveCount(0)
   })
 })
