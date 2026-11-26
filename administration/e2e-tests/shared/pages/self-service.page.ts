@@ -2,6 +2,7 @@ import { type Download, type Locator, type Page } from '@playwright/test'
 
 import { KoblenzApplicant } from '../data/koblenz-applicants'
 import { koblenz } from '../tenants'
+import { step } from '../user-manual'
 import { fillDatePicker } from './date-picker'
 
 export class SelfServicePage {
@@ -28,31 +29,40 @@ export class SelfServicePage {
   }
 
   async goto(): Promise<void> {
-    await this.page.goto(koblenz.urls.selfServiceCreate)
+    await step('Öffnen Sie im Browser die Seite zum Erstellen des KoblenzPasses.', async () => {
+      await this.page.goto(koblenz.urls.selfServiceCreate)
+    })
   }
 
   async fillCard(applicant: KoblenzApplicant): Promise<void> {
-    await this.page.getByLabel(koblenz.labels.firstName).fill(applicant.name)
-    await fillDatePicker(
-      this.page.getByRole('group', { name: koblenz.labels.birthDate, exact: true }),
-      applicant.birthDate,
+    await step(
+      'Füllen Sie **Vorname Name**, **Geburtsdatum** und **Aktenzeichen** aus und bestätigen Sie die **Datenschutzerklärung**.',
+      async () => {
+        await this.page.getByLabel(koblenz.labels.firstName).fill(applicant.name)
+        await fillDatePicker(
+          this.page.getByRole('group', { name: koblenz.labels.birthDate, exact: true }),
+          applicant.birthDate,
+        )
+        await this.page.getByLabel(koblenz.labels.fileReference).fill(applicant.fileReference)
+        await this.page.getByLabel(koblenz.labels.privacyPolicy).check()
+      },
     )
-    await this.page.getByLabel(koblenz.labels.fileReference).fill(applicant.fileReference)
-    await this.page.getByLabel(koblenz.labels.privacyPolicy).check()
   }
 
   async submit(): Promise<void> {
-    await this.submitButton.click()
+    await step('Klicken Sie auf **KoblenzPass erstellen**.', () => this.submitButton.click())
   }
 
   async proceed(): Promise<void> {
-    await this.proceedButton.click()
+    await step('Klicken Sie auf **Weiter zur Aktivierung**.', () => this.proceedButton.click())
   }
 
   async downloadPdf(): Promise<Download> {
     const [download] = await Promise.all([
       this.page.waitForEvent('download'),
-      this.downloadPdfButton.click(),
+      step('Klicken Sie auf **KoblenzPass PDF**, um den Pass als PDF herunterzuladen.', () =>
+        this.downloadPdfButton.click(),
+      ),
     ])
     return download
   }
