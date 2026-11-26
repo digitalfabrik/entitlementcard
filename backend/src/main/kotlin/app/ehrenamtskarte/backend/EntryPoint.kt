@@ -96,7 +96,8 @@ class DbImportDev : CliktCommand("db-import-dev") {
         if (dir.exists() && dir.isDirectory) {
             Database.setupWithoutMigrationCheck(config, log = false)
 
-            dir.walk().forEach {
+            // Sort the files, as the order of walk() depends on the file system and files may depend on each other
+            dir.walk().sorted().forEach {
                 if (it.isFile && sqlFilePattern.containsMatchIn(it.path)) {
                     logger.info("Loading SQL file: ${it.absolutePath.substring(dir.absolutePath.length + 1)}")
                     try {
