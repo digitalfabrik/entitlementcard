@@ -1,10 +1,14 @@
 import { Page, expect, test } from '@playwright/test'
 
-test.describe('Bayern testing', () => {
+import { step, testDoc, userManualTag } from '../shared/user-manual'
+
+test.describe('Ehrenamtskarte beantragen', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
     await page.getByRole('button', { name: 'Switch to Ehrenamtskarte' }).click({ force: true })
-    await page.goto('/beantragen')
+    await step('Öffnen Sie im Browser die Seite zum Beantragen der Ehrenamtskarte.', async () => {
+      await page.goto('/beantragen')
+    })
   })
 
   const testImageFileSelection = async (page: Page, buttonName) => {
@@ -102,7 +106,14 @@ test.describe('Bayern testing', () => {
     await testImageFileSelection(page, 'Datei Anhängen *')
   }
 
-  const personalInfo = async (page: Page, browserName) => {
+  const personalInfo = (page: Page, browserName) =>
+    step(
+      'Füllen Sie Ihre persönlichen Daten aus, wählen Sie unter **Empfänger des Antrags** Ihre Region und ' +
+        'klicken Sie auf **Nächster Schritt**.',
+      () => fillPersonalInfo(page, browserName),
+    )
+
+  const fillPersonalInfo = async (page: Page, browserName) => {
     await page.getByRole('textbox', { name: 'Vorname(n)' }).fill(browserName)
     await page.getByRole('textbox', { name: 'Nachname' }).fill('Doe')
     await expect(page.getByRole('heading', { level: 2 })).toContainText(
@@ -132,7 +143,15 @@ test.describe('Bayern testing', () => {
     await page.getByRole('button', { name: 'Nächster Schritt' }).click()
   }
 
-  const cardType = async (page: Page, cardType, applicationType = 'initial') => {
+  const cardType = (page: Page, cardType, applicationType = 'initial') =>
+    step(
+      'Wählen Sie **Blaue Ehrenamtskarte** oder **Goldene Ehrenamtskarte**, bei der blauen Karte außerdem ' +
+        '**Erstantrag** oder **Verlängerungsantrag**. Wählen Sie, ob Sie eine digitale und/oder physische ' +
+        'Karte beantragen, und klicken Sie auf **Nächster Schritt**.',
+      () => selectCardType(page, cardType, applicationType),
+    )
+
+  const selectCardType = async (page: Page, cardType, applicationType = 'initial') => {
     const form = page.locator('form').last()
     await expect(form).toContainText(
       'Die Bayerische Ehrenamtskarte gibt es in zwei Varianten: Die blaue Ehrenamtskarte, welche für drei Jahre gültig ist, und die goldene Ehrenamtskarte, welche unbegrenzt gültig ist. Für die blaue Ehrenamtskarte ist beispielsweise berechtigt, wer sich seit mindestens zwei Jahren mindestens fünf Stunden pro Woche ehrenamtlich engagiert. Für die goldene Ehrenamtskarte ist beispielsweise berechtigt, wer sich seit mindestens 25 Jahren mindestens fünf Stunden pro Woche ehrenamtlich engagiert.',
@@ -175,7 +194,20 @@ test.describe('Bayern testing', () => {
     await page.getByRole('button', { name: 'Nächster Schritt' }).last().click()
   }
 
-  const requirements = async (page: Page, cardType, requirement: number, browser: string) => {
+  const requirements = (page: Page, cardType, requirement: number, browser: string) =>
+    step(
+      'Wählen Sie die Voraussetzung aus, die Sie erfüllen, machen Sie die Angaben dazu und klicken Sie auf ' +
+        '**Nächster Schritt**.',
+      async () => {
+        await testDoc.note(
+          'Je nach Voraussetzung hängen Sie einen Nachweis an, z.B. eine Kopie Ihrer JuLeiCa oder einen ' +
+            'Tätigkeitsnachweis. Die Datei darf maximal 5 MB groß sein und muss im JPG-, PNG- oder PDF-Format sein.',
+        )
+        await fillRequirements(page, cardType, requirement, browser)
+      },
+    )
+
+  const fillRequirements = async (page: Page, cardType, requirement: number, browser: string) => {
     if (cardType == 'blue') {
       await handleBlueCardRequirements(page, requirement, browser)
     } else {
@@ -296,7 +328,14 @@ test.describe('Bayern testing', () => {
     }
   }
 
-  const sendRequest = async (page: Page) => {
+  const sendRequest = (page: Page) =>
+    step(
+      'Stimmen Sie der **Datenschutzerklärung** zu, versichern Sie die Richtigkeit Ihrer Angaben und klicken ' +
+        'Sie auf **Antrag Abschicken**.',
+      () => submitRequest(page),
+    )
+
+  const submitRequest = async (page: Page) => {
     await page.getByRole('button', { name: 'Datenschutzerklärung' }).click()
     await expect(
       page.locator('div').filter({ hasText: 'Datenschutzerklärung für die' }).nth(1),
@@ -331,17 +370,28 @@ test.describe('Bayern testing', () => {
   test.describe.configure({ mode: 'parallel' })
   test.setTimeout(200_000)
 
-  test('blue_initial_volunteer', async ({ page, browserName }) => {
-    await personalInfo(page, browserName)
+  test(
+    'Blaue Ehrenamtskarte beantragen',
+    { tag: [userManualTag] },
+    async ({ page, browserName }) => {
+      testDoc.description(
+        'Ehrenamtliche beantragen die Ehrenamtskarte ohne Anmeldung über ein Online-Formular. Der Antrag geht ' +
+          'an die ausgewählte Region und erscheint dort in der Verwaltung unter **Eingehende Anträge**.',
+      )
+      await personalInfo(page, browserName)
 
-    await cardType(page, 'blue', 'initial')
+      await cardType(page, 'blue', 'initial')
 
-    await requirements(page, 'blue', 1, browserName)
+      await requirements(page, 'blue', 1, browserName)
 
-    await sendRequest(page)
+      await sendRequest(page)
 
-    await sentSuccessfully(page)
-  })
+      await testDoc.result(
+        'Das System bestätigt den Versand. Über den Fortschritt des Antrags werden Sie per E-Mail informiert.',
+        () => sentSuccessfully(page),
+      )
+    },
+  )
 
   test('blue_extension_volunteer', async ({ page, browserName }) => {
     await personalInfo(page, browserName)

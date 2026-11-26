@@ -1,5 +1,7 @@
 import { APIRequestContext, expect, test } from '@playwright/test'
 
+import { roles, step, testDoc, userManualTag } from '../shared/user-manual'
+
 const backendUrl = 'http://localhost:8000'
 
 const address = {
@@ -60,40 +62,78 @@ const createApplication = async (request: APIRequestContext, forenames: string) 
   expect(await response.json()).toEqual({ data: { result: true } })
 }
 
-test.describe('DeleteApplications', () => {
+test.describe('Anträge bearbeiten', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/')
+    await step('Öffnen Sie die Verwaltung im Browser.', async () => {
+      await page.goto('/')
+    })
     await page.getByRole('button', { name: 'Switch to Ehrenamtskarte' }).click()
-    await page
-      .getByRole('textbox', { name: 'Email-Adresse' })
-      .fill('region-admin-augsburg@bayern.ehrenamtskarte.app')
-    await page.getByPlaceholder('Passwort').fill('Administrator!')
-    await page.getByRole('button', { name: 'Anmelden' }).click()
+    await step(
+      'Geben Sie Ihre **Email-Adresse** und Ihr **Passwort** ein und klicken Sie auf **Anmelden**.',
+      async () => {
+        await page
+          .getByRole('textbox', { name: 'Email-Adresse' })
+          .fill('region-admin-augsburg@bayern.ehrenamtskarte.app')
+        await page.getByPlaceholder('Passwort').fill('Administrator!')
+        await page.getByRole('button', { name: 'Anmelden' }).click()
+      },
+    )
   })
 
-  test('should reject and delete an application', async ({ page, request }) => {
+  test('Antrag ablehnen und löschen', { tag: [userManualTag] }, async ({ page, request }) => {
+    testDoc.role(roles.regionAdmin)
+    testDoc.role(roles.regionManager)
+    testDoc.description(
+      'Unter **Eingehende Anträge** sehen Sie alle Anträge Ihrer Region. Offene Anträge müssen Sie ablehnen, ' +
+        'bevor Sie sie löschen können. Abgelehnte und zurückgezogene Anträge können Sie direkt löschen.',
+    )
+
     // Use a unique name, so the test does not depend on leftovers of previous runs
     const forenames = `delete-${Date.now()}`
-    await createApplication(request, forenames)
-
-    await page.getByRole('link', { name: 'Eingehende Anträge' }).nth(1).click()
+    await testDoc.setup('Antrag für den Test anlegen', () => createApplication(request, forenames))
     const application = page
       .locator('.MuiAccordion-root')
       .filter({ has: page.getByRole('heading', { name: `Doe, ${forenames}`, exact: true }) })
+
+    await step('Klicken Sie auf **Eingehende Anträge**.', () =>
+      page.getByRole('link', { name: 'Eingehende Anträge' }).nth(1).click(),
+    )
     await expect(application).toHaveCount(1)
-    await application.click()
+    await step('Klicken Sie auf den Antrag, um alle Angaben anzuzeigen.', () => application.click())
 
-    // Pending applications have to be rejected before they can be deleted
-    await application.getByRole('button', { name: 'Antrag ablehnen' }).click()
-    await page.getByRole('dialog').getByRole('combobox', { name: 'Grund' }).click()
-    await page
-      .getByRole('option', { name: 'Anwartschaftszeit blau (2 Jahre) nicht erreicht', exact: true })
-      .click()
-    await page.getByRole('button', { name: 'Ablehnung bestätigen' }).click()
+    await step(
+      'Klicken Sie auf **Antrag ablehnen**, wählen Sie unter **Grund** einen Ablehnungsgrund aus und klicken ' +
+        'Sie auf **Ablehnung bestätigen**.',
+      async () => {
+        await testDoc.note(
+          'Die antragstellende Person wird per E-Mail über die Ablehnung informiert.',
+        )
+        await application.getByRole('button', { name: 'Antrag ablehnen' }).click()
+        await page.getByRole('dialog').getByRole('combobox', { name: 'Grund' }).click()
+        await page
+          .getByRole('option', {
+            name: 'Anwartschaftszeit blau (2 Jahre) nicht erreicht',
+            exact: true,
+          })
+          .click()
+        await page.getByRole('button', { name: 'Ablehnung bestätigen' }).click()
+      },
+    )
 
-    await application.getByRole('button', { name: 'Antrag löschen' }).click()
-    await page.getByRole('dialog').getByRole('button', { name: 'Bestätigen' }).click()
-    await expect(page.getByRole('dialog')).toBeHidden()
-    await expect(application).toHaveCount(0)
+    await step(
+      'Klicken Sie auf **Antrag löschen** und bestätigen Sie mit **Bestätigen**.',
+      async () => {
+        await application.getByRole('button', { name: 'Antrag löschen' }).click()
+        await page.getByRole('dialog').getByRole('button', { name: 'Bestätigen' }).click()
+      },
+    )
+
+    await testDoc.result(
+      'Das System löscht den Antrag und entfernt ihn aus der Liste.',
+      async () => {
+        await expect(page.getByRole('dialog')).toBeHidden()
+        await expect(application).toHaveCount(0)
+      },
+    )
   })
 })
