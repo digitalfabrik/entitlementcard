@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:ehrenamtskarte/app_lifecycle_observer.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
@@ -5,7 +6,6 @@ import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/search/no_results_found.dart';
 import 'package:ehrenamtskarte/search/scroll_to_top_button.dart';
 import 'package:ehrenamtskarte/search/search_result_card.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -21,6 +21,7 @@ class SliverResultsLoader extends StatefulWidget {
   final List<int> categoryIds;
   final bool hasActiveFilters;
   final VoidCallback onResetFilters;
+  final ValueChanged<int> onTotalCountChanged;
 
   const SliverResultsLoader({
     super.key,
@@ -29,10 +30,13 @@ class SliverResultsLoader extends StatefulWidget {
     required this.categoryIds,
     required this.hasActiveFilters,
     required this.onResetFilters,
+    required this.onTotalCountChanged,
   });
 
   bool hasSameSearchParams(SliverResultsLoader other) =>
-      searchText == other.searchText && coordinates == other.coordinates && listEquals(categoryIds, other.categoryIds);
+      searchText == other.searchText &&
+      coordinates == other.coordinates &&
+      const ListEquality<int>().equals(categoryIds, other.categoryIds);
 
   @override
   State<StatefulWidget> createState() => SliverResultsLoaderState();
@@ -43,7 +47,9 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
   GraphQLClient? _client;
   AppResumeNotifier? _resumeNotifier;
 
-  final PagingController<int, Query$AcceptingStoresSearch$stores> _pagingController = PagingController(firstPageKey: 0);
+  final PagingController<int, Query$AcceptingStoresSearch$search$stores> _pagingController = PagingController(
+    firstPageKey: 0,
+  );
 
   void _onAppResumed() {
     if (!mounted) return;
@@ -78,6 +84,7 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
   @override
   void didUpdateWidget(SliverResultsLoader oldWidget) {
     super.didUpdateWidget(oldWidget);
+    // Only refetch if the search params changed, not on every rebuild of the parent (e.g. when the total count is set).
     if (!widget.hasSameSearchParams(oldWidget)) {
       _pagingController.refresh();
     }
@@ -128,7 +135,12 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
       if (newData == null) {
         throw Exception('Fetched data is null.');
       }
-      final newItems = newData.stores;
+      final newItems = newData.search.stores;
+
+      final totalCount = newData.search.totalCount;
+      if (totalCount != null && widget.hasSameSearchParams(oldWidget)) {
+        widget.onTotalCountChanged(totalCount);
+      }
 
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
@@ -154,9 +166,9 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
   Widget build(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      sliver: PagedSliverList<int, Query$AcceptingStoresSearch$stores>(
+      sliver: PagedSliverList<int, Query$AcceptingStoresSearch$search$stores>(
         pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<Query$AcceptingStoresSearch$stores>(
+        builderDelegate: PagedChildBuilderDelegate<Query$AcceptingStoresSearch$search$stores>(
           itemBuilder: (context, item, index) {
             return SearchResultCard(
               key: ValueKey(item.id),

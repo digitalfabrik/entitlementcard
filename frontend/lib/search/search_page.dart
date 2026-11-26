@@ -27,6 +27,7 @@ class _SearchPageState extends State<SearchPage> {
   final Set<int> _selectedCategoryIds = {};
   Input$CoordinatesInput? _coordinates;
   SortingMode _sortingMode = SortingMode.alphabetically;
+  int? _totalCount;
 
   @override
   void initState() {
@@ -85,7 +86,8 @@ class _SearchPageState extends State<SearchPage> {
           textEditingController: _searchController,
           selectedCategoryIds: _selectedCategoryIds,
           footer: SearchResultsToolbar(
-            child: SortingButton(
+            totalCount: _totalCount,
+            sortingButton: SortingButton(
               setCoordinates: (position) => setState(() {
                 _coordinates = Input$CoordinatesInput(lat: position.latitude, lng: position.longitude);
                 _sortingMode = SortingMode.byDistance;
@@ -105,6 +107,9 @@ class _SearchPageState extends State<SearchPage> {
           coordinates: _sortingMode == SortingMode.byDistance ? _coordinates : null,
           hasActiveFilters: _hasActiveFilters,
           onResetFilters: _resetFilters,
+          onTotalCountChanged: (totalCount) {
+            if (totalCount != _totalCount) setState(() => _totalCount = totalCount);
+          },
         ),
       ],
     );

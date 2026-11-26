@@ -44,6 +44,14 @@ type AcceptingStore {
   physicalStore: PhysicalStore
 }
 
+"A page of accepting stores matching the search params together with the total number of matches."
+type AcceptingStoreSearchResult {
+  "The accepting stores of the requested page (respecting limit and offset)."
+  stores: [AcceptingStoreV2!]!
+  "The total number of accepting stores matching the search params (ignoring limit and offset). Only returned for the first page (offset 0), as it does not change when paginating."
+  totalCount: Int
+}
+
 type AcceptingStoreV2 {
   category: Category!
   categoryId: Int!
@@ -328,7 +336,9 @@ type Query {
   "Search for accepting stores in the given project using searchText and categoryIds."
   searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]! @deprecated(reason : "Use searchAcceptingStoresInProjectV2 query for localized descriptions. Can be safely removed in January 2028.")
   "Search for accepting stores in the given project using searchText and categoryIds."
-  searchAcceptingStoresInProjectV2(params: SearchParamsInput!, project: String!): [AcceptingStoreV2!]!
+  searchAcceptingStoresInProjectV2(params: SearchParamsInput!, project: String!): [AcceptingStoreV2!]! @deprecated(reason : "Use searchAcceptingStoresInProjectV3 query for the total result count. Can be safely removed in December 2028.")
+  "Search for accepting stores in the given project using searchText and categoryIds. Additionally returns the total number of matching stores."
+  searchAcceptingStoresInProjectV3(params: SearchParamsInput!, project: String!): AcceptingStoreSearchResult!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
   verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
   "Returns the requesting administrator as retrieved from his JWT token."
