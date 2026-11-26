@@ -1,6 +1,7 @@
 docker:
   # https://playwright.dev/docs/ci#circleci
-  - image: mcr.microsoft.com/playwright:v1.60.0-noble
+  # Keep the version in sync with @playwright/test (package-lock.json), so the browsers are already installed
+  - image: mcr.microsoft.com/playwright:v1.64.1-noble
   - image: postgis/postgis:17-3.5
     environment:
       POSTGRES_DB: ehrenamtskarte
@@ -44,10 +45,7 @@ steps:
   - run:
       name: Install Playwright browsers
       working_directory: ~/project/administration
-      command: mise x -- npm exec -- playwright install --with-deps chromium
-      environment:
-        DEBIAN_FRONTEND: noninteractive
-        NEEDRESTART_MODE: a
+      command: mise x -- npm exec -- playwright install chromium
   - run:
       name: Start administration frontend
       working_directory: ~/project/administration
@@ -59,6 +57,9 @@ steps:
       name: Check backend health
       command: curl --retry 120 --retry-delay 1 --retry-all-errors http://localhost:8000/health
   - run:
+      name: Check administration frontend
+      command: curl --silent --output /dev/null --retry 60 --retry-delay 1 --retry-all-errors http://localhost:3000
+  - run:
       name: Import dev data
       working_directory: ~/project/backend
       command: mise x -- ~/backend/bin/backend db-import-dev src/dev/sql
@@ -67,6 +68,8 @@ steps:
       working_directory: ~/project/administration
       # TODO Use sharding: https://playwright.dev/docs/ci#sharding-in-circleci
       command: mise x -- npm run test:e2e
+  - store_test_results:
+      path: ~/project/administration/test-results/junit.xml
   - store_artifacts:
       path: ~/project/administration/playwright-report
       destination: playwright-report
