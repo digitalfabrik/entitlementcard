@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 
+import { contactPersonName, devDataApplicants, displayName } from '../shared/data/bayern-applicants'
+
 export const expectVisible = async (item, text) => {
   await expect(await item.getByText(text, { exact: true }).first()).toBeVisible()
 }
@@ -10,7 +12,7 @@ const expectAttachment = async (item, label) => {
 }
 
 // The checked applications are loaded as dev data (backend/src/dev/sql/applications_e2e.sql)
-const applicantName = 'Doe, chromium'
+const applicantNames = new RegExp(`^(${devDataApplicants.map(displayName).join('|')})$`)
 
 test.describe('Bayern regional admin', () => {
   test.beforeEach(async ({ page }) => {
@@ -60,7 +62,10 @@ test.describe('Bayern regional admin', () => {
     await expectVisible(item, 'Land: Deutschland')
     await expectVisible(item, 'Einsatzgebiet: Sport')
     await expectVisible(item, 'Kontaktperson der Organisation')
-    await expectVisible(item, 'Vor- und Nachname der Kontaktperson in der Organisation: John doe 2')
+    await expectVisible(
+      item,
+      `Vor- und Nachname der Kontaktperson in der Organisation: ${contactPersonName}`,
+    )
     await expectVisible(item, 'Telefon: 123456798')
     await expectVisible(item, 'E-Mail-Adresse: test@gmail.com')
     await expectVisible(
@@ -125,7 +130,7 @@ test.describe('Bayern regional admin', () => {
     // await page.getByRole('button', { name: 'Akzeptiert' }).click()
     const listItems = await page
       .locator('.MuiAccordion-root')
-      .filter({ has: page.getByRole('heading', { name: applicantName, exact: true }) })
+      .filter({ has: page.getByRole('heading', { name: applicantNames }) })
       .all()
     for (const item of listItems) {
       if (visitedCases.size === casesToVisit.size) break

@@ -1,16 +1,32 @@
 import { expect, test } from '../shared/fixtures/nuernberg'
 import { LoginPage } from '../shared/pages'
+import { testDoc, userManualTag } from '../shared/user-manual'
 
-test.describe('Login page', () => {
+test.describe('Anmelden', () => {
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.goto()
   })
 
-  test('happy path: valid credentials show main navigation', async ({ tenant, loginPage }) => {
-    await loginPage.login(tenant.credentials.regionAdmin)
+  test(
+    'Mit Email-Adresse und Passwort anmelden',
+    { tag: [userManualTag] },
+    async ({ tenant, loginPage }) => {
+      testDoc.description(
+        'Für die Verwaltung benötigen Sie ein Benutzerkonto. Sind die Zugangsdaten falsch, zeigt das System ' +
+          'die Meldung **Der Login ist fehlgeschlagen.** an. Haben Sie Ihr Passwort vergessen, klicken Sie auf ' +
+          '**Passwort vergessen**.',
+      )
 
-    await expect(loginPage.mainNavigation).toBeVisible()
-  })
+      await loginPage.loginWithCredentials(tenant.credentials.regionAdmin)
+
+      await testDoc.result(
+        'Das System meldet Sie an und zeigt die Startseite der Verwaltung an.',
+        async () => {
+          await expect(loginPage.mainNavigation).toBeVisible()
+        },
+      )
+    },
+  )
 
   test('wrong password: shows error message', async ({ tenant, loginPage }) => {
     await loginPage.login({

@@ -1,7 +1,8 @@
-import { type Locator, test as base } from '@playwright/test'
+import { type Locator } from '@playwright/test'
 
 import { CardsAddPage, CardsImportPage, LoginPage, StoresPage } from '../pages'
 import { nuernberg } from '../tenants'
+import { test as base } from '../user-manual'
 import { selectProject } from './project'
 
 type NuernbergFixture = {

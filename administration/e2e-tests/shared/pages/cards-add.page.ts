@@ -2,7 +2,27 @@ import { type Download, type Locator, type Page } from '@playwright/test'
 
 import { NuernbergApplicant } from '../data/nuernberg-applicants'
 import { nuernberg } from '../tenants'
+import { step } from '../user-manual'
 import { fillDatePicker } from './date-picker'
+
+/** Query parameters of a link which opens the card creation with prefilled card data */
+export const prefilledCardParams = (applicant: NuernbergApplicant): URLSearchParams => {
+  const params = new URLSearchParams({
+    Name: applicant.name,
+    Ablaufdatum: applicant.expiryDate,
+    Startdatum: applicant.startDate,
+    Geburtsdatum: applicant.birthDate,
+    'Pass-ID': applicant.passId,
+  })
+  if (applicant.street1 !== undefined) params.set('Adresszeile 1', applicant.street1)
+  if (applicant.street2 !== undefined) params.set('Adresszeile 2', applicant.street2)
+  if (applicant.postalCode !== undefined) params.set('PLZ', applicant.postalCode)
+  if (applicant.city !== undefined) params.set('Ort', applicant.city)
+  return params
+}
+
+export const prefilledCardUrl = (applicant: NuernbergApplicant): string =>
+  `${nuernberg.urls.cardsAdd}?${prefilledCardParams(applicant)}`
 
 export class CardsAddPage {
   readonly nameInput: Locator
@@ -25,31 +45,39 @@ export class CardsAddPage {
     this.csvExportButton = page.getByRole('button', { name: nuernberg.labels.csvExport })
   }
 
-  async goto(): Promise<void> {
-    await this.page.goto(nuernberg.urls.cardsAdd)
+  async openCardsFromDashboard(): Promise<void> {
+    // The first link with this name is part of the navigation bar
+    const element = this.page.getByRole('link', { name: 'Karten erstellen' }).last()
+    await step('Klicken Sie auf **Karten erstellen**.', () => element.click(), { focus: element })
+  }
+
+  async openSingleCardCreation(): Promise<void> {
+    const element = this.page.getByRole('link', { name: 'Einzelne Karten erstellen' })
+    await step('Öffnen Sie **Einzelne Karten erstellen**.', () => element.click(), {
+      focus: element,
+    })
   }
 
   async gotoPrefilledCard(applicant: NuernbergApplicant): Promise<void> {
-    const params = new URLSearchParams({
-      Name: applicant.name,
-      Ablaufdatum: applicant.expiryDate,
-      Startdatum: applicant.startDate,
-      Geburtsdatum: applicant.birthDate,
-      'Pass-ID': applicant.passId,
-    })
-    if (applicant.street1 !== undefined) params.set('Adresszeile 1', applicant.street1)
-    if (applicant.street2 !== undefined) params.set('Adresszeile 2', applicant.street2)
-    if (applicant.postalCode !== undefined) params.set('PLZ', applicant.postalCode)
-    if (applicant.city !== undefined) params.set('Ort', applicant.city)
-    await this.page.goto(`${nuernberg.urls.cardsAdd}?${params}`)
+    await step(
+      'Öffnen Sie den Link mit den vorausgefüllten Kartendaten.',
+      () => this.page.goto(prefilledCardUrl(applicant)),
+      { screenshot: false },
+    )
   }
 
   async fillCard(applicant: NuernbergApplicant, index = 0): Promise<void> {
-    await this.nameInput.nth(index).fill(applicant.name)
-    await this.fillDate(nuernberg.labels.birthDate, applicant.birthDate, index)
-    await this.fillDate(nuernberg.labels.startDate, applicant.startDate, index)
-    await this.fillDate(nuernberg.labels.expiryDate, applicant.expiryDate, index)
-    await this.passIdInput.nth(index).fill(applicant.passId)
+    await step(
+      'Füllen Sie **Name**, **Ablaufdatum**, **Startdatum**, **Geburtsdatum** und **Nürnberg-Pass-ID** aus.',
+      async () => {
+        await this.nameInput.nth(index).fill(applicant.name)
+        await this.fillDate(nuernberg.labels.birthDate, applicant.birthDate, index)
+        await this.fillDate(nuernberg.labels.startDate, applicant.startDate, index)
+        await this.fillDate(nuernberg.labels.expiryDate, applicant.expiryDate, index)
+        await this.passIdInput.nth(index).fill(applicant.passId)
+      },
+      { screenshot: 'after' },
+    )
   }
 
   // The selected date of a date picker is stored in a hidden input
@@ -68,15 +96,23 @@ export class CardsAddPage {
   async addCard(applicant: NuernbergApplicant): Promise<void> {
     const cards = this.page.locator('.MuiCard-root')
     const countBefore = await cards.count()
-    await this.addCardButton.click()
-    await cards.nth(countBefore).waitFor({ state: 'visible' })
-    await this.fillCard(applicant, countBefore)
+    await step(
+      'Klicken Sie auf **Karte hinzufügen** und füllen Sie die Felder der neuen Karte aus.',
+      async () => {
+        await this.addCardButton.click()
+        await cards.nth(countBefore).waitFor({ state: 'visible' })
+        await this.fillCard(applicant, countBefore)
+      },
+      { screenshot: 'after' },
+    )
   }
 
   async downloadPdf(): Promise<Download> {
     const [download] = await Promise.all([
       this.page.waitForEvent('download'),
-      this.printQrCodesButton.click(),
+      step('Klicken Sie auf **QR-Codes drucken**.', () => this.printQrCodesButton.click(), {
+        focus: this.printQrCodesButton,
+      }),
     ])
     return download
   }
@@ -84,7 +120,9 @@ export class CardsAddPage {
   async downloadCsv(): Promise<Download> {
     const [download] = await Promise.all([
       this.page.waitForEvent('download'),
-      this.csvExportButton.click(),
+      step('Klicken Sie auf **CSV Export**.', () => this.csvExportButton.click(), {
+        focus: this.csvExportButton,
+      }),
     ])
     return download
   }

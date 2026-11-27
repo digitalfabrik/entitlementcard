@@ -11,6 +11,7 @@ export default [
       'playwright.config.ts',
       'src-gen/**/*',
       'coverage/**/*',
+      'user-manual/site/**/*',
     ],
   },
   {

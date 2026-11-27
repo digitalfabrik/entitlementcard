@@ -7,8 +7,8 @@ export const devPassword = 'Administrator!'
 export const paths = {
   // admin
   login: '/',
+  cards: '/cards',
   cardsAdd: '/cards/add',
-  cardsImport: '/cards/import',
   forgotPassword: '/forgot-password',
   stores: '/stores',
   // self service

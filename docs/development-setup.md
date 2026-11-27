@@ -131,6 +131,7 @@ Install Node.js dependencies: `npm install`
 3. Run Playwright tests:
     - All tests: `npm run test:e2e`
     - You can run individual tests by `npm run test:e2e [file name]`
+4. To generate the user manual from the e2e tests, see [User Manual](user-manual.md).
 
 ## Backend
 

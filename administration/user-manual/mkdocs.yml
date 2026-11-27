@@ -1,0 +1,28 @@
+# User manual of the administration, deployed to GitHub Pages (see docs/user-manual.md)
+# The chapters are generated from the e2e tests tagged with @doc (npm run test:e2e:docs)
+site_name: Digitale Berechtigungskarte – Benutzerhandbuch
+site_url: https://digitalfabrik.github.io/entitlementcard/
+repo_url: https://github.com/digitalfabrik/entitlementcard
+repo_name: digitalfabrik/entitlementcard
+
+theme:
+  name: material
+  language: de
+  features:
+    - navigation.sections
+    - navigation.expand
+
+# The chapters are named after the test files, so they get readable titles here
+nav:
+  - Startseite: index.md
+  - Bayern – Ehrenamtskarte:
+      - Ehrenamtskarte beantragen: bayern/01_create_applications.md
+      - Anträge bearbeiten: bayern/03_delete_applications.md
+  - Nürnberg – Nürnberg-Pass:
+      - Anmelden: nuernberg/login.md
+      - Karten erstellen: nuernberg/create-card.md
+      - Karte über einen vorausgefüllten Link erstellen: nuernberg/create-card-prefilled.md
+      - Karten importieren: nuernberg/import-cards.md
+      - Akzeptanzstellen verwalten: nuernberg/stores.md
+  - Koblenz – KoblenzPass:
+      - KoblenzPass selbst erstellen: koblenz/create-card.md

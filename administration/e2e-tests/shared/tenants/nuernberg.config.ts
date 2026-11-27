@@ -4,8 +4,8 @@ export const nuernberg = {
   projectId: 'nuernberg.sozialpass.app',
   urls: {
     login: paths.login,
+    cards: paths.cards,
     cardsAdd: paths.cardsAdd,
-    cardsImport: paths.cardsImport,
     forgotPassword: paths.forgotPassword,
     stores: paths.stores,
   },

@@ -3,3 +3,5 @@ coverage
 build
 playwright-report
 test-results
+user-manual/docs/*/
+user-manual/site

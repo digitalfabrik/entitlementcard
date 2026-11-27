@@ -591,6 +591,32 @@ jobs:
                         command: curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
                         name: Install packages
             - notify
+    deploy_user_manual:
+        docker:
+            - image: cimg/python:3.11
+        resource_class: small
+        steps:
+            - prepare_workspace
+            - run:
+                command: pip install --user "PyJWT[crypto]" requests mkdocs-material==9.8.1
+                name: Install python dependencies
+            - run:
+                command: cp -r ~/attached_workspace/administration/user-manual/docs/. ~/project/administration/user-manual/docs/
+                name: Copy generated user manual chapters
+            - run:
+                command: mkdocs build --strict
+                name: Build user manual
+                working_directory: ~/project/administration/user-manual
+            - run:
+                command: |
+                    TOKEN=$(~/project/.circleci/scripts/get_access_token.py)
+                    git config user.name "deliverino[bot]"
+                    git config user.email "deliverino[bot]@users.noreply.github.com"
+                    git remote set-url origin "https://x-access-token:${TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git"
+                    mkdocs gh-deploy --force --remote-branch gh-pages
+                name: Deploy user manual to GitHub Pages
+                working_directory: ~/project/administration/user-manual
+            - notify
     e2e_administration:
         docker:
             - image: mcr.microsoft.com/playwright:v1.64.1-noble
@@ -660,6 +686,10 @@ jobs:
             - store_artifacts:
                 destination: playwright-report
                 path: ~/project/administration/playwright-report
+            - persist_to_workspace:
+                paths:
+                    - administration/user-manual/docs
+                root: ~/project
             - notify
         working_directory: ~/project
     llm-pr-review:
@@ -985,6 +1015,11 @@ workflows:
             - e2e_administration:
                 requires:
                     - build_backend
+            - deploy_user_manual:
+                context:
+                    - deliverino
+                requires:
+                    - e2e_administration
             - build_android:
                 build_config: bayern
                 context:
