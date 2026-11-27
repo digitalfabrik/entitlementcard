@@ -86,11 +86,9 @@ test.describe('Anträge bearbeiten', () => {
     await testDoc.setup('Antrag für den Test anlegen', () =>
       createApplication(request, deletedApplicant),
     )
-    const application = page
-      .locator('.MuiAccordion-root')
-      .filter({
-        has: page.getByRole('heading', { name: displayName(deletedApplicant), exact: true }),
-      })
+    const application = page.locator('.MuiAccordion-root').filter({
+      has: page.getByRole('heading', { name: displayName(deletedApplicant), exact: true }),
+    })
 
     const applicationsLink = page.getByRole('link', { name: 'Eingehende Anträge' }).nth(1)
     await step('Klicken Sie auf **Eingehende Anträge**.', () => applicationsLink.click(), {
