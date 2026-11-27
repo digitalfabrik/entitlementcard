@@ -4,13 +4,21 @@ export const expectVisible = async (item, text) => {
   await expect(await item.getByText(text, { exact: true }).first()).toBeVisible()
 }
 
+const expectAttachment = async (item, label) => {
+  await expectVisible(item, `${label}:`)
+  await expect(item.getByRole('button', { name: 'Anhang 1' }).first()).toBeVisible()
+}
+
+// The checked applications are loaded as dev data (backend/src/dev/sql/applications_e2e.sql)
+const applicantName = 'Doe, chromium'
+
 test.describe('Bayern regional admin', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
     await page.getByRole('button', { name: 'Switch to Ehrenamtskarte' }).click()
     await page
       .getByRole('textbox', { name: 'Email-Adresse' })
-      .fill('region-admin@bayern.ehrenamtskarte.app')
+      .fill('region-admin-augsburg@bayern.ehrenamtskarte.app')
     await page.getByPlaceholder('Passwort').fill('Administrator!')
     await page.getByRole('button', { name: 'Anmelden' }).click()
     await expect(page.getByRole('heading').first()).toContainText('Wählen Sie eine Aktion aus:')
@@ -32,9 +40,11 @@ test.describe('Bayern regional admin', () => {
     await expectVisible(item, 'Land: Deutschland')
     await expectVisible(item, 'Einsatzgebiet: Sport')
     await expect(item.getByText('Kontaktperson der Organisation', { exact: true })).toHaveCount(0)
-    await expectVisible(item, 'Tätigkeitsnachweis: Anhang 1(siehe Anhang 1)')
+    await expectAttachment(item, 'Tätigkeitsnachweis')
     await expectVisible(item, 'Bestätigung(en) durch Organisationen:')
-    await expectVisible(item, '(keine)')
+    // An attached activity certificate counts as a confirmation by the organization
+    const verification = item.getByRole('listitem').filter({ hasText: 'organization 1' })
+    await expect(verification).toContainText('Bestätigt')
   }
 
   const organizationInfoTest2 = async item => {
@@ -71,7 +81,7 @@ test.describe('Bayern regional admin', () => {
 
   test.describe.configure({ mode: 'parallel' })
 
-  test('should assert all test applications', async ({ page, browserName }) => {
+  test('should assert all test applications', async ({ page }) => {
     test.setTimeout(200_000)
     const casesToVisit = new Set([
       'blue1',
@@ -115,13 +125,9 @@ test.describe('Bayern regional admin', () => {
     // await page.getByRole('button', { name: 'Akzeptiert' }).click()
     const listItems = await page
       .locator('.MuiAccordion-root')
-      .filter({ hasText: 'Antrag vom' })
+      .filter({ has: page.getByRole('heading', { name: applicantName, exact: true }) })
       .all()
     for (const item of listItems) {
-      const data = await item.innerText()
-      if (!data.includes(`Name: Doe, ${browserName}`)) {
-        continue
-      }
       if (visitedCases.size === casesToVisit.size) break
 
       await item.click()
@@ -162,21 +168,18 @@ test.describe('Bayern regional admin', () => {
 
       if ((await item.innerText()).includes('Goldene')) {
         const h6Element = await item
-          .locator('.bp5-heading')
-          .filter({ hasText: /Ich (bin|leiste|habe)/ })
+          .getByRole('button', { name: /Ich (bin|leiste|habe)/ })
           .first()
           .textContent()
         switch (h6Element) {
           case 'Ich bin Inhaber:in des Ehrenzeichens für Verdienste im Ehrenamt des Bayerischen Ministerpräsidenten.':
-            await item.getByRole('heading', { name: h6Element }).click()
-            await expectVisible(item, 'Kopie der Urkunde: Anhang 1(siehe Anhang 1)')
+            await expectAttachment(item, 'Kopie der Urkunde')
             await expectVisible(item, 'Bestätigung(en) durch Organisationen:')
             await expectVisible(item, '(keine)')
             await visitedCases.add('gold1')
             break
 
           case 'Ich leiste als Reservist:in seit mindestens 25 Jahren regelmäßig aktiven Wehrdienst in der Bundeswehr, indem ich in dieser Zeit entweder insgesamt mindestens 500 Tage Reservisten-Dienstleistung erbracht habe oder in dieser Zeit ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.':
-            await item.getByRole('heading', { name: h6Element }).click()
             await expectVisible(item, 'Bestätigung(en) durch Organisationen:')
             await expectVisible(item, '(keine)')
             await visitedCases.add('gold2')
@@ -209,20 +212,19 @@ test.describe('Bayern regional admin', () => {
         await expectVisible(item, 'Ich beantrage eine physische Ehrenamtskarte: Ja')
 
         const h6Element = await item
-          .locator('.bp5-heading')
-          .filter({ hasText: /Ich (bin|leiste|habe|engagiere)/ })
+          .getByRole('button', { name: /Ich (bin|leiste|habe|engagiere)/ })
           .first()
           .textContent()
         switch (h6Element) {
           case 'Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).':
             await expectVisible(item, 'Name des Programms: the program')
-            await expectVisible(item, 'Tätigkeitsnachweis: Anhang 1(siehe Anhang 1)')
+            await expectAttachment(item, 'Tätigkeitsnachweis')
             await expectVisible(item, '(keine)')
             await visitedCases.add('blue1')
             break
 
           case 'Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.':
-            await expectVisible(item, 'Tätigkeitsnachweis: Anhang 1(siehe Anhang 1)')
+            await expectAttachment(item, 'Tätigkeitsnachweis')
             await expectVisible(item, 'Bestätigung(en) durch Organisationen:')
             await expectVisible(item, '(keine)')
             await visitedCases.add('blue2')
@@ -231,7 +233,7 @@ test.describe('Bayern regional admin', () => {
           case 'Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card).':
             await expectVisible(item, 'Kartennummer: 123456789')
             await expectVisible(item, 'Karte gültig bis: 10.10.1999')
-            await expectVisible(item, 'Kopie der Karte (1): Anhang 1(siehe Anhang 1)')
+            await expectAttachment(item, 'Kopie der Karte (1)')
             await expectVisible(item, 'Bestätigung(en) durch Organisationen:')
             await expectVisible(item, '(keine)')
             await visitedCases.add('blue3')
@@ -265,5 +267,6 @@ test.describe('Bayern regional admin', () => {
         'Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind: Ja',
       )
     }
+    expect(visitedCases).toEqual(casesToVisit)
   })
 })

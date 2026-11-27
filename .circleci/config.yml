@@ -593,7 +593,7 @@ jobs:
             - notify
     e2e_administration:
         docker:
-            - image: mcr.microsoft.com/playwright:v1.60.0-noble
+            - image: mcr.microsoft.com/playwright:v1.64.1-noble
             - environment:
                 POSTGRES_DB: ehrenamtskarte
                 POSTGRES_PASSWORD: postgres
@@ -631,10 +631,7 @@ jobs:
                 name: Start backend
                 working_directory: ~/project/backend
             - run:
-                command: mise x -- npm exec -- playwright install --with-deps chromium
-                environment:
-                    DEBIAN_FRONTEND: noninteractive
-                    NEEDRESTART_MODE: a
+                command: mise x -- npm exec -- playwright install chromium
                 name: Install Playwright browsers
                 working_directory: ~/project/administration
             - run:
@@ -648,6 +645,9 @@ jobs:
                 command: curl --retry 120 --retry-delay 1 --retry-all-errors http://localhost:8000/health
                 name: Check backend health
             - run:
+                command: curl --silent --output /dev/null --retry 60 --retry-delay 1 --retry-all-errors http://localhost:3000
+                name: Check administration frontend
+            - run:
                 command: mise x -- ~/backend/bin/backend db-import-dev src/dev/sql
                 name: Import dev data
                 working_directory: ~/project/backend
@@ -655,6 +655,8 @@ jobs:
                 command: mise x -- npm run test:e2e
                 name: Run e2e tests
                 working_directory: ~/project/administration
+            - store_test_results:
+                path: ~/project/administration/test-results/junit.xml
             - store_artifacts:
                 destination: playwright-report
                 path: ~/project/administration/playwright-report

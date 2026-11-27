@@ -13,7 +13,12 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 3 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  /* In CI, the JUnit results are additionally stored, so CircleCI shows failed and flaky tests */
+  reporter: process.env.CI
+    ? [['html'], ['junit', { outputFile: 'test-results/junit.xml' }]]
+    : 'html',
+  /* Snapshots (e.g. of generated PDFs) are stored next to the tests, separately per platform */
+  snapshotPathTemplate: '{testDir}/{testFileDir}/snapshots/{arg}{-snapshotSuffix}{ext}',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL: 'http://localhost:3000',
@@ -33,13 +38,21 @@ export default defineConfig({
       name: '02_check_applications',
       testMatch: '02_check_applications.spec.ts',
       use: { ...devices['Desktop Chrome'] },
-      dependencies: ['01_create_applications'],
     },
     {
       name: '03_delete_applications',
       testMatch: '03_delete_applications.spec.ts',
       use: { ...devices['Desktop Chrome'] },
-      dependencies: ['02_check_applications'],
+    },
+    {
+      name: 'nuernberg',
+      testDir: './e2e-tests/nuernberg',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'koblenz',
+      testDir: './e2e-tests/koblenz',
+      use: { ...devices['Desktop Chrome'] },
     },
 
     // {

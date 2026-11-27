@@ -39,6 +39,20 @@ VALUES
     false,
     false
 ), (
+    -- Region "Augsburg (Stadt)", used by the bayern e2e tests
+    'region-admin-augsburg@bayern.ehrenamtskarte.app',
+    1,
+    9,
+    'REGION_ADMIN',
+    decode(
+        '24326124313124343871526343686239343559497069677238357163752F6E6E564270634149626F43426A382F2E596B3061755061484C32726B314B',
+        'hex'),
+    NULL,
+    NULL,
+    false,
+    false,
+    false
+), (
     'region-manager@bayern.ehrenamtskarte.app',
     1,
     1,
