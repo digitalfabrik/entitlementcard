@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_stores_by_physical_store_ids.graphql.dart';
+import 'package:ehrenamtskarte/search/results_loader_status_view.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -170,31 +171,21 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
 
   Widget _buildErrorWithRetry(BuildContext context) {
     final t = context.t;
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.warning, size: 60, color: Colors.orange),
-          Text(t.favorites.loadingFailed),
-          OutlinedButton(onPressed: _pagingController.retryLastFailedRequest, child: Text(t.common.tryAgain)),
-        ],
-      ),
+    return ResultsLoaderStatusView(
+      icon: Icons.wifi_off,
+      title: t.favorites.loadingFailed,
+      description: t.common.checkConnection,
+      actionLabel: t.common.tryAgain,
+      onAction: _pagingController.retryLastFailedRequest,
     );
   }
 
   Widget _buildNoItemsFoundIndicator(BuildContext context) {
     final t = context.t;
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(t.favorites.noFavoritesFound, textAlign: TextAlign.center),
-          ),
-        ],
-      ),
+    return ResultsLoaderStatusView(
+      icon: Icons.favorite_border,
+      title: t.favorites.noFavoritesTitle,
+      description: t.favorites.noFavoritesFound,
     );
   }
 

@@ -3,7 +3,7 @@ import 'package:ehrenamtskarte/app_lifecycle_observer.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
-import 'package:ehrenamtskarte/search/no_results_found.dart';
+import 'package:ehrenamtskarte/search/results_loader_status_view.dart';
 import 'package:ehrenamtskarte/search/scroll_to_top_button.dart';
 import 'package:ehrenamtskarte/search/search_result_card.dart';
 import 'package:flutter/material.dart';
@@ -203,25 +203,26 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
 
   Widget _buildErrorWithRetry(BuildContext context) {
     final t = context.t;
-    final theme = Theme.of(context);
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.warning, size: 60, color: Colors.orange),
-          Text(t.common.checkConnection, style: theme.textTheme.bodyMedium),
-          OutlinedButton(
-            style: theme.textButtonTheme.style,
-            onPressed: _pagingController.retryLastFailedRequest,
-            child: Text(t.common.tryAgain),
-          ),
-        ],
-      ),
+    return ResultsLoaderStatusView(
+      icon: Icons.wifi_off,
+      title: t.common.connectionFailed,
+      description: t.common.checkConnection,
+      actionLabel: t.common.tryAgain,
+      onAction: _pagingController.retryLastFailedRequest,
     );
   }
 
-  Widget _buildNoItemsFoundIndicator(BuildContext context) =>
-      NoResultsFound(hasActiveFilters: widget.hasActiveFilters, onResetFilters: widget.onResetFilters);
+  Widget _buildNoItemsFoundIndicator(BuildContext context) {
+    final t = context.t;
+    final hasActiveFilters = widget.hasActiveFilters;
+    return ResultsLoaderStatusView(
+      icon: Icons.search,
+      title: t.search.noResultsTitle,
+      description: hasActiveFilters ? t.search.noResultsDescription : t.search.noAcceptingStoresAvailable,
+      actionLabel: hasActiveFilters ? t.search.resetFilters : null,
+      onAction: widget.onResetFilters,
+    );
+  }
 
   @override
   void dispose() {
