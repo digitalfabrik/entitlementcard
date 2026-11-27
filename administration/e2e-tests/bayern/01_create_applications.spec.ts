@@ -1,5 +1,6 @@
 import { Page, expect } from '@playwright/test'
 
+import { contactPersonName, formApplicant } from '../shared/data/bayern-applicants'
 import { step, test, testDoc, userManualTag } from '../shared/user-manual'
 
 test.describe('Ehrenamtskarte beantragen', () => {
@@ -73,7 +74,7 @@ test.describe('Ehrenamtskarte beantragen', () => {
       ),
     ).toBeVisible()
     await expect(page.getByRole('button', { name: 'Datei Anhängen' })).toBeHidden()
-    await page.getByRole('textbox', { name: 'Vor- und Nachname der' }).fill('John doe 2')
+    await page.getByRole('textbox', { name: 'Vor- und Nachname der' }).fill(contactPersonName)
     await page.getByRole('textbox', { name: 'E-Mail-Adresse', exact: true }).fill('test@gmail.com')
     await page.getByRole('textbox', { name: 'E-Mail-Adresse wiederholen' }).fill('test@gmail.com')
     await page.getByRole('textbox', { name: 'Telefon' }).fill('123456798')
@@ -116,8 +117,9 @@ test.describe('Ehrenamtskarte beantragen', () => {
     )
 
   const fillPersonalInfo = async (page: Page, browserName) => {
-    await page.getByRole('textbox', { name: 'Vorname(n)' }).fill(browserName)
-    await page.getByRole('textbox', { name: 'Nachname' }).fill('Doe')
+    const { forenames, surname } = formApplicant
+    await page.getByRole('textbox', { name: 'Vorname(n)' }).fill(forenames)
+    await page.getByRole('textbox', { name: 'Nachname' }).fill(surname)
     await expect(page.getByRole('heading', { level: 2 })).toContainText(
       'Bayerische Ehrenamtskarte beantragen',
     )

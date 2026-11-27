@@ -1,5 +1,6 @@
 import { APIRequestContext, expect } from '@playwright/test'
 
+import { ApplicantName, deletedApplicant, displayName } from '../shared/data/bayern-applicants'
 import { LoginPage } from '../shared/pages'
 import { roles, step, test, testDoc, userManualTag } from '../shared/user-manual'
 import { closeToasts } from '../shared/utils'
@@ -15,7 +16,7 @@ const address = {
 }
 
 /** Creates a pending application in the region "Augsburg (Stadt)" via the backend API. */
-const createApplication = async (request: APIRequestContext, forenames: string) => {
+const createApplication = async (request: APIRequestContext, name: ApplicantName) => {
   const response = await request.post(backendUrl, {
     data: {
       query:
@@ -25,8 +26,8 @@ const createApplication = async (request: APIRequestContext, forenames: string) 
         project: 'bayern.ehrenamtskarte.app',
         application: {
           personalData: {
-            forenames: { shortText: forenames },
-            surname: { shortText: 'Doe' },
+            forenames: { shortText: name.forenames },
+            surname: { shortText: name.surname },
             address,
             dateOfBirth: { date: '1999-10-10' },
             emailAddress: { email: 'example@example.org' },
@@ -82,12 +83,14 @@ test.describe('Anträge bearbeiten', () => {
         'bevor Sie sie löschen können. Abgelehnte und zurückgezogene Anträge können Sie direkt löschen.',
     )
 
-    // Use a unique name, so the test does not depend on leftovers of previous runs
-    const forenames = `delete-${Date.now()}`
-    await testDoc.setup('Antrag für den Test anlegen', () => createApplication(request, forenames))
+    await testDoc.setup('Antrag für den Test anlegen', () =>
+      createApplication(request, deletedApplicant),
+    )
     const application = page
       .locator('.MuiAccordion-root')
-      .filter({ has: page.getByRole('heading', { name: `Doe, ${forenames}`, exact: true }) })
+      .filter({
+        has: page.getByRole('heading', { name: displayName(deletedApplicant), exact: true }),
+      })
 
     const applicationsLink = page.getByRole('link', { name: 'Eingehende Anträge' }).nth(1)
     await step('Klicken Sie auf **Eingehende Anträge**.', () => applicationsLink.click(), {
